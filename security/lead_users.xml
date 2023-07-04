@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.module.category" id="users_for_leads">
+        <field name="name">Leads Management</field>
+        <field name="sequence">21</field>
+        <field name="visible" eval="0"/>
+    </record>
+     <record id="leads_admin" model="res.groups">
+        <field name="name">Leads Manager</field>
+        <field name="category_id" ref="users_for_leads"/>
+    </record>
+    <record id="leads_basic_user" model="res.groups">
+        <field name="name">Leads User</field>
+        <field name="category_id" ref="users_for_leads"/>
+    </record>
+
+</odoo>
