@@ -19,8 +19,10 @@ class LeadsForm(models.Model):
     place = fields.Char('Place')
     leads_assign = fields.Many2one('res.users', string='Assign to')
     lead_owner = fields.Many2one('hr.employee', string='Lead owner')
+    seminar_lead_id = fields.Integer()
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
                              default='draft')
+    last_studied_course = fields.Char(string='Last studied course')
     _sql_constraints = [
         ('unique_phone_number', 'UNIQUE(phone_number)', 'Duplicate record based on creation time!'),
     ]
@@ -35,6 +37,15 @@ class LeadsForm(models.Model):
 
     def confirm(self):
         self.state = 'confirm'
+
+    @api.onchange('admission_status')
+    def _onchange_admission_status(self):
+        print('hi')
+        ss = self.env['seminar.students'].search([])
+        for rec in ss:
+            if self.admission_status == True:
+                if self.seminar_lead_id == rec.id:
+                    rec.admission_status = 'yes'
 
     def leadcreation(self):
         if not self.sales_person_id:

@@ -2,7 +2,7 @@
     'name': "Leads",
     'version': "14.0.1.0",
     'sequence': "0",
-    'depends': ['mail', 'crm'],
+    'depends': ['mail', 'crm',],
     'data': [
         'security/lead_users.xml',
         'security/ir.model.access.csv',

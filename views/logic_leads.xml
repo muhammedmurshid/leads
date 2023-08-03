@@ -25,7 +25,9 @@
                             <field name="phone_number" widget="phone"/>
                             <field name="place"/>
                             <field name="course_id"/>
+                            <field name="last_studied_course"/>
                             <field name="make_visible_manager" invisible="1"/>
+                            <field name="seminar_lead_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="probability" widget="percentage"/>
@@ -77,6 +79,7 @@
                 <field name="name"/>
                 <field name="phone_number" widget="phone"/>
                 <field name="course_id"/>
+                <field name="last_studied_course"/>
                 <field name="probability" widget="percentage"/>
                 <field name="last_update_date"/>
                 <field name="admission_status"/>
@@ -94,6 +97,8 @@
     <menuitem name="Leads" id="menu_leads_details" action="details_leads_view_form"
               web_icon="leads/static/description/icon.png"
               sequence="7"/>
+    <menuitem name="Leads" id="menu_leads_details_id" action="details_leads_view_form"
+              parent="menu_leads_details" sequence="1"/>
     <record model="ir.actions.act_window" id="leads_source_view_form">
         <field name="name">Leads Source</field>
         <field name="res_model">leads.sources</field>
@@ -101,7 +106,7 @@
     </record>
     <menuitem name="Leads Source" id="menu_leads_source" action="leads_source_view_form"
               parent="menu_leads_details"
-              sequence="1"/>
+              sequence="2"/>
 
 
 </odoo>
