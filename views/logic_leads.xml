@@ -24,7 +24,9 @@
                             <field name="email_address"/>
                             <field name="phone_number" widget="phone"/>
                             <field name="place"/>
+                            <field name="district"/>
                             <field name="course_id"/>
+                            <field name="lead_qualification"/>
                             <field name="last_studied_course"/>
                             <field name="make_visible_manager" invisible="1"/>
                             <field name="seminar_lead_id" invisible="1"/>

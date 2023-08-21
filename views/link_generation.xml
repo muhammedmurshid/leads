@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="mail_channel_view_form_leads" model="ir.ui.view">
+        <field name="name">leads.link.form.inherit.hr</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_location']" position="after">
+                <group>
+                    <button name="action_generate_lead_link" type="object" string="Generate Leads Link"
+                            class="oe_highlight"/>
+                    <field name="link" attrs="{'invisible':[('link_active', '=', False)]}"/>
+                    <field name="link_active" invisible="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -20,12 +20,24 @@ class LeadsForm(models.Model):
     leads_assign = fields.Many2one('res.users', string='Assign to')
     lead_owner = fields.Many2one('hr.employee', string='Lead owner')
     seminar_lead_id = fields.Integer()
-    state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
-                             default='draft')
+    state = fields.Selection(
+        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
+        default='draft')
     last_studied_course = fields.Char(string='Last studied course')
     _sql_constraints = [
         ('unique_phone_number', 'UNIQUE(phone_number)', 'Duplicate record based on creation time!'),
     ]
+    lead_qualification = fields.Selection(
+        [('plus_one_science', 'Plus One Science'), ('plus_two_science', 'Plus Two Science'),
+         ('plus_two_commerce', 'Plus Two Commerce'), ('plus_one_commerce', 'Plus One Commerce'),
+         ('commerce_degree', 'Commerce Degree'),
+         ('other_degree', 'Other Degree'), ('working_professional', 'Working Professional')],
+        string='Lead qualification')
+    district = fields.Selection([('wayanad', 'Wayanad'), ('ernakulam', 'Ernakulam'), ('kollam', 'Kollam'),
+                                 ('thiruvananthapuram', 'Thiruvananthapuram'), ('kottayam', 'Kottayam'),
+                                 ('kozhikode', 'Kozhikode'), ('palakkad', 'Palakkad'), ('kannur', 'Kannur'),
+                                 ('alappuzha', 'Alappuzha'), ('malappuram', 'Malappuram'), ('kasaragod', 'Kasaragod'),
+                                 ('thrissur', 'Thrissur'), ('idukki', 'Idukki')], string='District')
 
     @api.model
     def create(self, vals):
@@ -66,6 +78,7 @@ class LeadsForm(models.Model):
             self.state = 'crm'
 
         print('hi')
+
     sales_person_id = fields.Many2one('res.users', string='Sales person')
 
     def cancel_lead(self):
@@ -83,6 +96,7 @@ class LeadsForm(models.Model):
 
         else:
             self.make_visible_manager = True
+
     make_visible_manager = fields.Boolean(string="User", compute='get_manager')
 
 
@@ -93,3 +107,14 @@ class LeadsSources(models.Model):
     name = fields.Char('Name', required=True)
 
 
+class GenerateLeadLink(models.Model):
+    _inherit = 'res.users'
+
+    link = fields.Char(string='Link')
+    link_active = fields.Boolean(string='Active')
+
+    def action_generate_lead_link(self):
+        self.link_active = True
+        leads = "leads_form/" + str(self.env.user.id)
+        self.link = leads
+        print('hhhj')

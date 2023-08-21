@@ -8,6 +8,8 @@
         'security/ir.model.access.csv',
         'security/record_rule.xml',
         'views/logic_leads.xml',
+        'views/lead_web_form.xml',
+        # 'views/link_generation.xml',
 
     ],
     'demo': [],
