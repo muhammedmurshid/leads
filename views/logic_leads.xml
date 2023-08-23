@@ -23,6 +23,7 @@
                             <field name="name"/>
                             <field name="email_address"/>
                             <field name="phone_number" widget="phone"/>
+                            <field name="phone_number_second" widget="phone"/>
                             <field name="place"/>
                             <field name="district"/>
                             <field name="course_id"/>
@@ -44,10 +45,36 @@
                     </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids"
-                           widget="mail_followers"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.server" id="action_multiple_leads_owner">
+        <field name="name">Leads Assign To</field>
+        <field name="model_id" ref="leads.model_leads_logic"/>
+        <field name="binding_model_id" ref="leads.model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="code">
+            action= record.multiple_leads_assigning()
+        </field>
+    </record>
+    <record id="view_assigned_to_wizard" model="ir.ui.view">
+        <field name="name">assigned_to.view</field>
+        <field name="model">leads.assigning.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="assigned_to"/>
+
+                </group>
+                <footer>
+                    <button name="action_done" string="Confirm" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
             </form>
         </field>
     </record>

@@ -4,7 +4,8 @@ from odoo.exceptions import ValidationError
 
 class LeadsForm(models.Model):
     _name = 'leads.logic'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Leads'
 
     leads_source = fields.Many2one('leads.sources', string='Leads source', required=True)
     name = fields.Char(string='Name')
@@ -17,16 +18,20 @@ class LeadsForm(models.Model):
     course_id = fields.Char(string='Course')
     lead_quality = fields.Selection([('good', 'Good'), ('bad', 'Bad')], string='Lead quality')
     place = fields.Char('Place')
-    leads_assign = fields.Many2one('res.users', string='Assign to')
+    leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
     lead_owner = fields.Many2one('hr.employee', string='Lead owner')
     seminar_lead_id = fields.Integer()
+    phone_number_second = fields.Char(string='Phone Number')
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
         default='draft')
     last_studied_course = fields.Char(string='Last studied course')
     _sql_constraints = [
         ('unique_phone_number', 'UNIQUE(phone_number)', 'Duplicate record based on creation time!'),
+        ('unique_phone_number_second', 'UNIQUE(phone_number_second)',
+         'A record with the same mobile number already exists!'),
     ]
+
     lead_qualification = fields.Selection(
         [('plus_one_science', 'Plus One Science'), ('plus_two_science', 'Plus Two Science'),
          ('plus_two_commerce', 'Plus Two Commerce'), ('plus_one_commerce', 'Plus One Commerce'),
@@ -47,17 +52,33 @@ class LeadsForm(models.Model):
             raise ValidationError('A record with the same mobile number already exists!')
         return super(LeadsForm, self).create(vals)
 
+    def multiple_leads_assigning(self):
+
+        active_ids = self.env.context.get('active_ids', [])
+        # sales = sale_obj.browse(active_ids)
+        print(active_ids, 'current rec')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Assign Leads Owner',
+            'res_model': 'leads.assigning.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'parent_obj': active_ids}
+
+        }
+
     def confirm(self):
         self.state = 'confirm'
 
-    @api.onchange('admission_status')
-    def _onchange_admission_status(self):
-        print('hi')
-        ss = self.env['seminar.students'].search([])
-        for rec in ss:
-            if self.admission_status == True:
-                if self.seminar_lead_id == rec.id:
-                    rec.admission_status = 'yes'
+    # @api.onchange('admission_status')
+    # def _onchange_admission_status(self):
+    #     print('hi')
+    #     ss = self.env['seminar.students'].search([])
+    #     for rec in ss:
+    #         if self.admission_status == True:
+    #             if self.seminar_lead_id == rec.id:
+    #                 rec.admission_status = 'yes'
 
     def leadcreation(self):
         if not self.sales_person_id:
@@ -118,3 +139,32 @@ class GenerateLeadLink(models.Model):
         leads = "leads_form/" + str(self.env.user.id)
         self.link = leads
         print('hhhj')
+
+
+class LeadsAssigningWizard(models.TransientModel):
+    _name = 'leads.assigning.wizard'
+
+    assigned_to = fields.Many2one('hr.employee', string='Assigned To')
+
+    def action_done(self):
+        # abc = self.env['leads.logic'].sudo().update({
+        #     'lead_owner': self.assigned_to
+        # })
+        print(self._context['parent_obj'], 'current rec')
+
+        aa = self.env['leads.logic'].search([])
+        for i in aa:
+            if i.id in self._context['parent_obj']:
+                i.leads_assign = self.assigned_to
+        # aa.lead_owner = self.assigned_to
+        # abc.lead_owner = self.assigned_to
+
+        # for i in abc:
+        #     if i:
+        #         print(i.id, 'selected only')
+        #         abc.lead_owner = self.assigned_to
+
+        print('hi')
+
+    def cancel(self):
+        print('hi')
