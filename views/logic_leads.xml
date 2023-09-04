@@ -61,6 +61,18 @@
             action= record.multiple_leads_assigning()
         </field>
     </record>
+    <record id="leads_search_filter" model="ir.ui.view">
+        <field name="model">leads.logic</field>
+        <field name="arch" type="xml">
+            <search string="Filters">
+                <field name="phone_number" string="Mobile Number"/>
+                <field name="phone_number_second" string="Alternate Mobile Number"/>
+                <field name="course_id" string="Course"/>
+
+
+            </search>
+        </field>
+    </record>
     <record id="view_assigned_to_wizard" model="ir.ui.view">
         <field name="name">assigned_to.view</field>
         <field name="model">leads.assigning.wizard</field>
