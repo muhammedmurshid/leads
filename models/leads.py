@@ -1,21 +1,25 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from datetime import date, datetime, timedelta
 
 
 class LeadsForm(models.Model):
     _name = 'leads.logic'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Leads'
+    _rec_name = 'name'
 
     leads_source = fields.Many2one('leads.sources', string='Leads source', required=True)
-    name = fields.Char(string='Name')
+    name = fields.Char(string='Name', required=True)
     email_address = fields.Char(string='Email address')
     phone_number = fields.Char(string='Mobile number', required=True, copy=False)
     probability = fields.Float(string='Probability')
     admission_status = fields.Boolean(string='Admission')
     date_of_adding = fields.Date(string='Date of adding', default=fields.Date.today())
-    last_update_date = fields.Date(string='Last updated date', default=fields.Date.today())
+    last_update_date = fields.Datetime(string='Last updated date', )
     course_id = fields.Char(string='Course')
+    reference_no = fields.Char(string='Sequence Number', required=True,
+                               readonly=True, default=lambda self: _('New'))
     lead_quality = fields.Selection([('good', 'Good'), ('bad', 'Bad')], string='Lead quality')
     place = fields.Char('Place')
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
@@ -48,6 +52,9 @@ class LeadsForm(models.Model):
 
     @api.model
     def create(self, vals):
+        if vals.get('reference_no', _('New')) == _('New'):
+            vals['reference_no'] = self.env['ir.sequence'].next_by_code(
+                'leads.logic') or _('New')
         existing_record = self.search([('phone_number', '=', vals.get('phone_number'))])
         if existing_record:
             # Handle the duplicate record, e.g., raise an error
@@ -58,7 +65,7 @@ class LeadsForm(models.Model):
     def _compute_display_value(self):
         for record in self:
             if record.sample:
-            # Modify the display value as needed based on the original field's value
+                # Modify the display value as needed based on the original field's value
                 modified_value = "Modified: "
                 record.sample = modified_value
 
@@ -79,9 +86,6 @@ class LeadsForm(models.Model):
                 'url': i.sample,
             }
 
-
-
-
     def multiple_leads_assigning(self):
 
         active_ids = self.env.context.get('active_ids', [])
@@ -99,6 +103,8 @@ class LeadsForm(models.Model):
         }
 
     def confirm(self):
+        for i in self.activity_ids:
+            i.action_feedback(feedback='confirmed')
         self.state = 'confirm'
 
     # @api.onchange('admission_status')
@@ -109,6 +115,39 @@ class LeadsForm(models.Model):
     #         if self.admission_status == True:
     #             if self.seminar_lead_id == rec.id:
     #                 rec.admission_status = 'yes'
+
+    def cron_seven_days_checking_lead(self):
+        print('working')
+        records = self.env['leads.logic'].search([('state', '=', 'confirm')])
+        users_ids = []
+        current_datetime = datetime.now()
+        current_date = current_datetime.date()
+
+        print(current_date, 'date')
+        seven_days_later = current_date + timedelta(days=7)
+        for rec in records:
+            if rec.date_of_adding:
+                print(rec.date_of_adding, 'date_of_adding')
+                if rec.date_of_adding + timedelta(days=7) == current_date:
+                    if rec.admission_status == False:
+                        # print(rec.id, 'id')
+                        rec.write({'state': 'draft'})
+                        users = rec.env.ref('leads.leads_admin').users
+                        for i in users:
+                            # users_ids.append(i.id)
+                            print(i.name, 'users')
+                            rec.activity_schedule('leads.mail_activity_for_returned_leads', user_id=i.id,
+                                                  note=f'Lead status reset to Draft as the students admission decision is pending.')
+                    else:
+                        print('no')
+                    print('hhi')
+                else:
+                    print('no')
+
+            print(rec.id, 'id')
+            print(rec.state, 'state')
+
+            # rec.state = 'draft'
 
     def leadcreation(self):
         if not self.sales_person_id:
@@ -132,6 +171,13 @@ class LeadsForm(models.Model):
 
     sales_person_id = fields.Many2one('res.users', string='Sales person')
 
+    @api.onchange('leads_source', 'lead_owner', 'name', 'email_address', 'phone_number', 'phone_number_second', 'place',
+                  'district', 'course_id', 'lead_qualification', 'last_studied_course', 'probability', 'leads_assign',
+                  'admission_status', 'lead_quality', 'sales_person_id')
+    def onchange_fields_dates(self):
+        for i in self:
+            i.last_update_date = fields.Datetime.now()
+
     def cancel_lead(self):
         self.state = 'cancel'
 
@@ -149,6 +195,12 @@ class LeadsForm(models.Model):
             self.make_visible_manager = True
 
     make_visible_manager = fields.Boolean(string="User", compute='get_manager')
+
+    def current_user_id(self):
+        for i in self:
+            i.current_user_id_int = self.env.user.id
+
+    current_user_id_int = fields.Integer(string='Current User ID', compute='current_user_id')
 
 
 class LeadsSources(models.Model):
