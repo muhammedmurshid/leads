@@ -48,7 +48,7 @@ class LeadsForm(models.Model):
                                  ('thiruvananthapuram', 'Thiruvananthapuram'), ('kottayam', 'Kottayam'),
                                  ('kozhikode', 'Kozhikode'), ('palakkad', 'Palakkad'), ('kannur', 'Kannur'),
                                  ('alappuzha', 'Alappuzha'), ('malappuram', 'Malappuram'), ('kasaragod', 'Kasaragod'),
-                                 ('thrissur', 'Thrissur'), ('idukki', 'Idukki')], string='District')
+                                 ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta')], string='District')
 
     @api.model
     def create(self, vals):
@@ -195,6 +195,22 @@ class LeadsForm(models.Model):
             self.make_visible_manager = True
 
     make_visible_manager = fields.Boolean(string="User", compute='get_manager')
+
+    # @api.depends('phone_number')
+    # def _compute_name_without_spaces(self):
+    #     for record in self:
+    #         record.name_without_spaces = record.phone_number.replace(' ', '')
+    @api.constrains('phone_number')
+    def _check_name(self):
+        for record in self:
+            if ' ' in record.phone_number:
+                record.phone_number = record.phone_number.replace(' ', '')
+
+    def button_remove_spaces(self):
+        rec = self.env['leads.logic'].search([])
+        for record in rec:
+            if ' ' in record.phone_number:
+                record.phone_number = record.phone_number.replace(' ', '')
 
     def current_user_id(self):
         for i in self:

@@ -150,6 +150,13 @@
 
         </field>
     </record>
+    <record id="action_set_remove_spaces" model="ir.actions.server">
+        <field name="name">Remove Phone Number Spaces</field>
+        <field name="model_id" ref="leads.model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="code">records.button_remove_spaces()</field>
+
+    </record>
     <record model="ir.actions.act_window" id="details_leads_view_form">
         <field name="name">Leads Details</field>
         <field name="res_model">leads.logic</field>
