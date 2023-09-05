@@ -22,6 +22,8 @@ class LeadsForm(models.Model):
     lead_owner = fields.Many2one('hr.employee', string='Lead owner')
     seminar_lead_id = fields.Integer()
     phone_number_second = fields.Char(string='Phone Number')
+    sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp', store=True)
+    field_to_display = fields.Char(string='Field to Display')
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
         default='draft')
@@ -51,6 +53,34 @@ class LeadsForm(models.Model):
             # Handle the duplicate record, e.g., raise an error
             raise ValidationError('A record with the same mobile number already exists!')
         return super(LeadsForm, self).create(vals)
+
+    @api.depends('sample')
+    def _compute_display_value(self):
+        for record in self:
+            if record.sample:
+            # Modify the display value as needed based on the original field's value
+                modified_value = "Modified: "
+                record.sample = modified_value
+
+    @api.depends('phone_number')
+    def get_phone_number_for_whatsapp(self):
+        for rec in self:
+            # modified_value = "Modified: "
+            # rec.sample = 'modified_value'
+            if rec.phone_number:
+                self.sample = 'https://web.whatsapp.com/send?phone=' + rec.phone_number
+
+    def whatsapp_click_button(self):
+        for i in self:
+            return {
+                'type': 'ir.actions.act_url',
+                'name': "Leads Whatsapp",
+                'target': 'new',
+                'url': i.sample,
+            }
+
+
+
 
     def multiple_leads_assigning(self):
 

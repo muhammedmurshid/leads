@@ -28,6 +28,9 @@
                             <field name="district"/>
                             <field name="course_id"/>
                             <field name="lead_qualification"/>
+                            <field name="sample" widget="url" invisible="1"/>
+                            <!--                            <field name="display_value"/>-->
+
                             <field name="last_studied_course"/>
                             <field name="make_visible_manager" invisible="1"/>
                             <field name="seminar_lead_id" invisible="1"/>
@@ -119,8 +122,12 @@
                 <field name="leads_source"/>
                 <field name="name"/>
                 <field name="phone_number" widget="phone"/>
+                <button name="whatsapp_click_button" class="fa fa-whatsapp btn-success" type="object" />
                 <field name="course_id"/>
+<!--                <field name="sample" widget="url" string="WhatsApp"/>-->
                 <field name="last_studied_course"/>
+
+                <!--                <field name="sample" t-field="record.display_field"/>-->
                 <field name="probability" widget="percentage"/>
                 <field name="last_update_date"/>
                 <field name="admission_status"/>
