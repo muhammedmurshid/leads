@@ -20,7 +20,7 @@ class LeadsForm(models.Model):
     course_id = fields.Char(string='Course')
     reference_no = fields.Char(string='Sequence Number', required=True,
                                readonly=True, default=lambda self: _('New'))
-    lead_quality = fields.Selection([('good', 'Good'), ('bad', 'Bad')], string='Lead quality')
+    lead_quality = fields.Selection([('Interested', 'Interested'), ('Bad Lead', 'Bad Lead'), ('Not Interested', 'Not Interested'), ('Not responding', 'Not responding'), ('Under follow-up', 'Under follow-up'), ('Slightly Positive', 'Slightly Positive')], string='Lead quality')
     place = fields.Char('Place')
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
     lead_owner = fields.Many2one('hr.employee', string='Lead owner')
