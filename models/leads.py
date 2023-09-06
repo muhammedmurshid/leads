@@ -9,34 +9,45 @@ class LeadsForm(models.Model):
     _description = 'Leads'
     _rec_name = 'name'
 
-    leads_source = fields.Many2one('leads.sources', string='Leads source', required=True)
+    leads_source = fields.Many2one('leads.sources', string='Leads Source', required=True)
     name = fields.Char(string='Name', required=True)
-    email_address = fields.Char(string='Email address')
-    phone_number = fields.Char(string='Mobile number', required=True, copy=False)
+    email_address = fields.Char(string='Email Address')
+    phone_number = fields.Char(string='Mobile Number', required=True, copy=False)
     probability = fields.Float(string='Probability')
     admission_status = fields.Boolean(string='Admission')
-    date_of_adding = fields.Date(string='Date of adding', default=fields.Date.today())
-    last_update_date = fields.Datetime(string='Last updated date', )
-    course_id = fields.Char(string='Course')
+    date_of_adding = fields.Date(string='Date of Adding', default=fields.Date.today())
+    last_update_date = fields.Datetime(string='Last Updated Date', )
+    course_id = fields.Char(string='Course', required=True)
     reference_no = fields.Char(string='Sequence Number', required=True,
                                readonly=True, default=lambda self: _('New'))
-    lead_quality = fields.Selection([('good', 'Good'), ('bad', 'Bad')], string='Lead quality')
+    lead_quality = fields.Selection(
+        [('Interested', 'Interested'), ('bad_lead', 'Bad Lead'), ('not_interested', 'Not Interested'),
+         ('not_responding', 'Not Responding'), ('under_follow_up', 'Under Follow-up'),
+         ('slightly_positive', 'Slightly Positive')], string='Lead Quality', required=True)
     place = fields.Char('Place')
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
-    lead_owner = fields.Many2one('hr.employee', string='Lead owner')
+    lead_owner = fields.Many2one('hr.employee', string='Lead Owner')
     seminar_lead_id = fields.Integer()
     phone_number_second = fields.Char(string='Phone Number')
     sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp', store=True)
     field_to_display = fields.Char(string='Field to Display')
+    lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
         default='draft')
-    last_studied_course = fields.Char(string='Last studied course')
-    _sql_constraints = [
-        ('unique_phone_number', 'UNIQUE(phone_number)', 'Duplicate record based on creation time!'),
-        ('unique_phone_number_second', 'UNIQUE(phone_number_second)',
-         'A record with the same mobile number already exists!'),
-    ]
+    last_studied_course = fields.Char(string='Last Studied Course')
+    referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
+                                   string='Referred By')
+    referred_by_id = fields.Many2one('hr.employee', string='Referred Person')
+    referred_by_name = fields.Char(string='Referred Person')
+    referred_by_number = fields.Char(string='Referred Person Number')
+    batch_preference = fields.Char(string='Batch Preference')
+    branch_id = fields.Many2one('logic.branches', string='Branch')
+    # _sql_constraints = [
+    #     ('unique_phone_number', 'UNIQUE(phone_number)', 'Duplicate record based on creation time!'),
+    #     ('unique_phone_number_second', 'UNIQUE(phone_number_second)',
+    #      'A record with the same mobile number already exists!' + 'unique_name'),
+    # ]
 
     lead_qualification = fields.Selection(
         [('plus_one_science', 'Plus One Science'), ('plus_two_science', 'Plus Two Science'),
@@ -48,7 +59,8 @@ class LeadsForm(models.Model):
                                  ('thiruvananthapuram', 'Thiruvananthapuram'), ('kottayam', 'Kottayam'),
                                  ('kozhikode', 'Kozhikode'), ('palakkad', 'Palakkad'), ('kannur', 'Kannur'),
                                  ('alappuzha', 'Alappuzha'), ('malappuram', 'Malappuram'), ('kasaragod', 'Kasaragod'),
-                                 ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta')], string='District')
+                                 ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta')],
+                                string='District')
 
     @api.model
     def create(self, vals):
@@ -57,8 +69,16 @@ class LeadsForm(models.Model):
                 'leads.logic') or _('New')
         existing_record = self.search([('phone_number', '=', vals.get('phone_number'))])
         if existing_record:
+            for record in existing_record:
             # Handle the duplicate record, e.g., raise an error
-            raise ValidationError('A record with the same mobile number already exists!')
+                raise ValidationError('A record with the same mobile number already exists! created by ' + record.create_uid.name)
+        existing_record_second = self.search([('phone_number_second', '=', vals.get('phone_number_second'))])
+        if existing_record_second:
+            for rd in existing_record_second:
+                if self.phone_number_second:
+            # Handle the duplicate record, e.g., raise an error
+                    raise ValidationError(
+                        'A record with the same mobile number already exists! created by ' + rd.create_uid.name)
         return super(LeadsForm, self).create(vals)
 
     @api.depends('sample')
