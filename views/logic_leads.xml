@@ -13,6 +13,7 @@
                     <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"
                             attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel']),('make_visible_manager', '=', True)]}"/>
                     <button name="cancel_lead" type="object" states='draft,crm,confirm' string="Cancel"/>
+                    <button name="reset_to_draft" type="object" states='cancel' string="Reset To Draft" groups="leads.leads_admin"/>
                 </header>
                 <sheet>
                     <h2>
@@ -148,7 +149,7 @@
                 <field name="course_id"/>
                 <!--                <field name="sample" widget="url" string="WhatsApp"/>-->
                 <field name="last_studied_course"/>
-
+                <field name="district"/>
                 <!--                <field name="sample" t-field="record.display_field"/>-->
                 <field name="probability" widget="percentage"/>
                 <field name="last_update_date"/>

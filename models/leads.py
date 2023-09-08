@@ -60,7 +60,7 @@ class LeadsForm(models.Model):
                                  ('kozhikode', 'Kozhikode'), ('palakkad', 'Palakkad'), ('kannur', 'Kannur'),
                                  ('alappuzha', 'Alappuzha'), ('malappuram', 'Malappuram'), ('kasaragod', 'Kasaragod'),
                                  ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta')],
-                                string='District')
+                                string='District', required=True)
 
     @api.model
     def create(self, vals):
@@ -80,6 +80,9 @@ class LeadsForm(models.Model):
                     raise ValidationError(
                         'A record with the same mobile number already exists! created by ' + rd.create_uid.name)
         return super(LeadsForm, self).create(vals)
+
+    def reset_to_draft(self):
+        self.state = 'draft'
 
     @api.depends('sample')
     def _compute_display_value(self):
