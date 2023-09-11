@@ -13,7 +13,8 @@
                     <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"
                             attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel']),('make_visible_manager', '=', True)]}"/>
                     <button name="cancel_lead" type="object" states='draft,crm,confirm' string="Cancel"/>
-                    <button name="reset_to_draft" type="object" states='cancel' string="Reset To Draft" groups="leads.leads_admin"/>
+                    <button name="reset_to_draft" type="object" states='cancel' string="Reset To Draft"
+                            groups="leads.leads_admin"/>
                 </header>
                 <sheet>
                     <h2>
@@ -22,7 +23,7 @@
                     <group>
                         <group>
                             <field name="lead_channel" attrs="{'readonly':[('make_visible_manager', '=', True)]}"/>
-                            <field name="leads_source"/>
+                            <field name="leads_source" options="{'no_create': True, 'no_create_edit':True}"/>
                             <field name="lead_owner"/>
                             <field name="name"/>
                             <field name="email_address"/>
@@ -53,9 +54,11 @@
                             <field name="sales_person_id"
                                    attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel']),('make_visible_manager', '=', True)]}"/>
                             <field name="referred_by"/>
-                            <field name="referred_by_name" attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
+                            <field name="referred_by_name"
+                                   attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
                             <field name="referred_by_id" attrs="{'invisible':[('referred_by', '!=', 'staff')]}"/>
-                            <field name="referred_by_number" attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
+                            <field name="referred_by_number"
+                                   attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
                             <field name="batch_preference"/>
 
                         </group>
@@ -93,11 +96,16 @@
                 <field name="phone_number" string="Mobile Number"/>
                 <field name="phone_number_second" string="Alternate Mobile Number"/>
                 <field name="course_id" string="Course"/>
-
+                <filter string="To Approve" name="state" domain="[('state', '=','draft')]"/>
+                <filter string="assign" name="leads_assign" context="{'group_by': 'leads_assign'}"/>
+<!--                <group expand="0" string="Group By">-->
+<!--                    <filter string="assign" name="leads_assign" context="{'group_by': 'leads_assign'}"/>-->
+<!--                </group>-->
 
             </search>
         </field>
     </record>
+
     <record id="view_assigned_to_wizard" model="ir.ui.view">
         <field name="name">assigned_to.view</field>
         <field name="model">leads.assigning.wizard</field>
@@ -136,10 +144,26 @@
             </form>
         </field>
     </record>
+    <!--    <record id="leads_search_group_filter_cus" model="ir.ui.view">-->
+    <!--        <field name="name">leads.search.view</field>-->
+    <!--        <field name="model">leads.logic</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <search>-->
+    <!--                <filter string="To Approve" name="state" domain="[('state', '=','draft')]"/>-->
+    <!--                <group expand="0" string="Group By">-->
+    <!--                    <filter string="assign" name="leads_assign" context="{'group_by': 'leads_assign'}"/>-->
+    <!--                </group>-->
+    <!--            </search>-->
+    <!--        </field>-->
+    <!--    </record>-->
     <record id="leads_logic_tree" model="ir.ui.view">
         <field name="name">Leads Details</field>
         <field name="model">leads.logic</field>
         <field name="arch" type="xml">
+            <!--            <search string="Filters">-->
+
+            <!--                <filter name="group_leads_assign" string="Employee" context="{'group_by':'leads_assign'}"/>-->
+            <!--            </search>-->
             <tree>
                 <field name="reference_no"/>
                 <field name="leads_source"/>
@@ -160,6 +184,23 @@
 
         </field>
     </record>
+    <record id="logic_activity_leads" model="ir.ui.view">
+        <field name="name">leads.logic.activity</field>
+        <field name="model">leads.logic</field>
+        <field name="arch" type="xml">
+            <activity string="Leads">
+                <templates>
+                    <div t-name="activity-box">
+                        <div>
+                            <field name="name" display="full"/>
+                            <field name="leads_assign" muted="1" display="full"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
     <record id="action_set_remove_spaces" model="ir.actions.server">
         <field name="name">Remove Phone Number Spaces</field>
         <field name="model_id" ref="leads.model_leads_logic"/>
@@ -184,6 +225,7 @@
     </record>
     <menuitem name="Leads Source" id="menu_leads_source" action="leads_source_view_form"
               parent="menu_leads_details"
+              groups="leads.leads_admin"
               sequence="2"/>
 
 
