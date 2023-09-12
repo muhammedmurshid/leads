@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.actions.act_window" id="lead_activity_view_action">
+        <field name="name">Leads Activity</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="domain">[('res_model', '=', 'leads.logic')]</field>
+    </record>
+    <record id="logic_leads_calendar" model="ir.ui.view">
+        <field name="name">leads.calendar.logic</field>
+        <field name="model">mail.activity</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Follow Up Activity" create="0" mode="month" date_start="date_deadline"
+                      color="user_id" hide_time="true" event_limit="5">
+                <field name="user_id"/>
+                <field name="lead_id" avatar_field="image_128"/>
+                <field name="activity_type_id" filters="1" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+    <menuitem name="Follow Up Activity" id="menu_leads_activity" action="lead_activity_view_action"
+              parent="menu_leads_details"
+              groups="leads.leads_admin"
+              sequence="3"/>
+    <record id="view_inherit_activity_leads" model="ir.ui.view">
+        <field name="name">leads.activity.inherit</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <field name="user_id"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="assign_to" invisible="1"/>
+                <field name="lead_id" groups="leads.leads_admin"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="leads_tree_inherit_activity" model="ir.ui.view">
+        <field name="name">tree.inherit.leads</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='res_name']"
+                   position="after">
+                <field name="user_id" groups="leads.leads_admin"/>
+                <field name="lead_id" groups="leads.leads_admin"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="group_by_assign_to_leads" model="ir.ui.view">
+        <field name="name">leads.search.view</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_search"/>
+        <field name="arch" type="xml">
+            <search>
+                <group expand="0" string="Group By">
+                    <filter name="group_assign_to" string="Assign"
+                            context="{'group_by':'user_id'}"/>
+
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -98,9 +98,9 @@
                 <field name="course_id" string="Course"/>
                 <filter string="To Approve" name="state" domain="[('state', '=','draft')]"/>
                 <filter string="assign" name="leads_assign" context="{'group_by': 'leads_assign'}"/>
-<!--                <group expand="0" string="Group By">-->
-<!--                    <filter string="assign" name="leads_assign" context="{'group_by': 'leads_assign'}"/>-->
-<!--                </group>-->
+                <!--                <group expand="0" string="Group By">-->
+                <!--                    <filter string="assign" name="leads_assign" context="{'group_by': 'leads_assign'}"/>-->
+                <!--                </group>-->
 
             </search>
         </field>
@@ -184,12 +184,26 @@
 
         </field>
     </record>
+<!--    <record model="ir.filters" id="leads_activity_filter">-->
+<!--        <field name="name">Leads</field>-->
+<!--        <field name="model_id" ref="model_leads_logic"/>-->
+<!--        <field name="user_id" eval="False"/>-->
+<!--        <field name="domain">[('state', '=', 'draft')]</field>-->
+<!--        <field name="context">{}</field>-->
+<!--    </record>-->
+<!--    <record id="leads.logic_activity_leads"-->
+<!--            model="ir.actions.act_window">-->
+<!--        <field name="context">{"search_default_customer":1}</field>-->
+<!--    </record>-->
     <record id="logic_activity_leads" model="ir.ui.view">
         <field name="name">leads.logic.activity</field>
         <field name="model">leads.logic</field>
         <field name="arch" type="xml">
             <activity string="Leads">
                 <templates>
+                    <div>
+                        <field name="name"/>
+                    </div>
                     <div t-name="activity-box">
                         <div>
                             <field name="name" display="full"/>
@@ -212,6 +226,7 @@
         <field name="name">Leads Details</field>
         <field name="res_model">leads.logic</field>
         <field name="view_mode">tree,form,activity</field>
+
     </record>
     <menuitem name="Leads" id="menu_leads_details" action="details_leads_view_form"
               web_icon="leads/static/description/icon.png"
@@ -223,6 +238,7 @@
         <field name="res_model">leads.sources</field>
         <field name="view_mode">tree,form</field>
     </record>
+
     <menuitem name="Leads Source" id="menu_leads_source" action="leads_source_view_form"
               parent="menu_leads_details"
               groups="leads.leads_admin"

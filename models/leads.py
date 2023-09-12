@@ -70,19 +70,26 @@ class LeadsForm(models.Model):
         existing_record = self.search([('phone_number', '=', vals.get('phone_number'))])
         if existing_record:
             for record in existing_record:
-            # Handle the duplicate record, e.g., raise an error
-                raise ValidationError('A record with the same mobile number already exists! created by ' + record.create_uid.name)
+                # Handle the duplicate record, e.g., raise an error
+                raise ValidationError(
+                    'A record with the same mobile number already exists! created by ' + record.create_uid.name)
         existing_record_second = self.search([('phone_number_second', '=', vals.get('phone_number_second'))])
         if existing_record_second:
             for rd in existing_record_second:
                 if self.phone_number_second:
-            # Handle the duplicate record, e.g., raise an error
+                    # Handle the duplicate record, e.g., raise an error
                     raise ValidationError(
                         'A record with the same mobile number already exists! created by ' + rd.create_uid.name)
         return super(LeadsForm, self).create(vals)
 
     def reset_to_draft(self):
         self.state = 'draft'
+
+    # @api.onchange('branch_id')
+    # def onchange_branch_id(self):
+    #     # raise ValidationError(self.activity_ids)
+    #     print(self.activity_ids, 'activity ids')
+    #     print('dfksdhfgh')
 
     @api.depends('sample')
     def _compute_display_value(self):
@@ -147,11 +154,14 @@ class LeadsForm(models.Model):
         current_date = current_datetime.date()
 
         print(current_date, 'date')
-        seven_days_later = current_date + timedelta(days=7)
+
         for rec in records:
             if rec.date_of_adding:
                 print(rec.date_of_adding, 'date_of_adding')
+                seven_days_later = rec.date_of_adding + timedelta(days=7)
+                print(seven_days_later, 'seven_days_later')
                 if rec.date_of_adding + timedelta(days=7) == current_date:
+                    print('ya')
                     if rec.admission_status == False:
                         # print(rec.id, 'id')
                         rec.write({'state': 'draft'})
@@ -160,6 +170,7 @@ class LeadsForm(models.Model):
                             # users_ids.append(i.id)
                             print(i.name, 'users')
                             rec.activity_schedule('leads.mail_activity_for_returned_leads', user_id=i.id,
+                                                  lead_id=rec.id, assign_to=rec.leads_assign.id,
                                                   note=f'Lead status reset to Draft as the students admission decision is pending.')
                     else:
                         print('no')
@@ -245,6 +256,7 @@ class LeadsForm(models.Model):
 class LeadsSources(models.Model):
     _name = 'leads.sources'
     _inherit = 'mail.thread'
+    _description = 'Leads Sources'
 
     name = fields.Char('Name', required=True)
 

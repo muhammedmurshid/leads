@@ -10,6 +10,7 @@
         'views/logic_leads.xml',
         'views/lead_web_form.xml',
         'data/scheduled_action.xml',
+        'views/activity_view.xml',
         # 'views/link_generation.xml',
 
     ],
