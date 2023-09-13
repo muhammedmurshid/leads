@@ -6,7 +6,10 @@ class MailInheritActivityLeads(models.Model):
 
     assign_to = fields.Many2one('hr.employee', string='Assigned To')
     lead_id = fields.Many2one('leads.logic', string='Lead')
-    user_id = fields.Many2one('res.users', string='User')
+
+    def _compute_display_name(self):
+        for activity in self:
+            activity.display_name = activity.activity_type_id.name + ' : ' + activity.res_name
 
     @api.model
     def default_get(self, fields):
@@ -18,9 +21,21 @@ class MailInheritActivityLeads(models.Model):
                 if lead.id == res.get('res_id'):
                     print(lead.leads_assign.name, 'assigned to')
                     if lead.leads_assign:
+
+                        res.update({'lead_id': lead.id,
+                                    'user_id': lead.leads_assign.id})
                         # self.user_id = lead.leads_assign.user_id.id
-                        res['lead_id'] = lead.leads_assign.user_id.id
-                        res['lead_id'] = lead.id
-            # print(res.get('res_id'), 'id')
+                        # res['lead_id'] = lead.leads_assign.user_id.id
+                        # res['lead_id'] = lead.id
+
+                    #     return lead.leads_assign.user_id.id
+                    # else:
+                    #     return self.env.user.id
+
         return res
+
+    # user_id = fields.Many2one(
+    #     'res.users', 'Assigned to',
+    #     default=default_get,
+    #     index=True, required=True)
 

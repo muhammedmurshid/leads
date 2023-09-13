@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-     <record id="mail_activity_for_returned_leads" model="mail.activity.type">
+    <record id="mail_activity_for_returned_leads" model="mail.activity.type">
         <field name="name">Return to Draft</field>
         <field name="res_model_id" ref="leads.model_leads_logic"/>
         <field name="delay_count">30</field>
     </record>
     <data>
-        <record id="seven_days_after_return_state" model="ir.cron">
-            <field name="name">Seven Days After Checking Lead Status</field>
-            <field name="model_id" ref="model_leads_logic"/>
-            <field name="state">code</field>
-            <field name="code">model.cron_seven_days_checking_lead()</field>
-            <field name='interval_number'>1</field>
-            <field name='interval_type'>days</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
-        </record>
+        <!--        <record id="seven_days_after_return_state" model="ir.cron">-->
+        <!--            <field name="name">Seven Days After Checking Lead Status</field>-->
+        <!--            <field name="model_id" ref="model_leads_logic"/>-->
+        <!--            <field name="state">code</field>-->
+        <!--            <field name="code">model.cron_seven_days_checking_lead()</field>-->
+        <!--            <field name='interval_number'>1</field>-->
+        <!--            <field name='interval_type'>days</field>-->
+        <!--            <field name="numbercall">-1</field>-->
+        <!--            <field name="doall" eval="False"/>-->
+        <!--        </record>-->
     </data>
+    <record model="ir.actions.server" id="action_server_change_lead_channel">
+        <field name="name">Change Lead Channel</field>
+        <field name="model_id" ref="model_leads_logic"/>
+        <field name="binding_model_id" ref="model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                    action = records.change_leads_channel_name()
+        </field>
+    </record>
 </odoo>

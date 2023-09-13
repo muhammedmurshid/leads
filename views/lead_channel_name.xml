@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="channel_name_wizard" model="ir.ui.view">
+            <field name="name">Channel Name wizard</field>
+            <field name="model">channel.name.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="channel_name"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_launch" string="Change" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

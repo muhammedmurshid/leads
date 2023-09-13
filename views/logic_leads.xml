@@ -170,6 +170,7 @@
                 <field name="name"/>
                 <field name="phone_number" widget="phone"/>
                 <button name="whatsapp_click_button" class="fa fa-whatsapp btn-success" type="object"/>
+                <field name="phone_number_second" widget="phone"/>
                 <field name="course_id"/>
                 <!--                <field name="sample" widget="url" string="WhatsApp"/>-->
                 <field name="last_studied_course"/>

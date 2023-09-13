@@ -11,6 +11,7 @@
         'views/lead_web_form.xml',
         'data/scheduled_action.xml',
         'views/activity_view.xml',
+        'views/lead_channel_name.xml',
         # 'views/link_generation.xml',
 
     ],

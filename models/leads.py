@@ -252,6 +252,23 @@ class LeadsForm(models.Model):
 
     current_user_id_int = fields.Integer(string='Current User ID', compute='current_user_id')
 
+    def change_leads_channel_name(self):
+
+        for i in self:
+            print(i.name, 'name')
+        print('hi')
+        active_ids = self.env.context.get('active_ids', [])
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Leads Channel',
+            'res_model': 'channel.name.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'parent_obj': active_ids}
+
+        }
+
 
 class LeadsSources(models.Model):
     _name = 'leads.sources'
