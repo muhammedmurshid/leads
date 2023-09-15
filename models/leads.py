@@ -10,7 +10,7 @@ class LeadsForm(models.Model):
     _rec_name = 'name'
 
     leads_source = fields.Many2one('leads.sources', string='Leads Source', required=True)
-    name = fields.Char(string='Name', required=True)
+    name = fields.Char(string='Lead Name', required=True)
     email_address = fields.Char(string='Email Address')
     phone_number = fields.Char(string='Mobile Number', required=True, copy=False)
     probability = fields.Float(string='Probability')
@@ -23,7 +23,8 @@ class LeadsForm(models.Model):
     lead_quality = fields.Selection(
         [('Interested', 'Interested'), ('bad_lead', 'Bad Lead'), ('not_interested', 'Not Interested'),
          ('not_responding', 'Not Responding'), ('under_follow_up', 'Under Follow-up'),
-         ('slightly_positive', 'Slightly Positive')], string='Lead Quality', required=True)
+         ('slightly_positive', 'Slightly Positive'), ('already_took_admission', 'Already Took Admission')],
+        string='Lead Quality', required=True)
     place = fields.Char('Place')
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
     lead_owner = fields.Many2one('hr.employee', string='Lead Owner')
@@ -59,8 +60,11 @@ class LeadsForm(models.Model):
                                  ('thiruvananthapuram', 'Thiruvananthapuram'), ('kottayam', 'Kottayam'),
                                  ('kozhikode', 'Kozhikode'), ('palakkad', 'Palakkad'), ('kannur', 'Kannur'),
                                  ('alappuzha', 'Alappuzha'), ('malappuram', 'Malappuram'), ('kasaragod', 'Kasaragod'),
-                                 ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta')],
+                                 ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta'),
+                                 ('abroad', 'Abroad'), ('other', 'Other')],
+
                                 string='District', required=True)
+    remarks = fields.Char(string='Remarks')
 
     @api.model
     def create(self, vals):
@@ -89,7 +93,7 @@ class LeadsForm(models.Model):
     # def onchange_branch_id(self):
     #     # raise ValidationError(self.activity_ids)
     #     print(self.activity_ids, 'activity ids')
-    #     print('dfksdhfgh')
+    #     print('d)
 
     @api.depends('sample')
     def _compute_display_value(self):

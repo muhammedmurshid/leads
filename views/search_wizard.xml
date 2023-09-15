@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="wizard_leads_search" model="ir.ui.view">
+        <field name="name">Leads</field>
+        <field name="model">search.wizard.lead</field>
+        <field name="arch" type="xml">
+            <form string="Search Leads">
+                <group>
+                    <group class="oe_title">
+                        <field name="mobile" placeholder="Search Number"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Search" class="oe_highlight" type="object" name='action_search'/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="wizard_leads_search_response" model="ir.ui.view">
+        <field name="name">Response</field>
+        <field name="model">searched.leads.response</field>
+        <field name="arch" type="xml">
+            <form string="Response">
+                <div>
+                    <h3 align="center">
+                        <field name="owner"/>
+                    </h3>
+                </div>
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="search_leads_wizard_action" model="ir.actions.act_window">
+        <field name="name">Leads Search</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">search.wizard.lead</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wizard_leads_search"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="Search Leads" id="menu_search_leads_for_res"
+              action="search_leads_wizard_action"
+              parent="menu_leads_details"
+              groups="leads.lead_finder"
+              sequence="4"/>
+</odoo>

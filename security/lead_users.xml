@@ -13,5 +13,9 @@
         <field name="name">Leads User</field>
         <field name="category_id" ref="users_for_leads"/>
     </record>
+    <record id="lead_finder" model="res.groups">
+        <field name="name">Lead Finder</field>
+        <field name="category_id" ref="users_for_leads"/>
+    </record>
 
 </odoo>
