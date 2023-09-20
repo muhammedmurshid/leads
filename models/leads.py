@@ -65,6 +65,7 @@ class LeadsForm(models.Model):
 
                                 string='District', required=True)
     remarks = fields.Char(string='Remarks')
+    parent_number = fields.Char('Parent Number')
 
     @api.model
     def create(self, vals):
@@ -141,14 +142,18 @@ class LeadsForm(models.Model):
             i.action_feedback(feedback='confirmed')
         self.state = 'confirm'
 
-    # @api.onchange('admission_status')
-    # def _onchange_admission_status(self):
-    #     print('hi')
-    #     ss = self.env['seminar.students'].search([])
-    #     for rec in ss:
-    #         if self.admission_status == True:
-    #             if self.seminar_lead_id == rec.id:
-    #                 rec.admission_status = 'yes'
+    @api.onchange('admission_status')
+    def _onchange_admission_status(self):
+        print('hi', self.seminar_lead_id)
+        ss = self.env['seminar.students'].search([('id', '=', self.seminar_lead_id)])
+        print(ss.whatsapp_number, 'jfhsdjfhgfaweyuwe')
+
+        if self.admission_status == True:
+            ss.admission_status = 'yes'
+        # for rec in ss:
+        #     if self.admission_status == True:
+        #         if self.seminar_lead_id == rec.id:
+        #             rec.admission_status = 'yes'
 
     def cron_seven_days_checking_lead(self):
         print('working')

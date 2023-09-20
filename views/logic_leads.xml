@@ -28,6 +28,7 @@
                             <field name="email_address"/>
                             <field name="phone_number" widget="phone"/>
                             <field name="phone_number_second" widget="phone"/>
+                            <field name="parent_number"/>
                             <field name="district"/>
                             <field name="place"/>
 

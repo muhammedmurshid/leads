@@ -17,5 +17,9 @@
         <field name="name">Lead Finder</field>
         <field name="category_id" ref="users_for_leads"/>
     </record>
+    <record id="lead_marketing_staff" model="res.groups">
+        <field name="name">Lead Marketing Staff</field>
+        <field name="category_id" ref="users_for_leads"/>
+    </record>
 
 </odoo>
