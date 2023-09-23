@@ -40,6 +40,7 @@
                             <field name="seminar_lead_id" invisible="1"/>
                         </group>
                         <group>
+                            <field name="college_name"/>
                             <field name="course_id"/>
                             <field name="lead_qualification"/>
                             <field name="last_studied_course"/>
@@ -102,6 +103,8 @@
         <field name="arch" type="xml">
             <search string="Filters">
                 <field name="phone_number" string="Mobile Number"/>
+                <field name="lead_channel" string="Lead Channel"/>
+                <field name="name" string="Lead Name"/>
                 <field name="phone_number_second" string="Alternate Mobile Number"/>
                 <field name="course_id" string="Course"/>
                 <filter string="To Approve" name="state" domain="[('state', '=','draft')]"/>

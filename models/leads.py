@@ -37,6 +37,7 @@ class LeadsForm(models.Model):
         [('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
         default='draft')
     last_studied_course = fields.Char(string='Last Studied Course')
+    college_name = fields.Char(string='College/School')
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
                                    string='Referred By')
     referred_by_id = fields.Many2one('hr.employee', string='Referred Person')
@@ -77,7 +78,7 @@ class LeadsForm(models.Model):
             for record in existing_record:
                 # Handle the duplicate record, e.g., raise an error
                 raise ValidationError(
-                    'A record with the same mobile number already exists! created by ' + record.create_uid.name)
+                    'A record with the same mobile number already exists! created by ' + record.create_uid.name + ' ' + 'number is ' + record.phone_number)
         existing_record_second = self.search([('phone_number_second', '=', vals.get('phone_number_second'))])
         if existing_record_second:
             for rd in existing_record_second:

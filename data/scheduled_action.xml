@@ -5,6 +5,11 @@
         <field name="res_model_id" ref="leads.model_leads_logic"/>
         <field name="delay_count">30</field>
     </record>
+    <record id="mail_seminar_leads_done" model="mail.activity.type">
+        <field name="name">Confirmed</field>
+        <field name="res_model_id" ref="leads.model_leads_logic"/>
+        <field name="delay_count">10</field>
+    </record>
     <data>
         <!--        <record id="seven_days_after_return_state" model="ir.cron">-->
         <!--            <field name="name">Seven Days After Checking Lead Status</field>-->
