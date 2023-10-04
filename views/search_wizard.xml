@@ -24,7 +24,12 @@
             <form string="Response">
                 <div>
                     <h3 align="center">
+
                         <field name="owner"/>
+                        <br/>
+                        <field name="course"/><br/>
+                        <field name="date"/>
+
                     </h3>
                 </div>
                 <footer>

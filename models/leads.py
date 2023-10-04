@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from datetime import date, datetime, timedelta
 
 
@@ -29,13 +29,13 @@ class LeadsForm(models.Model):
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
     lead_owner = fields.Many2one('hr.employee', string='Lead Owner')
     seminar_lead_id = fields.Integer()
-    phone_number_second = fields.Char(string='Phone Number')
+    phone_number_second = fields.Char(string='Phone Number', unique=False)
     sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp', store=True)
     field_to_display = fields.Char(string='Field to Display')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
-        default='draft')
+        default='draft', tracking=True)
     last_studied_course = fields.Char(string='Last Studied Course')
     college_name = fields.Char(string='College/School')
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
@@ -45,11 +45,6 @@ class LeadsForm(models.Model):
     referred_by_number = fields.Char(string='Referred Person Number')
     batch_preference = fields.Char(string='Batch Preference')
     branch_id = fields.Many2one('logic.branches', string='Branch')
-    # _sql_constraints = [
-    #     ('unique_phone_number', 'UNIQUE(phone_number)', 'Duplicate record based on creation time!'),
-    #     ('unique_phone_number_second', 'UNIQUE(phone_number_second)',
-    #      'A record with the same mobile number already exists!' + 'unique_name'),
-    # ]
 
     lead_qualification = fields.Selection(
         [('plus_one_science', 'Plus One Science'), ('plus_two_science', 'Plus Two Science'),
@@ -73,29 +68,28 @@ class LeadsForm(models.Model):
         if vals.get('reference_no', _('New')) == _('New'):
             vals['reference_no'] = self.env['ir.sequence'].next_by_code(
                 'leads.logic') or _('New')
+
         existing_record = self.search([('phone_number', '=', vals.get('phone_number'))])
         if existing_record:
             for record in existing_record:
                 # Handle the duplicate record, e.g., raise an error
                 raise ValidationError(
                     'A record with the same mobile number already exists! created by ' + record.create_uid.name + ' ' + 'number is ' + record.phone_number)
-        existing_record_second = self.search([('phone_number_second', '=', vals.get('phone_number_second'))])
-        if existing_record_second:
-            for rd in existing_record_second:
-                if self.phone_number_second:
-                    # Handle the duplicate record, e.g., raise an error
-                    raise ValidationError(
-                        'A record with the same mobile number already exists! created by ' + rd.create_uid.name)
+
         return super(LeadsForm, self).create(vals)
+
+    @api.constrains('phone_number_second')
+    def check_number_duplicate(self):
+        for record in self:
+            if record.phone_number_second:
+                duplicate_records = self.search(
+                    [('phone_number_second', '=', record.phone_number_second), ('id', '!=', record.id)])
+                if duplicate_records:
+                    raise ValidationError(
+                        'This number already exists in the records created by ' + record.create_uid.name + ' ' + 'number is ' + str(record.phone_number_second))
 
     def reset_to_draft(self):
         self.state = 'draft'
-
-    # @api.onchange('branch_id')
-    # def onchange_branch_id(self):
-    #     # raise ValidationError(self.activity_ids)
-    #     print(self.activity_ids, 'activity ids')
-    #     print('d)
 
     @api.depends('sample')
     def _compute_display_value(self):
