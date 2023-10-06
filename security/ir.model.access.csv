@@ -11,6 +11,8 @@ lead_wizard_search,manager_user_leads,model_search_wizard_lead,,1,1,1,1
 lead_wizard_search_response,manager_user_leads,model_searched_leads_response,,1,1,1,1
 leads_users_access_executive,user_source,model_leads_sources,lead_marketing_staff,1,1,1,1
 user_access_executive,user_leads,model_leads_logic,lead_marketing_staff,1,1,1,1
+user_re_allocation_req,user_leads,model_re_allocation_request_leads,leads_admin,1,1,1,1
+
 
 
 

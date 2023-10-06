@@ -17,7 +17,7 @@ class LeadsForm(models.Model):
     admission_status = fields.Boolean(string='Admission')
     date_of_adding = fields.Date(string='Date of Adding', default=fields.Date.today())
     last_update_date = fields.Datetime(string='Last Updated Date', )
-    course_id = fields.Char(string='Course', required=True)
+    course_id = fields.Char(string='Course')
     reference_no = fields.Char(string='Sequence Number', required=True,
                                readonly=True, default=lambda self: _('New'))
     lead_quality = fields.Selection(
@@ -34,12 +34,19 @@ class LeadsForm(models.Model):
     field_to_display = fields.Char(string='Field to Display')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
-        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')], string='State',
+        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')],
+        string='State',
         default='draft', tracking=True)
     last_studied_course = fields.Char(string='Last Studied Course')
     college_name = fields.Char(string='College/School')
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
                                    string='Referred By')
+    country = fields.Selection(
+        [('india', 'India'), ('germany', 'Germany'), ('canada', 'Canada'), ('usa', 'USA'), ('australia', 'Australia'),
+         ('italy', 'Italy'), ('france', 'France'), ('united_kingdom', 'United Kingdom'),
+         ('saudi_arabia', 'Saudi Arabia'), ('ukraine', 'Ukraine'), ('united_arab_emirates', 'United Arab Emirates'),
+         ('china', 'China'), ('japan', 'Japan'), ('singapore', 'Singapore'), ('indonesia', 'Indonesia'), ('russia', 'Russia'), ('oman', 'Oman'), ('nepal', 'Nepal'), ('japan', 'Japan') ],
+        string='Country', default='india')
     referred_by_id = fields.Many2one('hr.employee', string='Referred Person')
     referred_by_name = fields.Char(string='Referred Person')
     referred_by_number = fields.Char(string='Referred Person Number')
@@ -62,6 +69,50 @@ class LeadsForm(models.Model):
                                 string='District', required=True)
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
+    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline')], string='Mode of Study')
+    platform = fields.Selection(
+        [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
+        string='Platform')
+    base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course')
+
+    @api.onchange('country')
+    def get_country_code(self):
+        if self.country == 'india':
+            self.phone_number = '+91'
+        if self.country == 'germany':
+            self.phone_number = '+49'
+        if self.country == 'canada':
+            self.phone_number = '+1'
+        if self.country == 'usa':
+            self.phone_number = '+1'
+        if self.country == 'australia':
+            self.phone_number = '+61'
+        if self.country == 'italy':
+            self.phone_number = '+39'
+        if self.country == 'france':
+            self.phone_number = '+33'
+        if self.country == 'united_kingdom':
+            self.phone_number = '+44'
+        if self.country == 'saudi_arabia':
+            self.phone_number = '+966'
+        if self.country == 'ukraine':
+            self.phone_number = '+380'
+        if self.country == 'united_arab_emirates':
+            self.phone_number = '+971'
+        if self.country == 'china':
+            self.phone_number = '+86'
+        if self.country == 'singapore':
+            self.phone_number = '+65'
+        if self.country == 'indonesia':
+            self.phone_number = '+62'
+        if self.country == 'russia':
+            self.phone_number = '+7'
+        if self.country == 'oman':
+            self.phone_number = '+968'
+        if self.country == 'nepal':
+            self.phone_number = '+977'
+        if self.country == 'japan':
+            self.phone_number = '+81'
 
     @api.model
     def create(self, vals):
@@ -78,6 +129,12 @@ class LeadsForm(models.Model):
 
         return super(LeadsForm, self).create(vals)
 
+    def action_done(self):
+        for i in self.activity_ids:
+            i.action_feedback(feedback='done')
+
+        self.state = 'done'
+
     @api.constrains('phone_number_second')
     def check_number_duplicate(self):
         for record in self:
@@ -86,7 +143,8 @@ class LeadsForm(models.Model):
                     [('phone_number_second', '=', record.phone_number_second), ('id', '!=', record.id)])
                 if duplicate_records:
                     raise ValidationError(
-                        'This number already exists in the records created by ' + record.create_uid.name + ' ' + 'number is ' + str(record.phone_number_second))
+                        'This number already exists in the records created by ' + record.create_uid.name + ' ' + 'number is ' + str(
+                            record.phone_number_second))
 
     def reset_to_draft(self):
         self.state = 'draft'
@@ -133,8 +191,12 @@ class LeadsForm(models.Model):
         }
 
     def confirm(self):
-        for i in self.activity_ids:
-            i.action_feedback(feedback='confirmed')
+        self.activity_schedule('leads.mail_seminar_leads_done',
+                               user_id=self.leads_assign.user_id.id)
+        print('agsfdsdshdasgda')
+        # for i in self.activity_ids:
+        #     i.action_feedback(feedback='confirmed')
+
         self.state = 'confirm'
 
     @api.onchange('admission_status')

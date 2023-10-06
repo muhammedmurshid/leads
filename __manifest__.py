@@ -13,6 +13,7 @@
         'views/activity_view.xml',
         'views/lead_channel_name.xml',
         'views/search_wizard.xml',
+        'views/re_allocation_req.xml',
         # 'views/link_generation.xml',
 
     ],
