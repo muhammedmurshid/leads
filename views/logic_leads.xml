@@ -232,13 +232,19 @@
         <field name="res_model">leads.sources</field>
         <field name="view_mode">tree,form</field>
     </record>
+    <record id="action_add_country_code_for_numbers" model="ir.actions.server">
+        <field name="name">Add Country code</field>
+        <field name="model_id" ref="leads.model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="code">
+            action= record.action_add_country_code()
+        </field>
+    </record>
 
     <menuitem name="Leads Source" id="menu_leads_source" action="leads_source_view_form"
               parent="menu_leads_details"
               groups="leads.leads_admin"
               sequence="2"/>
-
-
 
 
 </odoo>

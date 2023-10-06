@@ -335,6 +335,19 @@ class LeadsForm(models.Model):
 
         }
 
+    def action_add_country_code(self):
+        rec = self.env['leads.logic'].sudo().search([])
+        for i in rec:
+            number = i.phone_number
+            number_count = len(number)
+
+            if number_count == 10:
+                print(number_count, 'number_count')
+                i.phone_number = '+91' + i.phone_number
+            if number_count == 12:
+                print(number_count, 'number_count')
+                i.phone_number = '+' + i.phone_number
+
 
 class LeadsSources(models.Model):
     _name = 'leads.sources'
