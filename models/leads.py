@@ -30,7 +30,7 @@ class LeadsForm(models.Model):
     lead_owner = fields.Many2one('hr.employee', string='Lead Owner')
     seminar_lead_id = fields.Integer()
     phone_number_second = fields.Char(string='Phone Number', unique=False)
-    sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp', store=True)
+    sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp')
     field_to_display = fields.Char(string='Field to Display')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
@@ -157,21 +157,21 @@ class LeadsForm(models.Model):
                 modified_value = "Modified: "
                 record.sample = modified_value
 
-    @api.depends('phone_number')
     def get_phone_number_for_whatsapp(self):
         for rec in self:
             # modified_value = "Modified: "
             # rec.sample = 'modified_value'
             if rec.phone_number:
-                self.sample = 'https://web.whatsapp.com/send?phone=' + rec.phone_number
+                rec.sample = "https://web.whatsapp.com/send?phone=" + rec.phone_number or "https://api.whatsapp.com/send?phone=" + rec.phone_number
+            else:
+                rec.sample=''
 
     def whatsapp_click_button(self):
-        for i in self:
             return {
                 'type': 'ir.actions.act_url',
                 'name': "Leads Whatsapp",
                 'target': 'new',
-                'url': i.sample,
+                'url': self.sample,
             }
 
     def multiple_leads_assigning(self):
@@ -340,7 +340,6 @@ class LeadsForm(models.Model):
         for i in rec:
             number = i.phone_number
             number_count = len(number)
-
             if number_count == 10:
                 print(number_count, 'number_count')
                 i.phone_number = '+91' + i.phone_number
