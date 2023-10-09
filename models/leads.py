@@ -167,12 +167,12 @@ class LeadsForm(models.Model):
                 rec.sample=''
 
     def whatsapp_click_button(self):
-            return {
-                'type': 'ir.actions.act_url',
-                'name': "Leads Whatsapp",
-                'target': 'new',
-                'url': self.sample,
-            }
+        return {
+            'type': 'ir.actions.act_url',
+            'name': "Leads Whatsapp",
+            'target': 'new',
+            'url': self.sample,
+        }
 
     def multiple_leads_assigning(self):
 

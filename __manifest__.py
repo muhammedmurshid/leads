@@ -2,7 +2,7 @@
     'name': "Leads",
     'version': "14.0.1.0",
     'sequence': "0",
-    'depends': ['mail', 'crm',],
+    'depends': ['mail', 'crm', ],
     'data': [
         'security/lead_users.xml',
         'security/ir.model.access.csv',
@@ -17,7 +17,11 @@
         # 'views/link_generation.xml',
 
     ],
-    'demo': [],
+    # 'assets': {
+    #     'web.assets_backend': [
+    #         'leads/static/src/js/log_note_hide_custom.js'],
+    # },
+    # 'demo': [],
     'images': [
         '/home/murshid/odoo/custome_addons/logic_leads/static/description/icon.png',
     ],

@@ -1,14 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <!--    <template>-->
+    <!--        <t t-extend="mail.chatter.Buttons">-->
+    <!--            <t t-jquery=".o_chatter_button_log_note" t-operation="replace"></t>-->
+    <!--        </t>-->
+    <!--    </template>-->
+
     <record id="leads_logic_form_view" model="ir.ui.view">
         <field name="name">Leads Details</field>
         <field name="model">leads.logic</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Students">
+                <script>
+                    function confirm(){
+                    console.log("hi");
+                    $(".o_ChatterTopbar_buttonLogNote").css("display","none")
+                    $(".o_ChatterTopbar_buttonScheduleActivity").css("display","none")
+                    $(".o_ChatterTopbar_buttonSendMessage").css("display","none")
+                    }
+                    $(".o_form_button_edit").click(function(){
+                    console.log("lkhlkj");
+                    $(".o_ChatterTopbar_buttonLogNote").css("display","block")
+                     $(".o_ChatterTopbar_buttonScheduleActivity").css("display","block")
+                    $(".o_ChatterTopbar_buttonSendMessage").css("display","block")
+                    });
+                    $(".o_form_button_save").click(function(){
+                    console.log('save');
+                    $(".o_ChatterTopbar_buttonLogNote").css("display","none")
+                     $(".o_ChatterTopbar_buttonScheduleActivity").css("display","none")
+                    $(".o_ChatterTopbar_buttonSendMessage").css("display","none")
+                    });
+                    $(".o_form_button_cancel").click(function(){
+                    console.log('save');
+                    $(".o_ChatterTopbar_buttonLogNote").css("display","none")
+                     $(".o_ChatterTopbar_buttonScheduleActivity").css("display","none")
+                    $(".o_ChatterTopbar_buttonSendMessage").css("display","none")
+                    });
+
+
+                </script>
                 <header>
                     <field name="state" widget="statusbar"/>
-                    <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm"/>
+                    <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm" onclick="confirm()"/>
                     <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"
                             attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel','confirm']),('make_visible_manager', '=', True)]}"/>
                     <button name="action_done" class="oe_highlight" type="object" string="Done" states="confirm"/>
@@ -79,11 +113,14 @@
                         </group>
                     </group>
                 </sheet>
+
+
                 <div class="oe_chatter">
                     <field name="message_follower_ids"
                            widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+
                 </div>
             </form>
         </field>
@@ -122,6 +159,12 @@
             </search>
         </field>
     </record>
+    <!--    <template id="assets_backend" name="hide log note" inherit_id="web.assets_backend">-->
+    <!--        <xpath expr="." position="inside">-->
+    <!--            <script type="text/javascript" src="/leads/static/src/js/log_note_hide_custom.js"></script>-->
+    <!--        </xpath>-->
+    <!--    </template>-->
+
 
     <record id="view_assigned_to_wizard" model="ir.ui.view">
         <field name="name">assigned_to.view</field>
@@ -153,6 +196,7 @@
                         </group>
                     </group>
                 </sheet>
+
                 <div class="oe_chatter">
                     <field name="message_follower_ids"
                            widget="mail_followers"/>
