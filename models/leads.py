@@ -74,6 +74,7 @@ class LeadsForm(models.Model):
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
         string='Platform')
     base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course')
+    admission_date = fields.Date(string='Admission Date')
 
     @api.onchange('country')
     def get_country_code(self):
