@@ -21,20 +21,23 @@
                     }
                     $(".o_form_button_edit").click(function(){
                     console.log("lkhlkj");
+                    $(".o_Activity_dueDateText").css("display","none")
                     $(".o_ChatterTopbar_buttonLogNote").css("display","block")
-                     $(".o_ChatterTopbar_buttonScheduleActivity").css("display","block")
+                    $(".o_ChatterTopbar_buttonScheduleActivity").css("display","block")
                     $(".o_ChatterTopbar_buttonSendMessage").css("display","block")
                     });
                     $(".o_form_button_save").click(function(){
                     console.log('save');
+                    $(".o_Activity_dueDateText").css("display","none")
                     $(".o_ChatterTopbar_buttonLogNote").css("display","none")
-                     $(".o_ChatterTopbar_buttonScheduleActivity").css("display","none")
+                    $(".o_ChatterTopbar_buttonScheduleActivity").css("display","none")
                     $(".o_ChatterTopbar_buttonSendMessage").css("display","none")
                     });
                     $(".o_form_button_cancel").click(function(){
-                    console.log('save');
+                    console.log('cancel');
+
                     $(".o_ChatterTopbar_buttonLogNote").css("display","none")
-                     $(".o_ChatterTopbar_buttonScheduleActivity").css("display","none")
+                    $(".o_ChatterTopbar_buttonScheduleActivity").css("display","none")
                     $(".o_ChatterTopbar_buttonSendMessage").css("display","none")
                     });
 
@@ -42,7 +45,8 @@
                 </script>
                 <header>
                     <field name="state" widget="statusbar"/>
-                    <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm" onclick="confirm()"/>
+                    <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm"
+                            onclick="confirm()"/>
                     <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"
                             attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel','confirm']),('make_visible_manager', '=', True)]}"/>
                     <button name="action_done" class="oe_highlight" type="object" string="Done" states="confirm"/>
