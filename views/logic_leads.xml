@@ -73,7 +73,7 @@
                             <field name="district"/>
                             <field name="place"/>
 
-                            <field name="branch_id"/>
+                            <field name="branch_id" options="{'no_create': True}"/>
                             <field name="sample" widget="url" invisible="1"/>
                             <!--                            <field name="display_value"/>-->
 
