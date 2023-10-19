@@ -14,6 +14,7 @@
         'views/lead_channel_name.xml',
         'views/search_wizard.xml',
         'views/re_allocation_req.xml',
+        'views/touch_points.xml',
         # 'views/link_generation.xml',
 
     ],

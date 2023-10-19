@@ -41,7 +41,6 @@
                     $(".o_ChatterTopbar_buttonSendMessage").css("display","none")
                     });
 
-
                 </script>
                 <header>
                     <field name="state" widget="statusbar"/>
@@ -55,12 +54,17 @@
                             groups="leads.leads_admin"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Completed" bg_color="bg-success"
+                            attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <widget name="web_ribbon" title="cancel" bg_color="bg-danger"
+                            attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                    <widget name="web_ribbon" title="added crm" bg_color="bg-info"
+                            attrs="{'invisible': [('state', '!=', 'crm')]}"/>
                     <h2>
                         <field name="reference_no"/>
                     </h2>
                     <group>
                         <group>
-
                             <field name="name"/>
                             <field name="country"/>
                             <field name="lead_channel" attrs="{'readonly':[('make_visible_manager', '=', True)]}"/>
@@ -69,14 +73,11 @@
                             <field name="phone_number" widget="phone"/>
                             <field name="phone_number_second" widget="phone"/>
                             <field name="parent_number"/>
-
                             <field name="district"/>
                             <field name="place"/>
-
                             <field name="branch_id" options="{'no_create': True}"/>
                             <field name="sample" widget="url" invisible="1"/>
                             <!--                            <field name="display_value"/>-->
-
                             <field name="make_visible_manager" invisible="1"/>
                             <field name="seminar_lead_id" invisible="1"/>
                             <field name="mode_of_study"/>
@@ -117,6 +118,28 @@
                             <field name="last_update_date"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Touch Points" name="touch_points">
+                            <field name="touch_ids" widget="one2many">
+                                <tree string="Touch Points" editable="bottom">
+                                    <field name="name"/>
+
+                                    <field name="finished"/>
+                                    <field name="date" attrs="{'required':[('finished', '=', True)]}"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <group invisible="1">
+                                    <field name="touch_status"/>
+                                    <field name="count_of_total_touch_points"/>
+                                    <field name="finished_touch_points"/>
+                                    <field name="finished_points"/>
+                                </group>
+                            </group>
+
+                        </page>
+                    </notebook>
+
                 </sheet>
 
 
@@ -232,7 +255,10 @@
                 <field name="last_update_date"/>
                 <field name="admission_status"/>
                 <field name="lead_quality"/>
-                <field name="state"/>
+                <field name="finished_points" string="Finished Touch Points" widget="badge"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'"
+                       decoration-primary="state == 'crm'" decoration-info="state == 'confirmed'"
+                       decoration-danger="state == 'cancel'"/>
             </tree>
 
         </field>

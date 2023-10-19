@@ -20,11 +20,13 @@ class LeadsForm(models.Model):
     course_id = fields.Char(string='Course')
     reference_no = fields.Char(string='Sequence Number', required=True,
                                readonly=True, default=lambda self: _('New'))
+    touch_ids = fields.One2many('leads.own.touch.points', 'touch_id', string='Touch Points')
     lead_quality = fields.Selection(
         [('Interested', 'Interested'), ('bad_lead', 'Bad Lead'), ('not_interested', 'Not Interested'),
          ('not_responding', 'Not Responding'), ('under_follow_up', 'Under Follow-up'),
 
-         ('slightly_positive', 'Slightly Positive'), ('already_took_admission', 'Already Took Admission'),('nill', 'Nill')],
+         ('slightly_positive', 'Slightly Positive'), ('already_took_admission', 'Already Took Admission'),
+         ('nill', 'Nill')],
         string='Lead Quality', required=True)
     place = fields.Char('Place')
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
@@ -46,7 +48,8 @@ class LeadsForm(models.Model):
         [('india', 'India'), ('germany', 'Germany'), ('canada', 'Canada'), ('usa', 'USA'), ('australia', 'Australia'),
          ('italy', 'Italy'), ('france', 'France'), ('united_kingdom', 'United Kingdom'),
          ('saudi_arabia', 'Saudi Arabia'), ('ukraine', 'Ukraine'), ('united_arab_emirates', 'United Arab Emirates'),
-         ('china', 'China'), ('japan', 'Japan'), ('singapore', 'Singapore'), ('indonesia', 'Indonesia'), ('russia', 'Russia'), ('oman', 'Oman'), ('nepal', 'Nepal'), ('japan', 'Japan') ],
+         ('china', 'China'), ('japan', 'Japan'), ('singapore', 'Singapore'), ('indonesia', 'Indonesia'),
+         ('russia', 'Russia'), ('oman', 'Oman'), ('nepal', 'Nepal'), ('japan', 'Japan')],
         string='Country', default='india')
     referred_by_id = fields.Many2one('hr.employee', string='Referred Person')
     referred_by_name = fields.Char(string='Referred Person')
@@ -76,6 +79,65 @@ class LeadsForm(models.Model):
         string='Platform')
     base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course')
     admission_date = fields.Date(string='Admission Date')
+
+    # touch_points
+
+    count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
+
+    @api.depends('touch_ids')
+    def get_count_of_total_touch_points(self):
+        for record in self:
+            self.count_of_total_touch_points = len(record.touch_ids)
+
+    finished_touch_points = fields.Integer(compute='get_finished_touch_points', store=True)
+    touch_status = fields.Selection(
+        [('draft', 'Draft'), ('touch_one', 'Touch One'), ('touch_two', 'Touch Two'), ('touch_three', 'Touch Three'),
+         ('touch_two', 'Touch Two'), ('touch_four', 'Touch Four'), ('touch_five', 'Touch Five'),
+         ('touch_six', 'Touch Six'), ('touch_seven', 'Touch Seven'), ('touch_eight', 'Touch Eight'),
+         ('touch_nine', 'Touch Nine'), ('touch_ten', 'Touch Ten'), ('finished', 'Finished')], default='draft',
+        string='Touch Status')
+
+    @api.onchange('count_of_total_touch_points', 'finished_touch_points')
+    def get_touch_status(self):
+        for record in self:
+            if record.count_of_total_touch_points == record.finished_touch_points:
+                record.touch_status = 'finished'
+            elif record.finished_touch_points == 0:
+                record.touch_status = 'draft'
+            elif record.finished_touch_points == 1:
+                record.touch_status = 'touch_one'
+            elif record.finished_touch_points == 2:
+                record.touch_status = 'touch_two'
+            elif record.finished_touch_points == 3:
+                record.touch_status = 'touch_three'
+            elif record.finished_touch_points == 4:
+                record.touch_status = 'touch_four'
+            elif record.finished_touch_points == 5:
+                record.touch_status = 'touch_five'
+            elif record.finished_touch_points == 6:
+                record.touch_status = 'touch_six'
+            elif record.finished_touch_points == 7:
+                record.touch_status = 'touch_seven'
+            elif record.finished_touch_points == 8:
+                record.touch_status = 'touch_eight'
+            elif record.finished_touch_points == 9:
+                record.touch_status = 'touch_nine'
+            elif record.finished_touch_points == 10:
+                record.touch_status = 'touch_ten'
+
+    @api.depends('touch_ids')
+    def get_finished_touch_points(self):
+        for record in self:
+            record.finished_touch_points = len(record.touch_ids.filtered(lambda x: x.finished == True))
+
+    finished_points = fields.Char('Finished Touch Points')
+
+    @api.onchange('touch_ids', 'count_of_total_touch_points', 'finished_touch_points')
+    def get_finished_count(self):
+        for i in self:
+            print(str(i.count_of_total_touch_points) + '/' + str(i.finished_touch_points), '[[[')
+            i.finished_points = str(i.count_of_total_touch_points) + '/' + str(i.finished_touch_points)
+
 
     @api.onchange('country')
     def get_country_code(self):
@@ -131,6 +193,18 @@ class LeadsForm(models.Model):
 
         return super(LeadsForm, self).create(vals)
 
+    def add_touches(self):
+        touch_points = self.env['leads.touch.points'].sudo().search([])
+        for touch in touch_points:
+            print(touch.name, 'toches')
+            points = []
+            res_list = {
+                'name': touch.id,
+
+            }
+            points.append((0, 0, res_list))
+            self.touch_ids = points
+
     def action_done(self):
         for i in self.activity_ids:
             i.action_feedback(feedback='done')
@@ -166,7 +240,7 @@ class LeadsForm(models.Model):
             if rec.phone_number:
                 rec.sample = "https://web.whatsapp.com/send?phone=" + rec.phone_number or "https://api.whatsapp.com/send?phone=" + rec.phone_number
             else:
-                rec.sample=''
+                rec.sample = ''
 
     def whatsapp_click_button(self):
         return {
@@ -193,6 +267,16 @@ class LeadsForm(models.Model):
         }
 
     def confirm(self):
+        touch_points = self.env['leads.touch.points'].sudo().search([])
+        for touch in touch_points:
+            print(touch.name, 'toches')
+            points = []
+            res_list = {
+                'name': touch.id,
+
+            }
+            points.append((0, 0, res_list))
+            self.touch_ids = points
         self.activity_schedule('leads.mail_seminar_leads_done',
                                user_id=self.leads_assign.user_id.id)
         print('agsfdsdshdasgda')
@@ -398,3 +482,20 @@ class LeadsAssigningWizard(models.TransientModel):
 
     def cancel(self):
         print('hi')
+
+
+class LeadsOwnTouchPoints(models.Model):
+    _name = 'leads.own.touch.points'
+
+    name = fields.Many2one('leads.touch.points', string='Touch Points')
+    finished = fields.Boolean(string='Finished')
+    date = fields.Datetime(string='Date')
+    touch_id = fields.Many2one('leads.logic', string='Touch ID')
+
+    @api.onchange('finished')
+    def onchange_finished(self):
+        for record in self:
+            if record.finished == True:
+                record.date = fields.Datetime.now()
+            if record.finished == False:
+                record.date = False
