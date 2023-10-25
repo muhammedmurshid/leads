@@ -77,7 +77,7 @@ class LeadsForm(models.Model):
     platform = fields.Selection(
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
         string='Platform')
-    base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course')
+    base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True)
     admission_date = fields.Date(string='Admission Date')
 
     # touch_points
@@ -138,7 +138,6 @@ class LeadsForm(models.Model):
             print(str(i.count_of_total_touch_points) + '/' + str(i.finished_touch_points), '[[[')
             i.finished_points = str(i.count_of_total_touch_points) + '/' + str(i.finished_touch_points)
 
-
     @api.onchange('country')
     def get_country_code(self):
         if self.country == 'india':
@@ -191,7 +190,9 @@ class LeadsForm(models.Model):
                 raise ValidationError(
                     'A record with the same mobile number already exists! created by ' + record.create_uid.name + ' ' + 'number is ' + record.phone_number)
 
-        return super(LeadsForm, self).create(vals)
+        else:
+            print('lll')
+            return super(LeadsForm, self).create(vals)
 
     def add_touches(self):
         touch_points = self.env['leads.touch.points'].sudo().search([])

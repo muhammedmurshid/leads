@@ -32,4 +32,10 @@
                     action = records.change_leads_channel_name()
         </field>
     </record>
+    <data>
+        <record id="default_base_course" model="logic.base.courses">
+            <field name="name">Nill</field>
+
+        </record>
+    </data>
 </odoo>

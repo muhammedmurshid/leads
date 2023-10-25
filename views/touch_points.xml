@@ -39,9 +39,10 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+
     <menuitem name="Touch Points" id="leads_touch_points_menu_view"
               action="leads_touch_points_action"
-              parent="menu_leads_details"
+              parent="lead_logic_configuration"
               sequence="10"/>
 
 

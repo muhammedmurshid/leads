@@ -2,7 +2,7 @@
     'name': "Leads",
     'version': "14.0.1.0",
     'sequence': "0",
-    'depends': ['mail', 'crm', ],
+    'depends': ['mail', 'crm', 'logic_base'],
     'data': [
         'security/lead_users.xml',
         'security/ir.model.access.csv',
@@ -15,6 +15,7 @@
         'views/search_wizard.xml',
         'views/re_allocation_req.xml',
         'views/touch_points.xml',
+        'views/lead_target.xml',
         # 'views/link_generation.xml',
 
     ],

@@ -320,6 +320,9 @@
               parent="menu_leads_details"
               groups="leads.leads_admin"
               sequence="2"/>
+    <menuitem name="Configuration" id="lead_logic_configuration"
+              parent="menu_leads_details"
+              sequence="11"/>
 
 
 </odoo>

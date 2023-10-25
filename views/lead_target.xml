@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="leads_target_for_employees" model="ir.ui.view">
+        <field name="name">Target</field>
+        <field name="model">leads.target</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Target">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="year"/>
+                            <field name="user_id"/>
+                            <field name="admission_target"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="leads_target_list" model="ir.ui.view">
+        <field name="name">Targets</field>
+        <field name="model">leads.target</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="year"/>
+                <field name="user_id"/>
+                <field name="admission_target"/>
+            </tree>
+
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="target_leads_action">
+        <field name="name">Target</field>
+        <field name="res_model">leads.target</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Targets"
+              id="target_main_menu_for_leads"
+              action="target_leads_action"
+              parent="lead_logic_configuration"
+              sequence="2"/>
+
+
+</odoo>
