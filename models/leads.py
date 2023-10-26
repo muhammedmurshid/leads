@@ -278,13 +278,21 @@ class LeadsForm(models.Model):
             }
             points.append((0, 0, res_list))
             self.touch_ids = points
-        self.activity_schedule('leads.mail_seminar_leads_done',
-                               user_id=self.leads_assign.user_id.id)
-        print('agsfdsdshdasgda')
+        # self.activity_schedule('leads.mail_seminar_leads_done',
+        #                        user_id=self.leads_assign.user_id.id)
+        # print('agsfdsdshdasgda')
         # for i in self.activity_ids:
         #     i.action_feedback(feedback='confirmed')
 
         self.state = 'confirm'
+
+    def activity_remove_in_leads(self):
+        activity = self.env['mail.activity'].sudo().search(
+            [('res_model', '=', 'leads.logic'), ('activity_type_id', '=', self.env.ref('leads.mail_seminar_leads_done').id)])
+        for i in activity:
+            i.unlink()
+            print(i.res_model, 'activity')
+        # activity.unlink()
 
     @api.onchange('admission_status')
     def _onchange_admission_status(self):
