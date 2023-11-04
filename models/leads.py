@@ -79,10 +79,20 @@ class LeadsForm(models.Model):
         string='Platform')
     base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True)
     admission_date = fields.Date(string='Admission Date')
+    course_papers = fields.Many2many('course.papers', string='Course Papers')
 
     # touch_points
 
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
+
+    @api.onchange('base_course_id')
+    def onchange_base_course_id(self):
+        for record in self:
+            course = self.env['logic.base.courses'].search([('id', '=', record.base_course_id.id)])
+            print(course.papers.ids, 'hmm')
+            papers = self.env['course.papers'].search([('id', 'in', course.papers.ids)])
+            for j in papers:
+                record.course_papers = [(4, j.id)]
 
     @api.depends('touch_ids')
     def get_count_of_total_touch_points(self):
