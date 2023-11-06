@@ -22,12 +22,16 @@ class LeadsForm(models.Model):
                                readonly=True, default=lambda self: _('New'))
     touch_ids = fields.One2many('leads.own.touch.points', 'touch_id', string='Touch Points')
     lead_quality = fields.Selection(
-        [('Interested', 'Interested'), ('bad_lead', 'Bad Lead'), ('not_interested', 'Not Interested'),
-         ('not_responding', 'Not Responding'), ('under_follow_up', 'Under Follow-up'),
-
-         ('slightly_positive', 'Slightly Positive'), ('already_took_admission', 'Already Took Admission'),
+        [('hot', 'Hot'), ('warm', 'Warm'), ('cold', 'Cold'),
+         ('bad_lead', 'Bad Lead'),
          ('nill', 'Nill')],
         string='Lead Quality', required=True)
+    lead_status = fields.Selection(
+        [('interested', 'Interested'), ('not_interested', 'Not Interested'), ('not_responding', 'Not Responding'),
+         ('already_enrolled', 'Already Enrolled'), ('joined_in_another_institute', 'Joined in another institute')],
+        string='Lead Status', required=True
+    )
+
     place = fields.Char('Place')
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
     lead_owner = fields.Many2one('hr.employee', string='Lead Owner')
@@ -35,6 +39,8 @@ class LeadsForm(models.Model):
     phone_number_second = fields.Char(string='Phone Number', unique=False)
     sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp')
     field_to_display = fields.Char(string='Field to Display')
+    course_type = fields.Selection(
+        [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash')], string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')],
@@ -73,11 +79,11 @@ class LeadsForm(models.Model):
                                 string='District', required=True)
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
-    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline')], string='Mode of Study')
+    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline')], string='Mode of Study', required=True)
     platform = fields.Selection(
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
         string='Platform')
-    base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True)
+
     admission_date = fields.Date(string='Admission Date')
     course_papers = fields.Many2many('course.papers', string='Course Papers')
 
@@ -85,9 +91,23 @@ class LeadsForm(models.Model):
 
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
 
+    @api.onchange('course_type', 'base_course_id')
+    def onchange_course_id_domain(self):
+        course = self.env['logic.base.courses'].search([('type', '=', self.course_type)])
+        courses = []
+        for rec in course:
+            courses.append(rec.id)
+        domain = [('id', 'in', courses)]
+        print(courses, 'nn')
+        return {'domain': {'base_course_id': domain}}
+
+    base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True,
+                                     domain=onchange_course_id_domain)
+
     @api.onchange('base_course_id')
     def onchange_base_course_id(self):
         for record in self:
+            record.course_papers = False
             course = self.env['logic.base.courses'].search([('id', '=', record.base_course_id.id)])
             print(course.papers.ids, 'hmm')
             papers = self.env['course.papers'].search([('id', 'in', course.papers.ids)])
@@ -298,7 +318,8 @@ class LeadsForm(models.Model):
 
     def activity_remove_in_leads(self):
         activity = self.env['mail.activity'].sudo().search(
-            [('res_model', '=', 'leads.logic'), ('activity_type_id', '=', self.env.ref('leads.mail_seminar_leads_done').id)])
+            [('res_model', '=', 'leads.logic'),
+             ('activity_type_id', '=', self.env.ref('leads.mail_seminar_leads_done').id)])
         for i in activity:
             i.unlink()
             print(i.res_model, 'activity')
