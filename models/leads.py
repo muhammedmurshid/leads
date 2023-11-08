@@ -24,7 +24,7 @@ class LeadsForm(models.Model):
     lead_quality = fields.Selection(
         [('hot', 'Hot'), ('warm', 'Warm'), ('cold', 'Cold'),
          ('bad_lead', 'Bad Lead'),
-         ('nill', 'Nill')],
+         ('nil', 'Nil')],
         string='Lead Quality', required=True)
     lead_status = fields.Selection(
         [('interested', 'Interested'), ('not_interested', 'Not Interested'), ('not_responding', 'Not Responding'),
@@ -41,7 +41,7 @@ class LeadsForm(models.Model):
     sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp')
     field_to_display = fields.Char(string='Field to Display')
     course_type = fields.Selection(
-        [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash')], string='Course Type')
+        [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('nil', 'Nil')], string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')],
@@ -75,12 +75,12 @@ class LeadsForm(models.Model):
                                  ('kozhikode', 'Kozhikode'), ('palakkad', 'Palakkad'), ('kannur', 'Kannur'),
                                  ('alappuzha', 'Alappuzha'), ('malappuram', 'Malappuram'), ('kasaragod', 'Kasaragod'),
                                  ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta'),
-                                 ('abroad', 'Abroad'), ('other', 'Other')],
+                                 ('abroad', 'Abroad'), ('other', 'Other'), ('nil', 'Nil')],
 
                                 string='District', required=True)
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
-    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline')], string='Mode of Study',
+    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline'), ('nil', 'Nil')], string='Mode of Study',
                                      required=True)
     platform = fields.Selection(
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
