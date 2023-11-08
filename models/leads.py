@@ -28,7 +28,8 @@ class LeadsForm(models.Model):
         string='Lead Quality', required=True)
     lead_status = fields.Selection(
         [('interested', 'Interested'), ('not_interested', 'Not Interested'), ('not_responding', 'Not Responding'),
-         ('already_enrolled', 'Already Enrolled'), ('joined_in_another_institute', 'Joined in another institute')],
+         ('already_enrolled', 'Already Enrolled'), ('joined_in_another_institute', 'Joined in another institute'),
+         ('under_follow_up', 'Under Follow Up')],
         string='Lead Status', required=True
     )
 
@@ -79,13 +80,52 @@ class LeadsForm(models.Model):
                                 string='District', required=True)
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
-    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline')], string='Mode of Study', required=True)
+    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline')], string='Mode of Study',
+                                     required=True)
     platform = fields.Selection(
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
         string='Platform')
 
     admission_date = fields.Date(string='Admission Date')
-    course_papers = fields.Many2many('course.papers', string='Course Papers')
+
+    @api.onchange('base_course_id')
+    def get_course_levels(self):
+        ids = []
+        # ids.append(self.base_course_id.course_levels.ids)
+        levels = self.env['course.levels'].search([('course_id', '=', self.base_course_id.id)])
+        for rec in levels:
+            ids.append(rec.id)
+        domain = [('id', 'in', ids)]
+        return {'domain': {'course_level': domain}}
+
+    course_level = fields.Many2one('course.levels', string='Course Level', domain=get_course_levels)
+
+    @api.onchange('course_level')
+    def get_course_groups(self):
+        ids = []
+        # ids.append(self.base_course_id.course_levels.ids)
+        group = self.env['course.groups'].search([('level_ids', '=', self.course_level.id)])
+        for rec in group:
+            print(rec.id, 'gr')
+            ids.append(rec.id)
+        domain = [('id', 'in', ids)]
+        return {'domain': {'course_group': domain}}
+
+    course_group = fields.Many2one('course.groups', string='Course Group', domain=get_course_groups)
+
+    @api.onchange('course_group')
+    def get_course_papers(self):
+        ids = []
+        # ids.append(self.base_course_id.course_levels.ids)
+        group = self.env['course.papers'].search([('group_ids', '=', self.course_group.id)])
+        for rec in group:
+            print(rec.id, 'gr')
+            ids.append(rec.id)
+        domain = [('id', 'in', ids)]
+        return {'domain': {'course_papers': domain}}
+
+    course_papers = fields.Many2many('course.papers', string='Course Papers', domain=get_course_papers)
+
 
     # touch_points
 
@@ -93,16 +133,24 @@ class LeadsForm(models.Model):
 
     @api.onchange('course_type', 'base_course_id')
     def onchange_course_id_domain(self):
-        course = self.env['logic.base.courses'].search([('type', '=', self.course_type)])
-        courses = []
-        for rec in course:
-            courses.append(rec.id)
-        domain = [('id', 'in', courses)]
-        print(courses, 'nn')
-        return {'domain': {'base_course_id': domain}}
+        if self.course_type:
+            course = self.env['logic.base.courses'].search([('type', '=', self.course_type)])
+            courses = []
+            for rec in course:
+                courses.append(rec.id)
+            domain = [('id', 'in', courses)]
+            print(courses, 'nn')
+            return {'domain': {'base_course_id': domain}}
 
     base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True,
                                      domain=onchange_course_id_domain)
+
+    @api.depends('leads_source')
+    def get_leads_source_name(self):
+        for record in self:
+            record.lead_source_name = record.leads_source.name
+
+    lead_source_name = fields.Char(string='Lead Source Name', compute='get_leads_source_name', store=True)
 
     @api.onchange('base_course_id')
     def onchange_base_course_id(self):
@@ -111,8 +159,8 @@ class LeadsForm(models.Model):
             course = self.env['logic.base.courses'].search([('id', '=', record.base_course_id.id)])
             print(course.papers.ids, 'hmm')
             papers = self.env['course.papers'].search([('id', 'in', course.papers.ids)])
-            for j in papers:
-                record.course_papers = [(4, j.id)]
+            # for j in papers:
+            #     record.course_papers = [(4, j.id)]
 
     @api.depends('touch_ids')
     def get_count_of_total_touch_points(self):
