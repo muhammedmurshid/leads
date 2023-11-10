@@ -137,7 +137,8 @@ class LeadsForm(models.Model):
             course = self.env['logic.base.courses'].search([('type', '=', self.course_type)])
             courses = []
             for rec in course:
-                courses.append(rec.id)
+                if rec.state == 'done':
+                    courses.append(rec.id)
             domain = [('id', 'in', courses)]
             print(courses, 'nn')
             return {'domain': {'base_course_id': domain}}
