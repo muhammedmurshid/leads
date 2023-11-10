@@ -90,6 +90,7 @@
                             <field name="course_id" invisible="1"/>
                             <field name="base_course_id" options="{'no_create': True, 'no_create_edit':True}" placeholder="select course type first."/>
                             <field name="course_level" options="{'no_create':True}"/>
+                            <field name="level_name" invisible="1"/>
                             <field name="course_group" options="{'no_create':True}"/>
                             <field name="course_papers" widget="many2many_tags" options="{'no_create':True}"/>
                             <field name="lead_qualification"/>

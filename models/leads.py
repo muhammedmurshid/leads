@@ -92,26 +92,37 @@ class LeadsForm(models.Model):
     def get_course_levels(self):
         ids = []
         # ids.append(self.base_course_id.course_levels.ids)
-        levels = self.env['course.levels'].search([('course_id', '=', self.base_course_id.id)])
+        levels = self.env['course.levels'].search(['|',('course_id', '=', self.base_course_id.id), ('name', '=', 'Nil')])
         for rec in levels:
             ids.append(rec.id)
         domain = [('id', 'in', ids)]
         return {'domain': {'course_level': domain}}
 
     course_level = fields.Many2one('course.levels', string='Course Level', domain=get_course_levels)
+    level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
 
     @api.onchange('course_level')
     def get_course_groups(self):
-        ids = []
-        # ids.append(self.base_course_id.course_levels.ids)
-        group = self.env['course.groups'].search([('level_ids', '=', self.course_level.id)])
-        for rec in group:
-            print(rec.id, 'gr')
-            ids.append(rec.id)
-        domain = [('id', 'in', ids)]
-        return {'domain': {'course_group': domain}}
+        for j in self:
+            j.level_name = j.course_level.name
+            ids = []
+            if not j.level_name == 'Nil':
+                # ids.append(self.base_course_id.course_levels.ids)
+                group = self.env['course.groups'].search([('level_ids', '=', j.course_level.id)])
+                for rec in group:
+                    print(rec.id, 'gr')
+                    ids.append(rec.id)
+                domain = [('id', 'in', ids)]
+                return {'domain': {'course_group': domain}}
+            else:
+                group = self.env['course.groups'].sudo().search([])
+                for rec in group:
+                    print(rec.id, 'gr')
+                    ids.append(rec.id)
+                domain = [('id', 'in', ids)]
+                return {'domain': {'course_group': domain}}
 
-    course_group = fields.Many2one('course.groups', string='Course Group', domain=get_course_groups)
+    course_group = fields.Many2one('course.groups', string='Course Group/Part', domain=get_course_groups)
 
     @api.onchange('course_group')
     def get_course_papers(self):
@@ -357,8 +368,8 @@ class LeadsForm(models.Model):
             }
             points.append((0, 0, res_list))
             self.touch_ids = points
-        # self.activity_schedule('leads.mail_seminar_leads_done',
-        #                        user_id=self.leads_assign.user_id.id)
+        self.activity_schedule('leads.mail_seminar_leads_done',
+                               user_id=self.leads_assign.user_id.id)
         # print('agsfdsdshdasgda')
         # for i in self.activity_ids:
         #     i.action_feedback(feedback='confirmed')
