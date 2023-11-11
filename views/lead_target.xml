@@ -9,7 +9,8 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="year"/>
+                            <field name="year" widget="integer" options="{'format': 0}"/>
+                            <field name="month"/>
                             <field name="user_id"/>
                             <field name="admission_target"/>
                         </group>
@@ -28,7 +29,9 @@
         <field name="model">leads.target</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="year"/>
+                <field name="added_date"/>
+                <field name="year" widget="integer" options="{'format': 0}"/>
+                <field name="month"/>
                 <field name="user_id"/>
                 <field name="admission_target"/>
             </tree>
