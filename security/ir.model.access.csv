@@ -19,6 +19,8 @@ leads_own_touch_points_admin,user_leads,model_leads_own_touch_points,leads_admin
 leads_own_touch_points_marketing,user_leads,model_leads_own_touch_points,lead_marketing_staff,1,1,0,0
 
 leads_target,user_leads,model_leads_target,leads_admin,1,1,1,1
+leads_target_month,user_leads,model_month_lists_leads_target,leads_admin,1,1,1,1
+
 
 
 

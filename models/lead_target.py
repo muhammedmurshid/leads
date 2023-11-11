@@ -9,7 +9,6 @@ class LeadsTarget(models.Model):
 
     year = fields.Integer(string='Year', required=True)
     added_date = fields.Date(string='Added Date', default=fields.Date.today())
-    admission_target = fields.Integer(string='Admission Target')
     color = fields.Integer(string='Color Index', help="The color of the channel")
     month = fields.Selection(
         [('january', 'January'), ('february', 'February'), ('march', 'March'), ('april', 'April'), ('may', 'May'),
@@ -25,3 +24,60 @@ class LeadsTarget(models.Model):
             return [('id', 'in', [self.env.user.id])]
 
     user_id = fields.Many2one('res.users', string='Lead User', domain=get_leads_users)
+    month_ids = fields.One2many('month.lists.leads.target', 'month_id', string='Month')
+
+    @api.depends('month_ids.target')
+    def _amount_target_all(self):
+        """
+        Compute the total amounts of the SO.
+        """
+        total = 0
+        for order in self.month_ids:
+            total += order.target
+        self.update({
+            'admission_target': total,
+        })
+
+    admission_target = fields.Float(string='Admission Target', compute='_amount_target_all', store=True)
+
+    @api.onchange('user_id')
+    def onchange_month(self):
+        targets = []
+        field_info = self.month_ids.fields_get(['month'])
+        keys = [key for key, _ in field_info['month']['selection']]
+        unlink_commands = [(3, child.id) for child in self.month_ids]
+        self.write({'month_ids': unlink_commands})
+        for i in keys:
+            print(i, 'i')
+            res_list = {
+                'month': i,
+                'target': 0
+
+            }
+            targets.append((0,0, res_list))
+        self.month_ids = targets
+
+        # a.append(selection_values.keys())
+        # print(targets, 'all')
+
+
+class MonthListsLeadTarget(models.Model):
+    _name = 'month.lists.leads.target'
+
+    month = fields.Selection(
+        [('january', 'January'), ('february', 'February'), ('march', 'March'), ('april', 'April'), ('may', 'May'),
+         ('june', 'June'), ('july', 'July'), ('august', 'August'), ('september', 'September'), ('october', 'October'),
+         ('november', 'November'), ('december', 'December')], string="Month", required=True
+    )
+    target = fields.Float(string='Target')
+    month_id = fields.Many2one('leads.target', string='Month', ondelete='cascade')
+
+    # @api.onchange('month')
+    # def onchange_month(self):
+    #     a = []
+    #     field_info = self.fields_get(['month'])
+    #     keys = [key for key, _ in field_info['month']['selection']]
+    #     # a.append(selection_values.keys())
+    #     print(keys, 'all')
+
+

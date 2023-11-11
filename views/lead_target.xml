@@ -10,11 +10,26 @@
                     <group>
                         <group>
                             <field name="year" widget="integer" options="{'format': 0}"/>
-                            <field name="month"/>
+<!--                            <field name="month"/>-->
                             <field name="user_id"/>
-                            <field name="admission_target"/>
+<!--                            <field name="admission_target"/>-->
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Month Lists" name="months">
+                            <field name="month_ids">
+                                <tree string="Month Lists" editable="bottom">
+                                    <field name="month" style="width:250px;"/>
+                                    <field name="target" string="Admission Target"/>
+
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="admission_target">
+                                <field name="admission_target" string="Yearly Total Target"/>
+                            </group>
+                        </page>
+                    </notebook>
+
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -31,7 +46,7 @@
             <tree>
                 <field name="added_date"/>
                 <field name="year" widget="integer" options="{'format': 0}"/>
-                <field name="month"/>
+<!--                <field name="month"/>-->
                 <field name="user_id"/>
                 <field name="admission_target"/>
             </tree>
