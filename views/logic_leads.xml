@@ -86,10 +86,12 @@
                         </group>
                         <group>
                             <field name="college_name"/>
-                            <field name="course_type" attrs="{'required': [('lead_source_name', 'not in', ['Seminar','Seminar Data','Webinar'])]}"/>
+                            <field name="course_type"
+                                   attrs="{'required': [('lead_source_name', 'not in', ['Seminar','Seminar Data','Webinar'])]}"/>
                             <field name="course_id" invisible="1"/>
-                            <field name="base_course_id" options="{'no_create': True, 'no_create_edit':True}" placeholder="select course type first."/>
-                            <field name="course_level" options="{'no_create':True}"/>
+                            <field name="base_course_id" options="{'no_create': True, 'no_create_edit':True}"
+                                   placeholder="select course type first."/>
+                            <field name="course_level" options="{'no_create':True}" attrs="{'invisible': [('course_type', '=', 'international')]}"/>
                             <field name="level_name" invisible="1"/>
                             <field name="course_group" options="{'no_create':True}"/>
                             <field name="course_papers" widget="many2many_tags" options="{'no_create':True}"/>
@@ -182,7 +184,7 @@
                 <field name="lead_channel" string="Lead Channel"/>
                 <field name="name" string="Lead Name"/>
                 <field name="phone_number_second" string="Alternate Mobile Number"/>
-                <field name="course_id" string="Course"/>
+                <field name="base_course_id" string="Course"/>
                 <filter string="To Approve" name="state" domain="[('state', '=','draft')]"/>
                 <filter string="assign" name="leads_assign" context="{'group_by': 'leads_assign'}"/>
                 <!--                <group expand="0" string="Group By">-->
@@ -251,7 +253,7 @@
                 <field name="phone_number" widget="phone"/>
                 <button name="whatsapp_click_button" class="fa fa-whatsapp btn-success" type="object"/>
                 <field name="phone_number_second" widget="phone"/>
-                <field name="course_id"/>
+                <field name="base_course_id" string="Course"/>
                 <!--                <field name="sample" widget="url" string="WhatsApp"/>-->
                 <field name="remarks"/>
                 <field name="district"/>
