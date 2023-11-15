@@ -86,7 +86,7 @@ class LeadsForm(models.Model):
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
         string='Platform')
 
-    admission_date = fields.Date(string='Admission Date')
+    admission_date = fields.Date(string='Admission Date', readonly=True)
 
     @api.onchange('base_course_id')
     def get_course_levels(self):
@@ -385,6 +385,11 @@ class LeadsForm(models.Model):
             print(i.res_model, 'activity')
         # activity.unlink()
 
+    # @api.onchange('admission_status')
+    # def _onchange_admission_status(self):
+    #     print('kh;hfhdphodgs')
+    #
+
     @api.onchange('admission_status')
     def _onchange_admission_status(self):
         print('hi', self.seminar_lead_id)
@@ -393,6 +398,9 @@ class LeadsForm(models.Model):
 
         if self.admission_status == True:
             ss.admission_status = 'yes'
+            self.admission_date = datetime.now()
+        if self.admission_status == False:
+            self.admission_date = False
         # for rec in ss:
         #     if self.admission_status == True:
         #         if self.seminar_lead_id == rec.id:
