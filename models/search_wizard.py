@@ -47,7 +47,7 @@ class SearchLeadsWizard(models.TransientModel):
                     'view_mode': 'form',
                     'view_type': 'form',
                     'target': 'new',
-                    'context': {'default_owner': 'This number does not exist in our records'},
+                    'context': {'default_owner': str(self.mobile) + ' ' + 'does not exist in our records'},
 
                 }
 
