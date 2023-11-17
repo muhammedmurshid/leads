@@ -86,7 +86,7 @@ class LeadsForm(models.Model):
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
         string='Platform')
 
-    admission_date = fields.Date(string='Admission Date', readonly=True)
+    admission_date = fields.Date(string='Admission Date', compute='_compute_admission_status', store=True)
 
     @api.onchange('base_course_id')
     def get_course_levels(self):
@@ -155,7 +155,7 @@ class LeadsForm(models.Model):
             return {'domain': {'base_course_id': domain}}
 
     base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True,
-                                     domain=onchange_course_id_domain)
+                                     domain=[('state', '=', 'done')])
 
     @api.depends('leads_source')
     def get_leads_source_name(self):
@@ -389,6 +389,13 @@ class LeadsForm(models.Model):
     # def _onchange_admission_status(self):
     #     print('kh;hfhdphodgs')
     #
+    @api.depends('admission_status')
+    def _compute_admission_status(self):
+        for i in self:
+            if i.admission_status == True:
+                i.admission_date = datetime.now()
+            else:
+                i.admission_date = False
 
     @api.onchange('admission_status')
     def _onchange_admission_status(self):
@@ -398,7 +405,7 @@ class LeadsForm(models.Model):
 
         if self.admission_status == True:
             ss.admission_status = 'yes'
-            self.admission_date = datetime.now()
+            # self.admission_date = datetime.now()
         if self.admission_status == False:
             self.admission_date = False
         # for rec in ss:

@@ -112,7 +112,7 @@
                             <field name="referred_by_number"
                                    attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
                             <field name="admission_status"/>
-                            <field name="admission_date" attrs="{'required':[('admission_status', '=', True)]}"/>
+                            <field name="admission_date" attrs="{'invisible': [('admission_status', '!=', True)]}"/>
 
 
                         </group>
