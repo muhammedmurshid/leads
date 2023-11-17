@@ -263,9 +263,9 @@
                 <field name="admission_status"/>
                 <field name="lead_quality"/>
                 <field name="finished_points" string="Finished Touch Points" widget="badge"/>
-                <field name="state" widget="badge" decoration-success="state == 'done'"
-                       decoration-primary="state == 'crm'" decoration-info="state == 'confirmed'"
-                       decoration-danger="state == 'cancel'"/>
+<!--                <field name="state" widget="badge" decoration-success="state == 'done'"-->
+<!--                       decoration-primary="state == 'crm'" decoration-info="state == 'confirmed'"-->
+<!--                       decoration-danger="state == 'cancel'"/>-->
             </tree>
 
         </field>
