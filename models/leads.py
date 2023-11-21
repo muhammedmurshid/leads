@@ -20,6 +20,7 @@ class LeadsForm(models.Model):
     course_id = fields.Char(string='Course')
     reference_no = fields.Char(string='Sequence Number', required=True,
                                readonly=True, default=lambda self: _('New'))
+    preferred_batch_id = fields.Many2one('logic.base.batch', string='Preferred Batch')
     touch_ids = fields.One2many('leads.own.touch.points', 'touch_id', string='Touch Points')
     lead_quality = fields.Selection(
         [('hot', 'Hot'), ('warm', 'Warm'), ('cold', 'Cold'),
