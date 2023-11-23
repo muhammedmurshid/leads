@@ -143,6 +143,21 @@ class LeadsForm(models.Model):
 
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
 
+    source_seminar_or_not = fields.Boolean(string='Source Seminar or Not')
+
+    @api.onchange('leads_source','lead_source_name')
+    def get_source_seminar_or_not(self):
+        for record in self:
+            if record.lead_source_name == 'Seminar':
+                record.source_seminar_or_not = True
+
+            elif record.lead_source_name == 'Seminar Data':
+                record.source_seminar_or_not = True
+            elif record.lead_source_name == 'Webinar':
+                record.source_seminar_or_not = True
+            else:
+                record.source_seminar_or_not = False
+
     @api.onchange('course_type', 'base_course_id')
     def onchange_course_id_domain(self):
         if self.course_type:
