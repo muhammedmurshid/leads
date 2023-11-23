@@ -20,7 +20,7 @@ class LeadsForm(models.Model):
     course_id = fields.Char(string='Course')
     reference_no = fields.Char(string='Sequence Number', required=True,
                                readonly=True, default=lambda self: _('New'))
-    preferred_batch_id = fields.Many2one('logic.base.batch', string='Preferred Batch')
+
     touch_ids = fields.One2many('leads.own.touch.points', 'touch_id', string='Touch Points')
     lead_quality = fields.Selection(
         [('hot', 'Hot'), ('warm', 'Warm'), ('cold', 'Cold'),
@@ -42,7 +42,8 @@ class LeadsForm(models.Model):
     sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp')
     field_to_display = fields.Char(string='Field to Display')
     course_type = fields.Selection(
-        [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('nil', 'Nil')], string='Course Type')
+        [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('nil', 'Nil')],
+        string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
         [('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')],
@@ -81,7 +82,8 @@ class LeadsForm(models.Model):
                                 string='District', required=True)
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
-    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline'), ('nil', 'Nil')], string='Mode of Study',
+    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline'), ('nil', 'Nil')],
+                                     string='Mode of Study',
                                      required=True)
     platform = fields.Selection(
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
@@ -93,7 +95,8 @@ class LeadsForm(models.Model):
     def get_course_levels(self):
         ids = []
         # ids.append(self.base_course_id.course_levels.ids)
-        levels = self.env['course.levels'].search(['|',('course_id', '=', self.base_course_id.id), ('name', '=', 'Nil')])
+        levels = self.env['course.levels'].search(
+            ['|', ('course_id', '=', self.base_course_id.id), ('name', '=', 'Nil')])
         for rec in levels:
             ids.append(rec.id)
         domain = [('id', 'in', ids)]
@@ -101,6 +104,36 @@ class LeadsForm(models.Model):
 
     course_level = fields.Many2one('course.levels', string='Course Level', domain=get_course_levels)
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
+
+    @api.onchange('branch', 'preferred_batch_id')
+    def get_branch_inside_batches(self):
+        print('oooops')
+        ids = []
+        for j in self:
+            group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id)])
+            for rec in group:
+                print(rec.id, 'gr')
+                ids.append(rec.id)
+        if self.branch:
+            print('kkkkk')
+            domain = [('id', 'in', ids)]
+
+        else:
+            print('naaaa')
+            domain = []
+        return {'domain': {'preferred_batch_id': domain}}
+
+    preferred_batch_id = fields.Many2one('logic.base.batch', string='Preferred Batch',
+                                         domain=get_branch_inside_batches)
+
+    branch_true_or_false = fields.Boolean(string='Branch Check')
+
+    @api.onchange('branch')
+    def get_branch(self):
+        if self.branch:
+            self.branch_true_or_false = True
+        else:
+            self.branch_true_or_false = False
 
     @api.onchange('course_level')
     def get_course_groups(self):
@@ -138,14 +171,13 @@ class LeadsForm(models.Model):
 
     course_papers = fields.Many2many('course.papers', string='Course Papers', domain=get_course_papers)
 
-
     # touch_points
 
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
 
     source_seminar_or_not = fields.Boolean(string='Source Seminar or Not')
 
-    @api.onchange('leads_source','lead_source_name')
+    @api.onchange('leads_source', 'lead_source_name')
     def get_source_seminar_or_not(self):
         for record in self:
             if record.lead_source_name == 'Seminar':
@@ -172,6 +204,30 @@ class LeadsForm(models.Model):
 
     base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True,
                                      domain=[('state', '=', 'done')])
+
+    branch = fields.Many2one('logic.base.branches', string='Branch')
+
+    def get_old_branch_to_new_branch(self):
+        rec = self.env['leads.logic'].sudo().search([])
+        for record in rec:
+            if record.branch_id:
+                if record.branch_id.branch_name == 'Kottayam Campus':
+                    record.branch = 3
+                if record.branch_id.branch_name == 'Corporate Office & City Campus':
+                    record.branch = 1
+                if record.branch_id.branch_name == 'Cochin Campus':
+                    record.branch = 1
+                if record.branch_id.branch_name == 'Trivandrum Campus':
+                    record.branch = 6
+                if record.branch_id.branch_name == 'Calicut Campus':
+                    record.branch = 4
+                if record.branch_id.branch_name == 'Malappuram Campus':
+                    record.branch = 9
+                if record.branch_id.branch_name == 'Palakkad Campus':
+                    record.branch = 7
+
+                if record.branch_id.branch_name == 'Online Campus':
+                    record.branch = 10
 
     @api.depends('leads_source')
     def get_leads_source_name(self):

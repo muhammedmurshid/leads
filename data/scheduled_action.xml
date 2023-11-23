@@ -47,4 +47,14 @@
 <!--        <field name='interval_type'>minutes</field>-->
 <!--        <field name="numbercall">-1</field>-->
 <!--    </record>-->
+    <data>
+        <record id="action_old_branch_to_new_branch" model="ir.actions.server">
+            <field name="name">Change Branch</field>
+            <field name="model_id" ref="leads.model_leads_logic"/>
+            <field name="binding_model_id" ref="leads.model_leads_logic"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.get_old_branch_to_new_branch()</field>
+        </record>
+    </data>
 </odoo>
