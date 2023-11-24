@@ -204,7 +204,7 @@ class LeadsForm(models.Model):
     base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True,
                                      domain=[('state', '=', 'done')])
 
-    branch = fields.Many2one('logic.base.branches', string='Branch')
+    branch = fields.Many2one('logic.base.branches', string='Branch', required=1)
 
     def get_old_branch_to_new_branch(self):
         rec = self.env['leads.logic'].sudo().search([])
