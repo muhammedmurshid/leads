@@ -174,7 +174,6 @@ class LeadsForm(models.Model):
     # touch_points
 
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
-
     source_seminar_or_not = fields.Boolean(string='Source Seminar or Not')
 
     @api.onchange('leads_source', 'lead_source_name')

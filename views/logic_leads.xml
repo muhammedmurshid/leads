@@ -52,7 +52,7 @@
                     <button name="cancel_lead" type="object" states='draft,crm,confirm' string="Cancel"/>
                     <button name="reset_to_draft" type="object" states='cancel' string="Reset To Draft"
                             groups="leads.leads_admin"/>
-                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>
+<!--                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>-->
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Completed" bg_color="bg-success"
@@ -77,7 +77,7 @@
                             <field name="parent_number"/>
                             <field name="district"/>
                             <field name="place"/>
-                            <field name="branch_id" options="{'no_create': True}"/>
+<!--                            <field name="branch_id" options="{'no_create': True}"/>-->
                             <field name="sample" widget="url" invisible="1"/>
                             <!--                            <field name="display_value"/>-->
                             <field name="make_visible_manager" invisible="1"/>
@@ -95,17 +95,18 @@
                             <field name="course_id" invisible="1"/>
                             <field name="base_course_id" options="{'no_create': True, 'no_create_edit':True}"
                                    placeholder="select course type first."/>
-                            <field name="branch" placeholder="select branch"/>
+                            <field name="branch" placeholder="select branch" options="{'no_create': True, 'no_create_edit':True}"/>
                             <field name="branch_true_or_false" invisible="1"/>
-                            <field name="preferred_batch_id" options="{'no_create':True}" attrs="{'required': [('source_seminar_or_not', '=', False)], 'readonly':[('branch_true_or_false', '=', False)]}"/>
-                            <field name="course_level" options="{'no_create':True}" attrs="{'invisible': [('course_type', '=', 'international')]}"/>
+                            <field name="preferred_batch_id" options="{'no_create':True}"
+                                   attrs="{'required': [('source_seminar_or_not', '=', False)], 'readonly':[('branch_true_or_false', '=', False)]}" />
+                            <field name="course_level" options="{'no_create':True}"
+                                   attrs="{'invisible': [('course_type', '=', 'international')]}"/>
                             <field name="level_name" invisible="1"/>
                             <field name="course_group" options="{'no_create':True}"/>
                             <field name="course_papers" widget="many2many_tags" options="{'no_create':True}"/>
                             <field name="lead_qualification"/>
                             <field name="last_studied_course"/>
                             <field name="probability" widget="percentage"/>
-
                             <field name="current_user_id_int" invisible="1"/>
                             <field name="lead_quality"/>
                             <field name="lead_status"/>
@@ -119,8 +120,6 @@
                                    attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
                             <field name="admission_status"/>
                             <field name="admission_date" attrs="{'invisible': [('admission_status', '!=', True)]}"/>
-
-
                         </group>
                         <group>
                             <field name="batch_preference" invisible="1"/>
@@ -136,7 +135,6 @@
                             <field name="touch_ids" widget="one2many">
                                 <tree string="Touch Points" editable="bottom">
                                     <field name="name"/>
-
                                     <field name="finished"/>
                                     <field name="date" attrs="{'required':[('finished', '=', True)]}"/>
                                 </tree>
@@ -152,10 +150,7 @@
 
                         </page>
                     </notebook>
-
                 </sheet>
-
-
                 <div class="oe_chatter">
                     <field name="message_follower_ids"
                            widget="mail_followers"/>
@@ -251,7 +246,6 @@
         <field name="model">leads.logic</field>
         <field name="arch" type="xml">
             <tree sample="1" multi_edit="1">
-
                 <field name="reference_no"/>
                 <field name="leads_source"/>
                 <field name="name"/>
@@ -268,9 +262,9 @@
                 <field name="admission_status"/>
                 <field name="lead_quality"/>
                 <field name="finished_points" string="Finished Touch Points" widget="badge"/>
-<!--                <field name="state" widget="badge" decoration-success="state == 'done'"-->
-<!--                       decoration-primary="state == 'crm'" decoration-info="state == 'confirmed'"-->
-<!--                       decoration-danger="state == 'cancel'"/>-->
+                <!--                <field name="state" widget="badge" decoration-success="state == 'done'"-->
+                <!--                       decoration-primary="state == 'crm'" decoration-info="state == 'confirmed'"-->
+                <!--                       decoration-danger="state == 'cancel'"/>-->
             </tree>
 
         </field>
