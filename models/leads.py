@@ -64,7 +64,6 @@ class LeadsForm(models.Model):
     referred_by_name = fields.Char(string='Referred Person')
     referred_by_number = fields.Char(string='Referred Person Number')
     batch_preference = fields.Char(string='Batch Preference')
-    branch_id = fields.Many2one('logic.branches', string='Branch')
 
     lead_qualification = fields.Selection(
         [('plus_one_science', 'Plus One Science'), ('plus_two_science', 'Plus Two Science'),
