@@ -12,7 +12,7 @@ class LeadsForm(models.Model):
     leads_source = fields.Many2one('leads.sources', string='Leads Source', required=True)
     name = fields.Char(string='Lead Name', required=True)
     email_address = fields.Char(string='Email Address')
-    phone_number = fields.Char(string='Mobile Number', required=True, copy=False)
+    phone_number = fields.Char(string='Mobile Number', required=True)
     probability = fields.Float(string='Probability')
     admission_status = fields.Boolean(string='Admission')
     date_of_adding = fields.Date(string='Date of Adding', default=fields.Date.today())
@@ -38,7 +38,7 @@ class LeadsForm(models.Model):
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
     lead_owner = fields.Many2one('hr.employee', string='Lead Owner')
     seminar_lead_id = fields.Integer()
-    phone_number_second = fields.Char(string='Phone Number', unique=False)
+    phone_number_second = fields.Char(string='Phone Number')
     sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp')
     field_to_display = fields.Char(string='Field to Display')
     course_type = fields.Selection(
@@ -71,14 +71,15 @@ class LeadsForm(models.Model):
          ('commerce_degree', 'Commerce Degree'),
          ('other_degree', 'Other Degree'), ('working_professional', 'Working Professional')],
         string='Lead qualification')
+
     district = fields.Selection([('wayanad', 'Wayanad'), ('ernakulam', 'Ernakulam'), ('kollam', 'Kollam'),
                                  ('thiruvananthapuram', 'Thiruvananthapuram'), ('kottayam', 'Kottayam'),
                                  ('kozhikode', 'Kozhikode'), ('palakkad', 'Palakkad'), ('kannur', 'Kannur'),
                                  ('alappuzha', 'Alappuzha'), ('malappuram', 'Malappuram'), ('kasaragod', 'Kasaragod'),
                                  ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta'),
                                  ('abroad', 'Abroad'), ('other', 'Other'), ('nil', 'Nil')],
-
                                 string='District', required=True)
+
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
     mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline'), ('nil', 'Nil')],
@@ -342,8 +343,8 @@ class LeadsForm(models.Model):
         if vals.get('reference_no', _('New')) == _('New'):
             vals['reference_no'] = self.env['ir.sequence'].next_by_code(
                 'leads.logic') or _('New')
-
-        existing_record = self.search([('phone_number', '=', vals.get('phone_number'))])
+        #
+        existing_record = self.env['leads.logic'].search([('phone_number', '=', vals.get('phone_number'))])
         if existing_record:
             for record in existing_record:
                 # Handle the duplicate record, e.g., raise an error
@@ -382,6 +383,17 @@ class LeadsForm(models.Model):
                     raise ValidationError(
                         'This number already exists in the records created by ' + record.create_uid.name + ' ' + 'number is ' + str(
                             record.phone_number_second))
+
+    # @api.constrains('phone_number')
+    # def check_number_duplicate_mobile_number(self):
+    #     for record in self:
+    #         if record.phone_number:
+    #             duplicate_records = self.search(
+    #                 [('phone_number', '=', record.phone_number), ('id', '!=', record.id)])
+    #             if duplicate_records:
+    #                 raise ValidationError(
+    #                     'This number already exists in the records created by ' + record.create_uid.name + ' ' + 'number is ' + str(
+    #                         record.phone_number))
 
     def reset_to_draft(self):
         self.state = 'draft'

@@ -23,7 +23,7 @@ class SearchLeadsWizard(models.TransientModel):
                     'target': 'new',
                     'context': {
                         'default_owner': 'Lead: ' + leads.name + ' already exists with ' + leads.leads_assign.name,
-                        'default_course': 'Course: ' + leads.course_id,
+                        'default_course': 'Course: ' + leads.base_course_id.name,
                         'default_date': 'Added Date: ' + str(leads.date_of_adding)},
 
                 }
@@ -36,7 +36,7 @@ class SearchLeadsWizard(models.TransientModel):
                     'target': 'new',
                     'context': {
                         'default_owner': 'Lead: ' + leads_second.name + ' already exists with ' + leads_second.leads_assign.name,
-                        'default_course': 'Course: ' + leads_second.course_id,
+                        'default_course': 'Course: ' + leads_second.base_course_id.name,
                         'default_date': 'Added Date: ' + str(leads_second.date_of_adding)},
 
                 }
