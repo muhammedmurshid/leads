@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="admission_fee_template_report" model="ir.actions.report">
+            <field name="name">Admission Fee Receipt</field>
+            <field name="model">admission.fee.receipt</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">leads.admission_template</field>
+            <field name="binding_model_id" ref="model_admission_fee_receipt"/>
+            <field name="binding_type">report</field>
+        </record>
+        <template id="admission_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.basic_layout">
+                        <div class="page">
+                            <div class="text-middle" style="text-align:center;">
+                                <h4>Invoice cum Receipt</h4>
+                                <h6>Original Copy</h6>
+                            </div>
+                        </div>
+                        <style type="text/css">
+                            .table_head_border {
+                            text-align : center;
+                            vertical-align: middle;
+                            border-top: 1px solid black;
+                            border-bottom: 1px solid black;
+                            border-right: 1px solid black;
+                            border-left: 1px solid black;
+                            }
+                            .table_value_border {
+                            vertical-align: middle;
+                            border-top: 1px solid black;
+                            border-bottom: 1px solid black;
+                            border-right: 1px solid black;
+                            border-left: 1px solid black;
+                            }
+                            .total_border{
+                            vertical-align: middle;
+                            border-right: 1px solid black;
+                            border-left: 1px solid black;
+                            border-top: 1px solid black;
+                            border-bottom: 1px solid black;
+                            }
+                        </style>
+                        <div class="page">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <img t-att-src="'data:image/png;base64,%s' % to_text(doc.company_id.logo)"
+                                             style="width:30%; max-height:150pt;max-width:100pt;"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <span t-field="doc.company_id.partner_id"
+                                              t-options='{"widget": "contact", "fields": ["name", "address", "phone", "acc_number", "vat"], "no_marker": True}'/>
+
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </div>
+                        <!--                                </table>-->
+                        <br></br>
+                        <br></br>
+                        <table align="left" width="50%">
+                            <tr align="left">
+                                <td>
+                                    <strong>Date</strong>
+                                    <!--                                        </td>-->
+                                    <!--                                        <td>-->
+
+                                </td>
+                                <td align="left">:&amp;nbsp;
+                                    <span t-field="doc.invoice_date"/>
+                                </td>
+                            </tr>
+                            <tr align="left">
+                                <td>
+                                    <strong>Invoice No</strong>
+                                    <!--                                        </td>-->
+                                    <!--                                        <td>-->
+
+                                </td>
+                                <td align="left">:&amp;nbsp;
+                                    <span t-field="doc.payment_reference"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <strong>Billed To</strong>
+                                </td>
+                                <td>:&amp;nbsp;</td>
+                                <td align="right">
+                                    <span>
+                                        <strong>Payment Mode</strong>
+                                    </span>
+                                </td>
+                                <td align="left">:&amp;nbsp;
+                                    <span t-field="doc.payment_mode"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;">
+                                    <strong>Name</strong>
+                                </td>
+                                <td>:&amp;nbsp;
+                                    <span t-field="doc.student_name"/>
+                                </td>
+                                <td align="right">
+                                    <span>
+                                        <strong>Cheque No/Reference No</strong>
+                                    </span>
+                                </td>
+                                <td>:&amp;nbsp;
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;">
+                                    <span>
+                                        <strong>Batch</strong>
+                                    </span>
+                                </td>
+
+                                <td>:&amp;nbsp;
+                                    <span t-field="doc.batch_id.name"/>
+                                </td>
+
+                                <td align="right">
+                                    <span>
+                                        <strong>Course</strong>
+                                    </span>
+                                </td>
+                                <td>:&amp;nbsp;
+                                    <span t-field="doc.batch_id.course_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;">
+                                    <span>
+                                        <strong>Branch</strong>
+                                    </span>
+                                </td>
+
+                                <td>:&amp;nbsp;
+                                    <span t-field="doc.batch_id.branch_id.branch_name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;">
+                                    <span>
+                                        <strong>Address</strong>
+                                    </span>
+                                </td>
+                                <td>:&amp;nbsp;
+                                    <!--                                    <span t-field="doc.admission_id.partner_id.street"/>-->
+                                </td>
+                                <td align="right">
+                                    <span>
+                                        <strong>Admission No</strong>
+                                    </span>
+                                </td>
+                                <td>:&amp;nbsp;
+                                    <span t-field="doc.admission_id"/>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;">
+                                    <span>
+                                        <strong>State</strong>
+                                    </span>
+                                    <td>:&amp;nbsp;
+                                        <!--                                        <span t-field="doc.admission_id.partner_id.state_id"/>-->
+                                    </td>
+                                </td>
+                                <td align="right">
+                                    <span>
+                                        <strong>Student ID</strong>
+                                    </span>
+                                </td>
+
+                                <td>:&amp;nbsp;
+                                    <span t-field="doc.admission_id"/>
+                                </td>
+                            </tr>
+
+
+                        </table>
+
+                        <br></br>
+
+
+                        <table width="100%">
+                        <tr>
+                            <td class="table_value_border" rowspan="2" align="center">Sl No</td>
+                            <td class="table_value_border" rowspan="2" align="center">Fee Name</td>
+                            <!--                                <td class="table_value_border" rowspan="2" align="center">Product</td>-->
+
+                            <td class="table_value_border" align="center">Codes</td>
+                            <td class="table_value_border" rowspan="2" align="center">Taxable Amount</td>
+                            <td class="table_value_border" align="center">CGST</td>
+                            <td class="table_value_border" align="center">SGST</td>
+
+                            <td class="table_value_border" rowspan="2" align="center">Total Amount</td>
+
+                        </tr>
+                        <tr>
+                            <td class="table_value_border" align="center">HSN/SAC</td>
+                            <td class="table_value_border" align="center">Amount</td>
+                            <td class="table_value_border" align="center">Amount</td>
+
+                        </tr>
+                        <t t-set="sl_no" t-value="0"/>
+                        <!--                            <t t-foreach="doc.invoice_line_ids" t-as="d">-->
+                        <t t-set="sl_no" t-value="sl_no + 1"/>
+                        <tr>
+                            <td style="padding-left:14px;" class="table_value_border">
+                                <span t-esc="sl_no"/>
+                            </td>
+                            <td align="center" class="table_value_border">
+                                Admission Fee
+                            </td>
+                            <td align="center" class="table_value_border">
+                                <span t-field="doc.admission_fee"/>
+                            </td>
+
+                            <td align="center" class="table_value_border">
+                                <!--                                        <span t-field="d.product_id.l10n_in_hsn_code"/>-->
+                            </td>
+                            <td align="center" class="table_value_border">
+                                <span t-esc="'%.2f'% doc.admission_fee"/>
+                            </td>
+<!--                            < edit cheyyendedh ivide>-->
+<!--                            <t t-foreach="doc.amount_by_group" t-as="amount_by_group">-->
+<!--                                <t t-if="len(doc.line_ids.filtered(lambda line: line.tax_line_id))-->
+<!--                                                                                                                        in [0, 1] and doc.amount_untaxed == amount_by_group[2]">-->
+<!--                                    <td align="center" class="table_value_border">-->
+<!--                                        <span class="text-nowrap" t-esc="amount_by_group[0]"/>-->
+<!--                                    </td>-->
+<!--                                </t>-->
+<!--                                <t t-else="">-->
+<!--                                    <td align="center" class="table_value_border">-->
+<!--                                        <span class="text-nowrap" t-esc="amount_by_group[3]"/>-->
+<!--                                    </td>-->
+<!--                                </t>-->
+<!--                            </t>-->
+
+
+                            <td align="center" class="table_value_border">
+                                <span t-esc="doc.paid_amount"
+                                      t-options="{'widget': 'monetary', 'display_currency': (company_id or res_company).currency_id}"/>
+                            </td>
+
+
+                        </tr>
+
+<!--                    </t>-->
+                    <tr>
+                        <td style="padding-left:14px" class="table_value_border" colspan="3">Total</td>
+                        <td align="center" class="table_value_border">
+                        </td>
+
+
+                        <td align="center" class="table_value_border">
+                            <!--                            <span t-esc="'%.2f'% doc.amount_untaxed"/>-->
+                        </td>
+                        <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
+
+                            <t t-if="len(doc.line_ids.filtered(lambda line: line.tax_line_id))
+                                                                                                                        in [0, 1] and doc.amount_untaxed == amount_by_group[2]">
+
+                                <td align="center" class="table_value_border">
+                                    <span t-esc="amount_by_group[0]"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td align="center" class="table_value_border">
+                                    <span class="text-nowrap" t-esc="amount_by_group[3]"/>
+                                </td>
+                            </t>
+                        </t>
+
+                        <td align="center" class="table_value_border">
+                                                        <span t-esc="doc.paid_amount"
+                                                              t-options="{'widget': 'monetary', 'display_currency': (company_id or res_company).currency_id}"/>
+                        </td>
+
+                    </tr>
+
+
+                    <tr width="100%">
+                        <td style="padding-left:14px" class="table_value_border" colspan="3">Total
+                            Amount Received in Words:
+                        </td>
+                        <td class="table_value_border" colspan="5"
+                            t-esc="doc.sudo()._compute_total_amount_in_words(doc)"/>
+                    </tr>
+                    <tr>
+                        <td colspan="6">Cheque Payment subject to realisation Only and Fees Once Paid
+                            will not be refunded
+                        </td>
+                    </tr>
+
+
+                </table>
+
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <table>
+                    <tr>
+                        <td>Sd/-</td>
+                    </tr>
+                    <tr>
+                        <td>Accountant</td>
+                    </tr>
+                    <tr>
+                        <td>For,LOGIC MANAGEMENT TRAINING INSTITUTES PVT.LTD</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Mob:
+                            <span t-field="doc.company_id.acc_number"/>
+                        </td>
+
+                    </tr>
+                </table>
+                <!--                            </div>-->
+                <!--                        </div>-->
+            </t>
+        </t>
+    </t>
+</template>
+        </data>
+        </odoo>

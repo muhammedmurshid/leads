@@ -52,6 +52,7 @@
                     <button name="cancel_lead" type="object" states='draft,crm,confirm' string="Cancel"/>
                     <button name="reset_to_draft" type="object" states='cancel' string="Reset To Draft"
                             groups="leads.leads_admin"/>
+<!--                    <button name="action_admission" type="object" string="Admission" style="background-color:#6fc72c;"/>-->
 <!--                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>-->
                 </header>
                 <sheet>

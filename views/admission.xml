@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="admission_wizard_for_leads" model="ir.ui.view">
+            <field name="name">Admission wizard</field>
+            <field name="model">add.to.student.list</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="student_name" required="1" placeholder="Student name"/>
+                                <field name="batch_id" required="1" options="{'no_create': True}"/>
+                                <field name="mobile_number"/>
+                                <field name="email" invisible="1"/>
+                                <field name="gender" invisible="1"/>
+                                <field name="mode_of_study" invisible="1"/>
+                                <field name="admission_officer"/>
+
+                            </group>
+                            <group>
+                                <field name="current_rec" invisible="1"/>
+                                <field name="payment_mode"/>
+                                <field name="admission_id"/>
+                                <field name="admission_fee" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="due_amount" widget="monetary" invisible="1"/>
+                                <field name="total_fee" widget="monetary" invisible="1"/>
+                                <field name="pending_adm_fee" invisible="1"/>
+                            </group>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="paid_amount" widget="monetary"/>
+                            </group>
+
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_create_student" string="Create Admission" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="admission_receipt_wizard" model="ir.ui.view">
+            <field name="name">Admission Fee Receipt</field>
+            <field name="model">admission.fee.receipt</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="student_name"/>
+                                <field name="batch_id" required="1" options="{'no_create': True}"/>
+                                <field name="mobile_number" invisible="1"/>
+                                <field name="email" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="admission_fee" widget="monetary"/>
+                                <field name="payment_mode"/>
+                            </group>
+                            <group>
+                                <field name="admission_id"/>
+                                <field name="invoice_date"/>
+                                <field name="payment_reference"/>
+                                <field name="paid_amount" widget="monetary"/>
+
+
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+
+
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_print_receipt" string="Print Receipt" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

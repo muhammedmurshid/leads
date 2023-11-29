@@ -21,6 +21,11 @@ leads_own_touch_points_marketing,user_leads,model_leads_own_touch_points,lead_ma
 leads_target,user_leads,model_leads_target,leads_admin,1,1,1,1
 leads_target_month,user_leads,model_month_lists_leads_target,leads_admin,1,1,1,1
 
+leads_admission,user_leads,model_add_to_student_list,,1,1,1,1
+leads_admission_receipt,user_leads,model_admission_fee_receipt,,1,1,1,1
+
+
+
 
 
 

@@ -16,6 +16,8 @@
         'views/re_allocation_req.xml',
         'views/touch_points.xml',
         'views/lead_target.xml',
+        'views/admission.xml',
+        'views/receipt_template.xml',
         # 'views/link_generation.xml',
 
     ],

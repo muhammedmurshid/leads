@@ -15,7 +15,7 @@ class LeadsForm(models.Model):
     phone_number = fields.Char(string='Mobile Number', required=True)
     probability = fields.Float(string='Probability')
     admission_status = fields.Boolean(string='Admission')
-    date_of_adding = fields.Date(string='Date of Adding', default=fields.Date.today())
+    date_of_adding = fields.Date(string='Date of Adding', default=fields.Datetime.now)
     last_update_date = fields.Datetime(string='Last Updated Date', )
     course_id = fields.Char(string='Course')
     reference_no = fields.Char(string='Sequence Number', required=True,
@@ -344,7 +344,7 @@ class LeadsForm(models.Model):
             vals['reference_no'] = self.env['ir.sequence'].next_by_code(
                 'leads.logic') or _('New')
         #
-        existing_record = self.env['leads.logic'].search([('phone_number', '=', vals.get('phone_number'))])
+        existing_record = self.env['leads.logic'].sudo().search([('phone_number', '=', vals.get('phone_number'))])
         if existing_record:
             for record in existing_record:
                 # Handle the duplicate record, e.g., raise an error
@@ -439,6 +439,20 @@ class LeadsForm(models.Model):
 
         }
 
+    # @api.onchange('admission_status')
+    # def _onchange_admission_status(self):
+    #     print('booooooooooooooo')
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'name': 'Assign Leads Owner',
+    #         'res_model': 'add.to.student.list',
+    #         'view_mode': 'form',
+    #         'view_type': 'form',
+    #         'target': 'new',
+    #         # 'context': {'parent_obj': active_ids}
+    #
+    #     }
+
     def confirm(self):
         touch_points = self.env['leads.touch.points'].sudo().search([])
         for touch in touch_points:
@@ -490,10 +504,21 @@ class LeadsForm(models.Model):
             # self.admission_date = datetime.now()
         if self.admission_status == False:
             self.admission_date = False
-        # for rec in ss:
-        #     if self.admission_status == True:
-        #         if self.seminar_lead_id == rec.id:
-        #             rec.admission_status = 'yes'
+
+    def action_admission(self):
+        print(self.id, 'admission')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Admission Form',
+            'res_model': 'add.to.student.list',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_mode_of_study': self.mode_of_study, 'default_email': self.email_address,
+                        'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
+                        'default_current_rec': self.id, }
+
+        }
 
     def cron_seven_days_checking_lead(self):
         print('working')
