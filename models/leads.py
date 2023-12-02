@@ -14,13 +14,12 @@ class LeadsForm(models.Model):
     email_address = fields.Char(string='Email Address')
     phone_number = fields.Char(string='Mobile Number', required=True)
     probability = fields.Float(string='Probability')
-    admission_status = fields.Boolean(string='Admission')
+    admission_status = fields.Boolean(string='Admission', readonly=True)
     date_of_adding = fields.Date(string='Date of Adding', default=fields.Datetime.now)
-    last_update_date = fields.Datetime(string='Last Updated Date', )
+    last_update_date = fields.Datetime(string='Last Updated Date')
     course_id = fields.Char(string='Course')
     reference_no = fields.Char(string='Sequence Number', required=True,
                                readonly=True, default=lambda self: _('New'))
-
     touch_ids = fields.One2many('leads.own.touch.points', 'touch_id', string='Touch Points')
     lead_quality = fields.Selection(
         [('hot', 'Hot'), ('warm', 'Warm'), ('cold', 'Cold'),
@@ -71,6 +70,8 @@ class LeadsForm(models.Model):
          ('commerce_degree', 'Commerce Degree'),
          ('other_degree', 'Other Degree'), ('working_professional', 'Working Professional')],
         string='Lead qualification')
+    adm_id = fields.Integer(string='Admission Id')
+    student_id = fields.Many2one('logic.students', string='Student Id')
 
     district = fields.Selection([('wayanad', 'Wayanad'), ('ernakulam', 'Ernakulam'), ('kollam', 'Kollam'),
                                  ('thiruvananthapuram', 'Thiruvananthapuram'), ('kottayam', 'Kottayam'),
@@ -175,6 +176,42 @@ class LeadsForm(models.Model):
 
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
     source_seminar_or_not = fields.Boolean(string='Source Seminar or Not')
+
+    def get_admission_profile(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Admission',
+            'view_mode': 'tree,form',
+            'res_model': 'admission.fee.collection',
+            'domain': [('name', '=', self.student_id.id)],
+            'context': "{'create': False}"
+        }
+
+    def compute_count(self):
+        for record in self:
+            record.admission_count = self.env['admission.fee.collection'].search_count(
+                [('name', '=', self.student_id.id)])
+
+    admission_count = fields.Integer(compute='compute_count')
+
+    def get_student_profile(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Students',
+            'view_mode': 'tree,form',
+            'res_model': 'logic.students',
+            'domain': [('id', '=', self.student_id.id)],
+            'context': "{'create': False}"
+        }
+
+    def compute_student_count(self):
+        for record in self:
+            record.student_count = self.env['logic.students'].search_count(
+                [('id', '=', self.student_id.id)])
+
+    student_count = fields.Integer(compute='compute_student_count')
 
     @api.onchange('leads_source', 'lead_source_name')
     def get_source_seminar_or_not(self):

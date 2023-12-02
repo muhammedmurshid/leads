@@ -17,7 +17,7 @@
         'views/touch_points.xml',
         'views/lead_target.xml',
         'views/admission.xml',
-        'views/receipt_template.xml',
+        # 'views/receipt_template.xml',
         # 'views/link_generation.xml',
 
     ],
