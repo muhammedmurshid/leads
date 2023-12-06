@@ -46,13 +46,13 @@
                     <field name="state" widget="statusbar"/>
                     <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm"
                             onclick="confirm()"/>
-                    <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"
-                            attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel','confirm']),('make_visible_manager', '=', True)]}"/>
+<!--                    <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"-->
+<!--                            attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel','confirm']),('make_visible_manager', '=', True)]}"/>-->
                     <button name="action_done" class="oe_highlight" type="object" string="Done" states="confirm"/>
-                    <button name="cancel_lead" type="object" states='draft,crm,confirm' string="Cancel"/>
+                    <button name="cancel_lead" type="object" states='draft,confirm' string="Cancel"/>
                     <button name="reset_to_draft" type="object" states='cancel' string="Reset To Draft"
                             groups="leads.leads_admin"/>
-                    <button name="action_admission" type="object" string="Admission" style="background-color:#6fc72c;" attrs="{'invisible':[('admission_status', '=', True)]}"/>
+                    <button name="action_admission" type="object" string="Admission" style="background-color:#6fc72c;" attrs="{'invisible':['|', ('admission_status', '=', True), ('state', 'in', ['draft','cancel'])]}"/>
                     <!--                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>-->
                 </header>
 
@@ -71,8 +71,8 @@
                             attrs="{'invisible': [('state', '!=', 'done')]}"/>
                     <widget name="web_ribbon" title="cancel" bg_color="bg-danger"
                             attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
-                    <widget name="web_ribbon" title="added crm" bg_color="bg-info"
-                            attrs="{'invisible': [('state', '!=', 'crm')]}"/>
+<!--                    <widget name="web_ribbon" title="added crm" bg_color="bg-info"-->
+<!--                            attrs="{'invisible': [('state', '!=', 'crm')]}"/>-->
                     <h2>
                         <field name="reference_no"/>
                     </h2>
@@ -124,7 +124,7 @@
                             <field name="lead_quality"/>
                             <field name="lead_status"/>
                             <field name="sales_person_id"
-                                   attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel']),('make_visible_manager', '=', True)]}"/>
+                                   attrs="{'invisible':['|',('state', 'in', ['draft', 'cancel']),('make_visible_manager', '=', True)]}"/>
                             <field name="referred_by"/>
                             <field name="referred_by_name"
                                    attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>

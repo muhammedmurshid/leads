@@ -45,7 +45,7 @@ class LeadsForm(models.Model):
         string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
-        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('crm', 'Added Crm'), ('cancel', 'Cancelled')],
+        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')],
         string='State',
         default='draft', tracking=True)
     last_studied_course = fields.Char(string='Last Studied Course')
@@ -594,25 +594,25 @@ class LeadsForm(models.Model):
 
             # rec.state = 'draft'
 
-    def leadcreation(self):
-        if not self.sales_person_id:
-            raise ValidationError('Please select sales person')
-        elif not self.name:
-            raise ValidationError('Please enter name')
-        elif not self.email_address:
-            raise ValidationError('Please enter email address')
-        else:
-            crm = self.env['crm.lead'].create({
-                'student_name': self.name,
-                # 'email_from': self.email_address,
-                'phone': self.phone_number,
-                'name': self.name,
-                'user_id': self.sales_person_id.id,
-            }
-            )
-            self.state = 'crm'
-
-        print('hi')
+    # def leadcreation(self):
+    #     if not self.sales_person_id:
+    #         raise ValidationError('Please select sales person')
+    #     elif not self.name:
+    #         raise ValidationError('Please enter name')
+    #     elif not self.email_address:
+    #         raise ValidationError('Please enter email address')
+    #     else:
+    #         crm = self.env['crm.lead'].create({
+    #             'student_name': self.name,
+    #             # 'email_from': self.email_address,
+    #             'phone': self.phone_number,
+    #             'name': self.name,
+    #             'user_id': self.sales_person_id.id,
+    #         }
+    #         )
+    #         self.state = 'crm'
+    #
+    #     print('hi')
 
     sales_person_id = fields.Many2one('res.users', string='Sales person')
 
