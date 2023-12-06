@@ -553,7 +553,7 @@ class LeadsForm(models.Model):
             'target': 'new',
             'context': {'default_mode_of_study': self.mode_of_study, 'default_email': self.email_address,
                         'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
-                        'default_current_rec': self.id, }
+                        'default_current_rec': self.id, 'default_student_name': self.name,}
 
         }
 

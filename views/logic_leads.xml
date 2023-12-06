@@ -69,7 +69,7 @@
                     </div>
                     <widget name="web_ribbon" title="Completed" bg_color="bg-success"
                             attrs="{'invisible': [('state', '!=', 'done')]}"/>
-                    <widget name="web_ribbon" title="cancel" bg_color="bg-danger"
+                    <widget name="web_ribbon" title="cancelled" bg_color="bg-danger"
                             attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
 <!--                    <widget name="web_ribbon" title="added crm" bg_color="bg-info"-->
 <!--                            attrs="{'invisible': [('state', '!=', 'crm')]}"/>-->
