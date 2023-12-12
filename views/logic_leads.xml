@@ -46,13 +46,14 @@
                     <field name="state" widget="statusbar"/>
                     <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm"
                             onclick="confirm()"/>
-<!--                    <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"-->
-<!--                            attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel','confirm']),('make_visible_manager', '=', True)]}"/>-->
+                    <!--                    <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"-->
+                    <!--                            attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel','confirm']),('make_visible_manager', '=', True)]}"/>-->
                     <button name="action_done" class="oe_highlight" type="object" string="Done" states="confirm"/>
                     <button name="cancel_lead" type="object" states='draft,confirm' string="Cancel"/>
                     <button name="reset_to_draft" type="object" states='cancel' string="Reset To Draft"
                             groups="leads.leads_admin"/>
-                    <button name="action_admission" type="object" string="Admission" style="background-color:#6fc72c;" attrs="{'invisible':['|', ('admission_status', '=', True), ('state', 'in', ['draft','cancel'])]}"/>
+                    <button name="action_admission" type="object" string="Admission" style="background-color:#6fc72c;"
+                            attrs="{'invisible':['|', ('admission_status', '=', True), ('state', 'in', ['draft','cancel'])]}"/>
                     <!--                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>-->
                 </header>
 
@@ -71,8 +72,8 @@
                             attrs="{'invisible': [('state', '!=', 'done')]}"/>
                     <widget name="web_ribbon" title="cancelled" bg_color="bg-danger"
                             attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
-<!--                    <widget name="web_ribbon" title="added crm" bg_color="bg-info"-->
-<!--                            attrs="{'invisible': [('state', '!=', 'crm')]}"/>-->
+                    <!--                    <widget name="web_ribbon" title="added crm" bg_color="bg-info"-->
+                    <!--                            attrs="{'invisible': [('state', '!=', 'crm')]}"/>-->
                     <h2>
                         <field name="reference_no"/>
                     </h2>
@@ -304,6 +305,18 @@
         </field>
     </record>
 
+    <record id="view_pivot_leads_logic" model="ir.ui.view">
+        <field name="name">logic.leads.pivot</field>
+        <field name="model">leads.logic</field>
+        <field name="arch" type="xml">
+            <pivot string="Pivot View">
+                <field name="name" type="row"/>
+                <field name="leads_source"/>
+                <field name="admission_status"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="action_set_remove_spaces" model="ir.actions.server">
         <field name="name">Remove Phone Number Spaces</field>
         <field name="model_id" ref="leads.model_leads_logic"/>
@@ -314,7 +327,7 @@
     <record model="ir.actions.act_window" id="details_leads_view_form">
         <field name="name">Leads Details</field>
         <field name="res_model">leads.logic</field>
-        <field name="view_mode">tree,form,activity</field>
+        <field name="view_mode">tree,form,activity,pivot</field>
         <field name="limit">20</field>
 
     </record>
