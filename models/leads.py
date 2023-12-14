@@ -544,18 +544,22 @@ class LeadsForm(models.Model):
 
     def action_admission(self):
         print(self.id, 'admission')
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Admission Form',
-            'res_model': 'add.to.student.list',
-            'view_mode': 'form',
-            'view_type': 'form',
-            'target': 'new',
-            'context': {'default_mode_of_study': self.mode_of_study, 'default_email': self.email_address,
-                        'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
-                        'default_current_rec': self.id, 'default_student_name': self.name}
 
-        }
+        # admission wizard codes
+        # return {
+        #     'type': 'ir.actions.act_window',
+        #     'name': 'Admission Form',
+        #     'res_model': 'add.to.student.list',
+        #     'view_mode': 'form',
+        #     'view_type': 'form',
+        #     'target': 'new',
+        #     'context': {'default_mode_of_study': self.mode_of_study, 'default_email': self.email_address,
+        #                 'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
+        #                 'default_current_rec': self.id, 'default_student_name': self.name}
+        #
+        # }
+        self.state = 'done'
+        self.admission_status = True
 
     def cron_seven_days_checking_lead(self):
         print('working')
