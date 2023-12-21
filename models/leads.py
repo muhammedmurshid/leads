@@ -29,7 +29,7 @@ class LeadsForm(models.Model):
     lead_status = fields.Selection(
         [('interested', 'Interested'), ('not_interested', 'Not Interested'), ('not_responding', 'Not Responding'),
          ('already_enrolled', 'Already Enrolled'), ('joined_in_another_institute', 'Joined in another institute'),
-         ('under_follow_up', 'Under Follow Up')],
+         ('under_follow_up', 'Under Follow Up'), ('nil', 'Nil')],
         string='Lead Status', required=True
     )
 
@@ -493,7 +493,7 @@ class LeadsForm(models.Model):
     def confirm(self):
         touch_points = self.env['leads.touch.points'].sudo().search([])
         for touch in touch_points:
-            print(touch.name, 'toches')
+            print(touch.name, 'touches')
             points = []
             res_list = {
                 'name': touch.id,
@@ -619,6 +619,7 @@ class LeadsForm(models.Model):
     #     print('hi')
 
     sales_person_id = fields.Many2one('res.users', string='Sales person')
+    seminar_id = fields.Integer(string='Seminar')
 
     @api.onchange('leads_source', 'lead_owner', 'name', 'email_address', 'phone_number', 'phone_number_second', 'place',
                   'district', 'course_id', 'lead_qualification', 'last_studied_course', 'probability', 'leads_assign',

@@ -98,6 +98,7 @@
                             <field name="mode_of_study"/>
                             <field name="platform"/>
                             <field name="lead_owner"/>
+                            <field name="seminar_id" invisible="1"/>
                             <field name="leads_assign" attrs="{'invisible':[('make_visible_manager', '=', True)]}"/>
                         </group>
                         <group>
