@@ -763,3 +763,9 @@ class LeadsOwnTouchPoints(models.Model):
                 record.date = fields.Datetime.now()
             if record.finished == False:
                 record.date = False
+
+
+class AdmissionFeeReceiptCustom(models.Model):
+    _name = 'admission.fee.receipt'
+
+    name = fields.Char(string='Test Name')
