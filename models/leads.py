@@ -87,7 +87,7 @@ class LeadsForm(models.Model):
                                      string='Mode of Study',
                                      required=True)
     platform = fields.Selection(
-        [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('other', 'Other')],
+        [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('just_dial', 'Just Dial'), ('other', 'Other')],
         string='Platform')
 
     admission_date = fields.Date(string='Admission Date', compute='_compute_admission_status', store=True)
