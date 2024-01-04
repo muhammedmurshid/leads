@@ -697,6 +697,13 @@ class LeadsForm(models.Model):
                 print(number_count, 'number_count')
                 i.phone_number = '+' + i.phone_number
 
+    def action_lead_source_where_was_coming_data(self):
+        rec = self.env['seminar.students'].sudo().search([])
+        for i in rec:
+            leads = self.env['leads.logic'].sudo().search([('phone_number', '=', i.contact_number)])
+            leads.seminar_id = i.seminar_id
+            print(i.seminar_id, 'seminar id')
+
 
 class LeadsSources(models.Model):
     _name = 'leads.sources'

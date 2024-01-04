@@ -29,7 +29,18 @@
         <field name="state">code</field>
         <field name="code">
             if records:
-                    action = records.change_leads_channel_name()
+            action = records.change_leads_channel_name()
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_server_lead_data_source">
+        <field name="name">Add Seminar Id</field>
+        <field name="model_id" ref="model_leads_logic"/>
+        <field name="binding_model_id" ref="model_leads_logic"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_lead_source_where_was_coming_data()
         </field>
     </record>
     <data>
@@ -38,23 +49,23 @@
 
         </record>
     </data>
-<!--    <record id="activity_remove" model="ir.cron">-->
-<!--        <field name="name">Remove activity in leads</field>-->
-<!--        <field name="model_id" ref="model_leads_logic"/>-->
-<!--        <field name="state">code</field>-->
-<!--        <field name="code">model.activity_remove_in_leads()</field>-->
-<!--        <field name='interval_number'>1</field>-->
-<!--        <field name='interval_type'>minutes</field>-->
-<!--        <field name="numbercall">-1</field>-->
-<!--    </record>-->
-<!--    <data>-->
-<!--        <record id="action_old_branch_to_new_branch" model="ir.actions.server">-->
-<!--            <field name="name">Change Branch</field>-->
-<!--            <field name="model_id" ref="leads.model_leads_logic"/>-->
-<!--            <field name="binding_model_id" ref="leads.model_leads_logic"/>-->
-<!--            <field name="binding_view_types">list</field>-->
-<!--            <field name="state">code</field>-->
-<!--            <field name="code">action = records.get_old_branch_to_new_branch()</field>-->
-<!--        </record>-->
-<!--    </data>-->
+    <!--    <record id="activity_remove" model="ir.cron">-->
+    <!--        <field name="name">Remove activity in leads</field>-->
+    <!--        <field name="model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="state">code</field>-->
+    <!--        <field name="code">model.activity_remove_in_leads()</field>-->
+    <!--        <field name='interval_number'>1</field>-->
+    <!--        <field name='interval_type'>minutes</field>-->
+    <!--        <field name="numbercall">-1</field>-->
+    <!--    </record>-->
+    <!--    <data>-->
+    <!--        <record id="action_old_branch_to_new_branch" model="ir.actions.server">-->
+    <!--            <field name="name">Change Branch</field>-->
+    <!--            <field name="model_id" ref="leads.model_leads_logic"/>-->
+    <!--            <field name="binding_model_id" ref="leads.model_leads_logic"/>-->
+    <!--            <field name="binding_view_types">list</field>-->
+    <!--            <field name="state">code</field>-->
+    <!--            <field name="code">action = records.get_old_branch_to_new_branch()</field>-->
+    <!--        </record>-->
+    <!--    </data>-->
 </odoo>
