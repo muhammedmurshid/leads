@@ -33,16 +33,16 @@
         </field>
     </record>
 
-    <record model="ir.actions.server" id="action_server_lead_data_source">
-        <field name="name">Add Seminar Id</field>
-        <field name="model_id" ref="model_leads_logic"/>
-        <field name="binding_model_id" ref="model_leads_logic"/>
-        <field name="binding_view_types">list</field>
-        <field name="state">code</field>
-        <field name="code">
-            action = records.action_lead_source_where_was_coming_data()
-        </field>
-    </record>
+<!--    <record model="ir.actions.server" id="action_server_lead_data_source">-->
+<!--        <field name="name">Add Seminar Id</field>-->
+<!--        <field name="model_id" ref="model_leads_logic"/>-->
+<!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
+<!--        <field name="binding_view_types">list</field>-->
+<!--        <field name="state">code</field>-->
+<!--        <field name="code">-->
+<!--            action = records.action_lead_source_where_was_coming_data()-->
+<!--        </field>-->
+<!--    </record>-->
     <data>
         <record id="default_base_course" model="logic.base.courses">
             <field name="name">Nill</field>

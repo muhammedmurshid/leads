@@ -701,8 +701,10 @@ class LeadsForm(models.Model):
         rec = self.env['seminar.students'].sudo().search([])
         for i in rec:
             leads = self.env['leads.logic'].sudo().search([('phone_number', '=', i.contact_number)])
-            leads.seminar_id = i.seminar_id
-            print(i.seminar_id, 'seminar id')
+            if leads:
+                if leads.leads_source == 'seminar' or leads.leads_source == 'seminar Data':
+                    leads.seminar_id = i.seminar_id
+
 
 
 class LeadsSources(models.Model):
