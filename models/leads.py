@@ -27,9 +27,9 @@ class LeadsForm(models.Model):
          ('nil', 'Nil')],
         string='Lead Quality', required=True)
     lead_status = fields.Selection(
-        [('interested', 'Interested'), ('not_interested', 'Not Interested'), ('not_responding', 'Not Responding'),
+        [('not_responding', 'Not Responding'),
          ('already_enrolled', 'Already Enrolled'), ('joined_in_another_institute', 'Joined in another institute'),
-         ('under_follow_up', 'Under Follow Up'), ('nil', 'Nil')],
+         ('nil', 'Nil')],
         string='Lead Status', required=True
     )
 
