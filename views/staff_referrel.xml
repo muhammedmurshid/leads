@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="model_logic_leads_referral_form_view" model="ir.ui.view">
+        <field name="name">Referral Leads</field>
+        <field name="model">staff.reference.leads</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Types">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="action_add_lead" type="object" states="draft" string="Confirm" class="oe_highlight"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="lead_name" placeholder="student name"/>
+                            <field name="lead_source_id"/>
+                            <field name="phone_number" widget="phone"/>
+                            <field name="email_address" widget="email"/>
+
+                        </group>
+                        <group>
+                            <field name="country"/>
+                            <field name="district"/>
+                            <field name="place"/>
+                            <field name="course_id"/>
+                            <field name="branch_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="model_logic_leads_referral_tree_view" model="ir.ui.view">
+        <field name="name">Referral Leads</field>
+        <field name="model">staff.reference.leads</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="lead_name"/>
+
+            </tree>
+
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="model_logic_leads_referral_action">
+        <field name="name">Referral Leads</field>
+        <field name="res_model">staff.reference.leads</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Referral Leads"
+              id="model_logic_leads_referral_menu"
+              action="model_logic_leads_referral_action"
+              parent="menu_leads_details"
+              sequence="10"/>
+
+
+</odoo>

@@ -50,6 +50,7 @@ class LeadsForm(models.Model):
         default='draft', tracking=True)
     last_studied_course = fields.Char(string='Last Studied Course')
     college_name = fields.Char(string='College/School')
+    lead_referral_staff_id = fields.Many2one('res.users', string='Lead Referral Staff')
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
                                    string='Referred By')
     country = fields.Selection(
@@ -90,7 +91,7 @@ class LeadsForm(models.Model):
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('just_dial', 'Just Dial'), ('other', 'Other')],
         string='Platform')
 
-    admission_date = fields.Date(string='Admission Date', compute='_compute_admission_status', store=True)
+    admission_date = fields.Date(string='Admission Date', compute='_compute_admission_status', store=True, readonly=False)
 
     @api.onchange('base_course_id')
     def get_course_levels(self):
@@ -546,18 +547,18 @@ class LeadsForm(models.Model):
         print(self.id, 'admission')
 
         # admission wizard codes
-        # return {
-        #     'type': 'ir.actions.act_window',
-        #     'name': 'Admission Form',
-        #     'res_model': 'add.to.student.list',
-        #     'view_mode': 'form',
-        #     'view_type': 'form',
-        #     'target': 'new',
-        #     'context': {'default_mode_of_study': self.mode_of_study, 'default_email': self.email_address,
-        #                 'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
-        #                 'default_current_rec': self.id, 'default_student_name': self.name}
-        #
-        # }
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Admission Form',
+            'res_model': 'add.to.student.list',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_mode_of_study': self.mode_of_study, 'default_email': self.email_address,
+                        'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
+                        'default_current_rec': self.id, 'default_student_name': self.name}
+
+        }
         self.state = 'done'
         self.admission_status = True
 
@@ -620,6 +621,37 @@ class LeadsForm(models.Model):
 
     sales_person_id = fields.Many2one('res.users', string='Sales person')
     seminar_id = fields.Integer(string='Seminar')
+
+    def perf_leads_users_open_action(self):
+        user = []
+        users = self.env.ref('leads.lead_staff_referral').users
+        for i in users:
+            user.append(i.id)
+        print(user, 'user')
+        print(self.env.user.id, 'user')
+        if self.env.user.id in user:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Leads',
+                'res_model': 'staff.reference.leads',
+                'view_mode': 'tree,form',
+                'target': 'current',
+            }
+        else:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Leads',
+                'res_model': 'leads.logic',
+                'view_mode': 'tree,form,activity,pivot',
+                'target': 'current',
+            }
+        # return {
+        #     'type': 'ir.actions.act_window',
+        #     'name': 'Open Leads',
+        #     'res_model': 'sale.order',
+        #     'view_mode': 'tree,form',
+        #     'target': 'current',
+        # }
 
     @api.onchange('leads_source', 'lead_owner', 'name', 'email_address', 'phone_number', 'phone_number_second', 'place',
                   'district', 'course_id', 'lead_qualification', 'last_studied_course', 'probability', 'leads_assign',

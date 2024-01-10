@@ -25,16 +25,7 @@ leads_target_month,user_leads,model_month_lists_leads_target,leads_admin,1,1,1,1
 
 leads_admission,user_leads,model_add_to_student_list,,1,1,1,1
 
-
-
-
-
-
-
-
-
-
-
-
+leads_staff_referral,access_leads,model_staff_reference_leads,leads.lead_staff_referral,1,1,1,1
+user_access_staff_referral,user_leads,model_leads_logic,leads.lead_staff_referral,1,1,1,1
 
 

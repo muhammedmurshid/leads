@@ -53,7 +53,7 @@
                     <button name="reset_to_draft" type="object" states='cancel' string="Reset To Draft"
                             groups="leads.leads_admin"/>
                     <button name="action_admission" type="object" string="Admission" style="background-color:#6fc72c;"
-                            attrs="{'invisible':['|', ('admission_status', '=', True), ('state', 'in', ['draft','cancel'])]}"/>
+                            attrs="{'invisible':[('state', 'in', ['draft','cancel'])]}"/>
                     <!--                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>-->
                 </header>
 
@@ -141,6 +141,7 @@
                             <field name="remarks"/>
                             <field name="student_id" invisible="1"/>
                             <field name="adm_id" invisible="1"/>
+                            <field name="lead_referral_staff_id" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="date_of_adding"/>
@@ -331,6 +332,14 @@
         <field name="view_mode">tree,form,activity,pivot</field>
         <field name="limit">20</field>
 
+    </record>
+    <record model="ir.actions.server" id="open_lead_users_action">
+        <field name="name">Leads</field>
+        <field name="model_id" ref="model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.perf_leads_users_open_action()
+        </field>
     </record>
     <menuitem name="Leads" id="menu_leads_details" action="details_leads_view_form"
               web_icon="leads/static/description/icon.png"
