@@ -557,7 +557,7 @@ class LeadsForm(models.Model):
         #     'context': {'default_mode_of_study': self.mode_of_study, 'default_email': self.email_address,
         #                 'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
         #                 'default_current_rec': self.id, 'default_student_name': self.name}
-        # 
+        #
         # }
         self.state = 'done'
         self.admission_status = True
@@ -734,9 +734,12 @@ class LeadsForm(models.Model):
         for i in rec:
             leads = self.env['leads.logic'].sudo().search([('phone_number', '=', i.contact_number)])
             if leads:
-                if leads.leads_source == 'seminar' or leads.leads_source == 'seminar Data':
-                    leads.seminar_id = i.seminar_id
-
+                if leads.lead_source_name == 'Seminar' or leads.lead_source_name == 'Seminar Data':
+                    print(leads.name, 'leads')
+                    print(i.seminar_id, 'seminar_id')
+                    leads.sudo().update({
+                        'seminar_id': i.seminar_id
+                    })
 
 
 class LeadsSources(models.Model):
