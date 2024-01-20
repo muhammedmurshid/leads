@@ -53,6 +53,7 @@ class LeadsForm(models.Model):
     lead_referral_staff_id = fields.Many2one('res.users', string='Lead Referral Staff')
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
                                    string='Referred By')
+    campaign_name = fields.Char(string='Campaign Name')
     country = fields.Selection(
         [('india', 'India'), ('germany', 'Germany'), ('canada', 'Canada'), ('usa', 'USA'), ('australia', 'Australia'),
          ('italy', 'Italy'), ('france', 'France'), ('united_kingdom', 'United Kingdom'),
@@ -740,6 +741,7 @@ class LeadsForm(models.Model):
                     leads.sudo().update({
                         'seminar_id': i.seminar_id
                     })
+
 
 
 class LeadsSources(models.Model):
