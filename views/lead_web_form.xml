@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
-        <record id="website_menu_leads_logic_form" model="website.menu">
-            <field name="name">Leads Form</field>
-            <field name="url">/leads_form</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">50</field>
-        </record>
+<!--        <record id="website_menu_leads_logic_form" model="website.menu">-->
+<!--            <field name="name">Leads Form</field>-->
+<!--            <field name="url">/leads_form</field>-->
+<!--            <field name="parent_id" ref="website.main_menu"/>-->
+<!--            <field name="sequence" type="int">50</field>-->
+<!--        </record>-->
         <template id="leads_service_request_form">
             <t t-call="website.layout">
                 <div id="request_form">
