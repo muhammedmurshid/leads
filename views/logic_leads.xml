@@ -83,6 +83,8 @@
                             <field name="country"/>
                             <field name="lead_channel" attrs="{'readonly':[('make_visible_manager', '=', True)]}"/>
                             <field name="leads_source" options="{'no_create': True, 'no_create_edit':True}"/>
+                            <field name="incoming_source"
+                                   attrs="{'invisible':[('incoming_source_checking', '=', False)], 'required':[('incoming_source_checking', '=', True)]}"/>
                             <field name="lead_source_name" invisible="1"/>
                             <field name="campaign_name"
                                    attrs="{'invisible':[('lead_source_name', '!=', 'Digital Leads')]}"/>
@@ -96,6 +98,7 @@
                             <field name="sample" widget="url" invisible="1"/>
                             <!--                            <field name="display_value"/>-->
                             <field name="make_visible_manager" invisible="1"/>
+                            <field name="incoming_source_checking" invisible="1"/>
                             <field name="seminar_lead_id" invisible="1"/>
                             <field name="mode_of_study"/>
                             <field name="platform"/>

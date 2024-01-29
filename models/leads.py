@@ -49,6 +49,8 @@ class LeadsForm(models.Model):
         string='State',
         default='draft', tracking=True)
     last_studied_course = fields.Char(string='Last Studied Course')
+    incoming_source = fields.Char(string='How do you hear about us?')
+    incoming_source_checking = fields.Boolean(string='Incoming Source Checking', )
     college_name = fields.Char(string='College/School')
     lead_referral_staff_id = fields.Many2one('res.users', string='Lead Referral Staff')
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
@@ -93,6 +95,22 @@ class LeadsForm(models.Model):
         string='Platform')
 
     admission_date = fields.Date(string='Admission Date', compute='_compute_admission_status', store=True, readonly=False)
+
+    @api.onchange('lead_source_name')
+    def check_lead_source_incoming(self):
+        for rec in self:
+            if rec.lead_source_name:
+                # source = []
+                # if rec.lead_source_name:
+                #     source.append(rec.lead_source_name)
+                print('source')
+                if "Incoming Calls" in rec.lead_source_name:
+                    rec.incoming_source_checking = True
+                    print('ya')
+                else:
+                    rec.incoming_source_checking = False
+                    print('na')
+
 
     @api.onchange('base_course_id')
     def get_course_levels(self):
