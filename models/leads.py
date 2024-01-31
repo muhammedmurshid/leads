@@ -49,7 +49,10 @@ class LeadsForm(models.Model):
         string='State',
         default='draft', tracking=True)
     last_studied_course = fields.Char(string='Last Studied Course')
-    incoming_source = fields.Char(string='How do you hear about us?')
+    incoming_source = fields.Selection(
+        [('social_media', 'Social Media'), ('google', 'Google'), ('hoardings', 'Hoardings'), ('tv_ads', 'TV Ads'),
+         ('other', 'Other')],
+        string='How do you hear about us?')
     incoming_source_checking = fields.Boolean(string='Incoming Source Checking', )
     college_name = fields.Char(string='College/School')
     lead_referral_staff_id = fields.Many2one('res.users', string='Lead Referral Staff')
@@ -91,10 +94,12 @@ class LeadsForm(models.Model):
                                      string='Mode of Study',
                                      required=True)
     platform = fields.Selection(
-        [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('just_dial', 'Just Dial'), ('other', 'Other')],
+        [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('just_dial', 'Just Dial'),
+         ('other', 'Other')],
         string='Platform')
 
-    admission_date = fields.Date(string='Admission Date', compute='_compute_admission_status', store=True, readonly=False)
+    admission_date = fields.Date(string='Admission Date', compute='_compute_admission_status', store=True,
+                                 readonly=False)
 
     @api.onchange('lead_source_name')
     def check_lead_source_incoming(self):
@@ -110,7 +115,6 @@ class LeadsForm(models.Model):
                 else:
                     rec.incoming_source_checking = False
                     print('na')
-
 
     @api.onchange('base_course_id')
     def get_course_levels(self):
@@ -759,7 +763,6 @@ class LeadsForm(models.Model):
                     leads.sudo().update({
                         'seminar_id': i.seminar_id
                     })
-
 
 
 class LeadsSources(models.Model):
