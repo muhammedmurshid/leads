@@ -7,9 +7,10 @@ class MailInheritActivityLeads(models.Model):
     assign_to = fields.Many2one('hr.employee', string='Assigned To')
     lead_id = fields.Many2one('leads.logic', string='Lead')
 
-    def _compute_display_name(self):
-        for activity in self:
-            activity.display_name = activity.activity_type_id.name + ' : ' + activity.res_name
+    # def _compute_display_name(self):
+    #     for activity in self:
+
+            # activity.display_name = activity.activity_type_id.name + ' : ' + activity.res_name
 
     @api.model
     def default_get(self, fields):
