@@ -112,6 +112,8 @@ class LeadsForm(models.Model):
                 if "Incoming Calls" in rec.lead_source_name:
                     rec.incoming_source_checking = True
                     print('ya')
+                elif "Walk In" in rec.lead_source_name:
+                    rec.incoming_source_checking = True
                 else:
                     rec.incoming_source_checking = False
                     print('na')
@@ -525,8 +527,8 @@ class LeadsForm(models.Model):
             }
             points.append((0, 0, res_list))
             self.touch_ids = points
-        self.activity_schedule('leads.mail_seminar_leads_done',
-                               user_id=self.leads_assign.user_id.id)
+        # self.activity_schedule('leads.mail_seminar_leads_done',
+        #                        user_id=self.leads_assign.user_id.id)
         # print('agsfdsdshdasgda')
         # for i in self.activity_ids:
         #     i.action_feedback(feedback='confirmed')
