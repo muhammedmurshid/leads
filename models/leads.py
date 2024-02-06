@@ -14,7 +14,7 @@ class LeadsForm(models.Model):
     email_address = fields.Char(string='Email Address')
     phone_number = fields.Char(string='Mobile Number', required=True)
     probability = fields.Float(string='Probability')
-    admission_status = fields.Boolean(string='Admission', readonly=True)
+    admission_status = fields.Boolean(string='Admission', readonly=False)
     date_of_adding = fields.Date(string='Date of Adding', default=fields.Datetime.now)
     last_update_date = fields.Datetime(string='Last Updated Date')
     course_id = fields.Char(string='Course')
@@ -105,10 +105,6 @@ class LeadsForm(models.Model):
     def check_lead_source_incoming(self):
         for rec in self:
             if rec.lead_source_name:
-                # source = []
-                # if rec.lead_source_name:
-                #     source.append(rec.lead_source_name)
-                print('source')
                 if "Incoming Calls" in rec.lead_source_name:
                     rec.incoming_source_checking = True
                     print('ya')
