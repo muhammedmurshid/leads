@@ -10,14 +10,17 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="student_name" required="1" placeholder="Student name"/>
+                                <field name="type"/>
+                                <field name="student_id"
+                                       attrs="{'invisible': [('type', '=', 'new_admission')], 'required':[('type', '=', 'already_taken_admission')]}"/>
+                                <field name="student_name" required="1" placeholder="Student name"
+                                       attrs="{'invisible': [('type', '!=', 'new_admission')]}"/>
+                                <field name="course_type"/>
                                 <field name="batch_id" required="1" options="{'no_create': True}"/>
                                 <field name="mobile_number"/>
                                 <field name="email"/>
 
                                 <field name="mode_of_study"/>
-
-                                <field name="admission_officer"/>
 
                             </group>
 
@@ -35,8 +38,8 @@
                                     <field name="country" placeholder="Country" class="o_address_country"
                                            options='{"no_open": True, "no_create": True}'/>
                                 </div>
+                                <field name="admission_officer"/>
                             </group>
-
 
 
                         </group>

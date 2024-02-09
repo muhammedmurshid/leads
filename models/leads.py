@@ -206,14 +206,14 @@ class LeadsForm(models.Model):
             'name': 'Admission',
             'view_mode': 'tree,form',
             'res_model': 'admission.fee.collection',
-            'domain': [('name', '=', self.student_id.id)],
+            'domain': [('name.lead_id', '=', self.id)],
             'context': "{'create': False}"
         }
 
     def compute_count(self):
         for record in self:
             record.admission_count = self.env['admission.fee.collection'].search_count(
-                [('name', '=', self.student_id.id)])
+                [('name.lead_id', '=', self.id)])
 
     admission_count = fields.Integer(compute='compute_count')
 
@@ -568,20 +568,23 @@ class LeadsForm(models.Model):
         print(self.id, 'admission')
 
         # admission wizard codes
-        # return {
-        #     'type': 'ir.actions.act_window',
-        #     'name': 'Admission Form',
-        #     'res_model': 'add.to.student.list',
-        #     'view_mode': 'form',
-        #     'view_type': 'form',
-        #     'target': 'new',
-        #     'context': {'default_mode_of_study': self.mode_of_study, 'default_email': self.email_address,
-        #                 'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
-        #                 'default_current_rec': self.id, 'default_student_name': self.name}
-        #
-        # }
-        self.state = 'done'
-        self.admission_status = True
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Admission Form',
+            'res_model': 'add.to.student.list',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_mode_of_study': self.mode_of_study, 'default_course_type': self.course_type,
+                        'default_email': self.email_address,
+                        'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
+                        'default_current_rec': self.id, 'default_student_name': self.name}
+
+        }
+        self.write({
+            'admission_status': True,
+            'state': 'done'
+        })
 
     def cron_seven_days_checking_lead(self):
         print('working')
@@ -589,8 +592,6 @@ class LeadsForm(models.Model):
         users_ids = []
         current_datetime = datetime.now()
         current_date = current_datetime.date()
-
-        print(current_date, 'date')
 
         for rec in records:
             if rec.date_of_adding:
