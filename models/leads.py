@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 
 class LeadsForm(models.Model):
@@ -41,7 +42,8 @@ class LeadsForm(models.Model):
     sample = fields.Char(string='Sample', compute='get_phone_number_for_whatsapp')
     field_to_display = fields.Char(string='Field to Display')
     course_type = fields.Selection(
-        [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('nil', 'Nil')],
+        [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('repeaters', 'Repeaters'),
+         ('nil', 'Nil')],
         string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
@@ -248,6 +250,44 @@ class LeadsForm(models.Model):
             else:
                 record.source_seminar_or_not = False
 
+    def action_cron_job_activity_for_after_4_days(self):
+        print('working')
+        rec = self.env['leads.logic'].sudo().search([])
+        today = fields.Date.today()
+        for record in rec:
+            if record.date_of_adding:
+                print(record.date_of_adding, 'date of adding')
+                print(today, 'today')
+                delta = today - record.date_of_adding
+                print(delta, 'delta')
+                if delta.days > 4:
+                    if record.state == 'confirm':
+                        if record.lead_quality != 'bad_lead':
+                            print('ya', record.id)
+                            record.activity_schedule(
+                                'leads.mail_seminar_leads_done', user_id=record.leads_assign.user_id.id,
+                                note=f'You have been assigned a {record.name} 4 days ago; please update its status.'),
+                else:
+                    print('no', record.id)
+
+    def action_cancel_cron_for_bad_leads(self):
+        lead = self.env['leads.logic'].sudo().search([])
+        today = fields.Date.today()
+        for rec in lead:
+            if rec.date_of_adding:
+                delta = today - rec.date_of_adding
+                if delta.days > 4:
+                    if rec.state == 'confirm':
+                        if rec.lead_quality == 'bad_lead':
+                            activity_id = self.env['mail.activity'].search(
+                                [('res_id', '=', rec.id), (
+                                    'activity_type_id', '=',
+                                    self.env.ref('leads.mail_seminar_leads_done').id)])
+                            if activity_id:
+                                activity_id.action_feedback(feedback=f'This lead is bad.')
+
+
+
     @api.onchange('course_type', 'base_course_id')
     def onchange_course_id_domain(self):
         if self.course_type:
@@ -427,8 +467,13 @@ class LeadsForm(models.Model):
             self.touch_ids = points
 
     def action_done(self):
-        for i in self.activity_ids:
-            i.action_feedback(feedback='done')
+        # for i in self.activity_ids:
+        #     i.action_feedback(feedback='done')
+        activity_id = self.env['mail.activity'].search(
+            [('res_id', '=', self.id), ('user_id', '=', self.env.user.id), (
+                'activity_type_id', '=', self.env.ref('leads.mail_seminar_leads_done').id)])
+        if activity_id:
+            activity_id.action_feedback(feedback=f'lead status is done.')
 
         self.state = 'done'
 
@@ -683,6 +728,11 @@ class LeadsForm(models.Model):
             i.last_update_date = fields.Datetime.now()
 
     def cancel_lead(self):
+        activity_id = self.env['mail.activity'].search(
+            [('res_id', '=', self.id), ('user_id', '=', self.env.user.id), (
+                'activity_type_id', '=', self.env.ref('leads.mail_seminar_leads_done').id)])
+        if activity_id:
+            activity_id.action_feedback(feedback=f'lead is cancelled.')
         self.state = 'cancel'
 
     @api.depends('leads_source')
