@@ -287,7 +287,6 @@ class LeadsForm(models.Model):
                                 activity_id.action_feedback(feedback=f'This lead is bad.')
 
 
-
     @api.onchange('course_type', 'base_course_id')
     def onchange_course_id_domain(self):
         if self.course_type:
