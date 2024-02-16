@@ -138,8 +138,8 @@
                             <field name="referred_by_id" attrs="{'invisible':[('referred_by', '!=', 'staff')]}"/>
                             <field name="referred_by_number"
                                    attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
-                            <field name="admission_status"/>
-                            <field name="admission_date" attrs="{'invisible': [('admission_status', '!=', True)]}"/>
+                            <field name="admission_status" groups="base.group_no_one"/>
+                            <field name="admission_date" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="batch_preference" invisible="1"/>

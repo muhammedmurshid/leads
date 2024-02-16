@@ -208,14 +208,14 @@ class LeadsForm(models.Model):
             'name': 'Admission',
             'view_mode': 'tree,form',
             'res_model': 'admission.fee.collection',
-            'domain': [('name.lead_id', '=', self.id)],
+            'domain': [('lead_id', '=', self.id)],
             'context': "{'create': False}"
         }
 
     def compute_count(self):
         for record in self:
             record.admission_count = self.env['admission.fee.collection'].search_count(
-                [('name.lead_id', '=', self.id)])
+                [('lead_id', '=', record.id)])
 
     admission_count = fields.Integer(compute='compute_count')
 

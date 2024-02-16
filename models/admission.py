@@ -51,6 +51,7 @@ class AddToStudentList(models.TransientModel):
         if self.type == 'new_admission':
             print('no student')
             self.current_rec.admission_status = True
+            self.current_rec.admission_date = today
             student = self.env['logic.students'].sudo().create({
                 'name': self.student_name,
                 'batch_id': self.batch_id.id,
@@ -89,6 +90,8 @@ class AddToStudentList(models.TransientModel):
                     'admission_officer_id': self.admission_officer.id,
                     'invoice_date': fields.Date.today(),
                     'admission_fee': 0,
+                    'lead_id': self.current_rec.id,
+                    'admission_date': today,
 
                 })
                 fee_id = self.env['admission.fee.collection'].search([])[-1].id
@@ -103,6 +106,8 @@ class AddToStudentList(models.TransientModel):
                     'email': self.email,
                     'admission_officer_id': self.admission_officer.id,
                     'invoice_date': fields.Date.today(),
+                    'lead_id': self.current_rec.id,
+                    'admission_date': today,
 
                 })
                 fee_id = self.env['admission.fee.collection'].search([])[-1].id
@@ -124,6 +129,7 @@ class AddToStudentList(models.TransientModel):
             print('yo yo')
             if self.student_id.adm_fee_due_amount == 0 and self.student_id.course_due_amount == 0:
                 if self.student_id.admission_date:
+                    self.current_rec.admission_date = today
                     one_year = self.student_id.admission_date + relativedelta(years=1)
                     print(one_year, 'one year')
                     if one_year > today:
@@ -136,29 +142,43 @@ class AddToStudentList(models.TransientModel):
                             # 'mode_of_study': self.mode_of_study,
                             'admission_officer_id': self.admission_officer.id,
                             'invoice_date': fields.Date.today(),
+                            'admission_date': today,
                             'admission_fee': 0,
+                            'lead_id': self.current_rec.id,
+
 
                         })
 
                         fee_id = self.env['admission.fee.collection'].search([])[-1].id
                         fee = self.env['admission.fee.collection'].browse(fee_id)
                         fee.state = 'paid'
-                        fee = self.env['admission.fee.collection'].sudo().create({
-                            'name': self.student_id.id,
-                            'batch_id': self.batch_id.id,
-                            'mobile_number': self.mobile_number,
-                            'email': self.email,
-                            # 'mode_of_study': self.mode_of_study,
-                            'admission_officer_id': self.admission_officer.id,
-                            'invoice_date': fields.Date.today(),
+                        fee.name.admission_date = today
+                        fee.name.update({
+                                'std_adm_detail_ids': [(0, 0, {
+                                    'batch_id': self.batch_id.id,
 
-                        })
-
-                        fee_id = self.env['admission.fee.collection'].search([])[-1].id
-                        fee = self.env['admission.fee.collection'].browse(fee_id)
-                        print(fee.name.name, 'fee name')
-                        print(fee_id, 'fee id')
-                        self.current_rec.adm_id = fee_id
+                                })]
+                            })
+                        fee.name.admission_officer = self.admission_officer.id
+                        fee.name.batch_id = self.batch_id.id
+                        fee.name.mode_of_study = self.mode_of_study
+                        # fee = self.env['admission.fee.collection'].sudo().create({
+                        #     'name': self.student_id.id,
+                        #     'batch_id': self.batch_id.id,
+                        #     'mobile_number': self.mobile_number,
+                        #     'email': self.email,
+                        #     # 'mode_of_study': self.mode_of_study,
+                        #     'admission_officer_id': self.admission_officer.id,
+                        #     'invoice_date': fields.Date.today(),
+                        #     'lead_id': self.current_rec.id
+                        #
+                        # })
+                        #
+                        # fee_id = self.env['admission.fee.collection'].search([])[-1].id
+                        # fee = self.env['admission.fee.collection'].browse(fee_id)
+                        # print(fee.name.name, 'fee name')
+                        # print(fee_id, 'fee id')
+                        # self.current_rec.adm_id = fee_id
                         return {
                             'type': 'ir.actions.act_window',
                             'name': 'Fee Receipt',
@@ -179,6 +199,8 @@ class AddToStudentList(models.TransientModel):
                                 'admission_officer_id': self.admission_officer.id,
                                 'invoice_date': fields.Date.today(),
                                 'admission_fee': 0,
+                                'lead_id': self.current_rec.id,
+                                'admission_date': today,
 
                             })
                             self.student_id.batch_id = self.batch_id
@@ -187,6 +209,7 @@ class AddToStudentList(models.TransientModel):
                             fee = self.env['admission.fee.collection'].browse(fee_id)
                             fee.state = 'paid'
                         else:
+                            print('sec work')
                             fee = self.env['admission.fee.collection'].sudo().create({
                                 'name': self.student_id.id,
                                 'batch_id': self.batch_id.id,
@@ -195,14 +218,17 @@ class AddToStudentList(models.TransientModel):
                                 # 'mode_of_study': self.mode_of_study,
                                 'admission_officer_id': self.admission_officer.id,
                                 'invoice_date': fields.Date.today(),
+                                'lead_id': self.current_rec.id,
+                                'admission_date': today,
 
                             })
                             self.student_id.batch_id = self.batch_id
                             self.student_id.admission_fee = self.batch_id.admission_fee
                             self.student_id.course_fee = self.batch_id.course_fee
+                            self.student_id.admission_date = today
                             self.student_id.paid_amount = 0
                             self.student_id.paid_course_fee = 0
-                            self.student_id.write({
+                            self.student_id.update({
                                 'std_adm_detail_ids': [(0, 0, {
                                     'batch_id': self.batch_id.id,
 
@@ -225,8 +251,7 @@ class AddToStudentList(models.TransientModel):
                 else:
                     print('not working')
             else:
-                print(self.student_id.adm_fee_due_amount, 'pending')
-                print(self.student_id.course_due_amount, 'course pending')
+
                 raise UserError(
                     _('Pending payment for previous fees')
                 )
