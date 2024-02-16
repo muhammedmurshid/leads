@@ -255,20 +255,21 @@ class LeadsForm(models.Model):
         rec = self.env['leads.logic'].sudo().search([])
         today = fields.Date.today()
         for record in rec:
-            if record.date_of_adding:
-                print(record.date_of_adding, 'date of adding')
-                print(today, 'today')
-                delta = today - record.date_of_adding
-                print(delta, 'delta')
-                if delta.days > 4:
-                    if record.state == 'confirm':
-                        if record.lead_quality != 'bad_lead':
-                            print('ya', record.id)
-                            record.activity_schedule(
-                                'leads.mail_seminar_leads_done', user_id=record.leads_assign.user_id.id,
-                                note=f'You have been assigned a {record.name} 4 days ago; please update its status.'),
-                else:
-                    print('no', record.id)
+            if not record.activity_ids:
+                if record.date_of_adding:
+                    delta = today - record.date_of_adding
+                    if delta.days > 4:
+                        if record.state == 'confirm':
+                            print('yaaaaaaaa', record.admission_status, record.id)
+                            if record.admission_status != True:
+                                if record.lead_quality != 'bad_lead':
+                                    print('yes', record.id)
+                                    record.activity_schedule(
+                                        'leads.mail_seminar_leads_done', user_id=record.leads_assign.user_id.id,
+                                        note=f'You have been assigned {record.name} lead. please update its status.'),
+
+            else:
+                print('no', record.id)
 
     def action_cancel_cron_for_bad_leads(self):
         lead = self.env['leads.logic'].sudo().search([])
@@ -278,14 +279,13 @@ class LeadsForm(models.Model):
                 delta = today - rec.date_of_adding
                 if delta.days > 4:
                     if rec.state == 'confirm':
-                        if rec.lead_quality == 'bad_lead':
+                        if rec.lead_quality == 'bad_lead' or rec.admission_status == True:
                             activity_id = self.env['mail.activity'].search(
                                 [('res_id', '=', rec.id), (
                                     'activity_type_id', '=',
                                     self.env.ref('leads.mail_seminar_leads_done').id)])
                             if activity_id:
-                                activity_id.action_feedback(feedback=f'This lead is bad.')
-
+                                activity_id.action_feedback(feedback=f'Done.')
 
     @api.onchange('course_type', 'base_course_id')
     def onchange_course_id_domain(self):
