@@ -95,6 +95,7 @@ class LeadsForm(models.Model):
     mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline'), ('nil', 'Nil')],
                                      string='Mode of Study',
                                      required=True)
+    assigned_date = fields.Date(string='Assigned Date', readonly=1)
     platform = fields.Selection(
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('just_dial', 'Just Dial'),
          ('other', 'Other')],
@@ -256,8 +257,8 @@ class LeadsForm(models.Model):
         today = fields.Date.today()
         for record in rec:
             if not record.activity_ids:
-                if record.date_of_adding:
-                    delta = today - record.date_of_adding
+                if record.assigned_date:
+                    delta = today - record.assigned_date
                     if delta.days > 4:
                         if record.state == 'confirm':
                             print('yaaaaaaaa', record.admission_status, record.id)
@@ -275,8 +276,8 @@ class LeadsForm(models.Model):
         lead = self.env['leads.logic'].sudo().search([])
         today = fields.Date.today()
         for rec in lead:
-            if rec.date_of_adding:
-                delta = today - rec.date_of_adding
+            if rec.assigned_date:
+                delta = today - rec.assigned_date
                 if delta.days > 4:
                     if rec.state == 'confirm':
                         if rec.lead_quality == 'bad_lead' or rec.admission_status == True:
@@ -390,6 +391,12 @@ class LeadsForm(models.Model):
             record.finished_touch_points = len(record.touch_ids.filtered(lambda x: x.finished == True))
 
     finished_points = fields.Char('Finished Touch Points')
+
+    def action_print_activity_date(self):
+        if self.activity_ids:
+            print(self.activity_ids.create_date.date(), 'date')
+        else:
+            print('no activity')
 
     @api.onchange('touch_ids', 'count_of_total_touch_points', 'finished_touch_points')
     def get_finished_count(self):
@@ -574,6 +581,7 @@ class LeadsForm(models.Model):
         #     i.action_feedback(feedback='confirmed')
 
         self.state = 'confirm'
+        self.assigned_date = datetime.now()
 
     def activity_remove_in_leads(self):
         activity = self.env['mail.activity'].sudo().search(

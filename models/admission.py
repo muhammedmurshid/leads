@@ -51,6 +51,7 @@ class AddToStudentList(models.TransientModel):
         if self.type == 'new_admission':
             print('no student')
             self.current_rec.admission_status = True
+            self.current_rec.state = 'done'
             self.current_rec.admission_date = today
             student = self.env['logic.students'].sudo().create({
                 'name': self.student_name,
@@ -74,8 +75,6 @@ class AddToStudentList(models.TransientModel):
                     'batch_id': self.batch_id.id,
 
                 })]
-
-
             })
 
             stud_id = self.env['logic.students'].search([])[-1].id
