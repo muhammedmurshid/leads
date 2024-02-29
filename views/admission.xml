@@ -44,6 +44,7 @@
                                 <field name="course_group_id"/>
                                 <field name="course_papers_ids" widget="many2many_tags"/>
                                 <field name="admission_officer"/>
+                                <field name="admission_date"/>
                             </group>
 
 

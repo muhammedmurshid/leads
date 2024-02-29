@@ -38,6 +38,7 @@ class AddToStudentList(models.TransientModel):
     course_type = fields.Selection(
         [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('nil', 'Nil')],
         string="Course Type")
+    admission_date = fields.Date(string="Admission Date", default=fields.Date.context_today, required=1, readonly=0)
 
     def action_create_student(self):
         today = datetime.date.today()
@@ -50,14 +51,14 @@ class AddToStudentList(models.TransientModel):
             print('no student')
             self.current_rec.admission_status = True
             self.current_rec.state = 'done'
-            self.current_rec.admission_date = today
+            self.current_rec.admission_date = self.admission_date
             student = self.env['logic.students'].sudo().create({
                 'name': self.student_name,
                 'batch_id': self.batch_id.id,
                 'phone_number': self.mobile_number,
                 'email': self.email,
                 'gender': self.gender,
-                'admission_date': today,
+                'admission_date': self.admission_date,
                 'mode_of_study': self.mode_of_study,
                 'admission_officer': self.admission_officer.id,
 
@@ -93,7 +94,7 @@ class AddToStudentList(models.TransientModel):
                     'invoice_date': fields.Date.today(),
                     'admission_fee': 0,
                     'lead_id': self.current_rec.id,
-                    'admission_date': today,
+                    'admission_date': self.admission_date,
 
                 })
                 fee_id = self.env['admission.fee.collection'].search([])[-1].id
@@ -109,7 +110,7 @@ class AddToStudentList(models.TransientModel):
                     'admission_officer_id': self.admission_officer.id,
                     'invoice_date': fields.Date.today(),
                     'lead_id': self.current_rec.id,
-                    'admission_date': today,
+                    'admission_date': self.admission_date,
 
                 })
                 fee_id = self.env['admission.fee.collection'].search([])[-1].id
@@ -131,7 +132,7 @@ class AddToStudentList(models.TransientModel):
             print('yo yo')
             if self.student_id.adm_fee_due_amount == 0 and self.student_id.course_due_amount == 0:
                 if self.student_id.admission_date:
-                    self.current_rec.admission_date = today
+                    self.current_rec.admission_date = self.admission_date
                     one_year = self.student_id.admission_date + relativedelta(years=1)
                     print(one_year, 'one year')
                     if one_year > today:
@@ -144,7 +145,7 @@ class AddToStudentList(models.TransientModel):
                             # 'mode_of_study': self.mode_of_study,
                             'admission_officer_id': self.admission_officer.id,
                             'invoice_date': fields.Date.today(),
-                            'admission_date': today,
+                            'admission_date': self.admission_date,
                             'admission_fee': 0,
                             'lead_id': self.current_rec.id,
 
@@ -206,7 +207,7 @@ class AddToStudentList(models.TransientModel):
                                 'invoice_date': fields.Date.today(),
                                 'admission_fee': 0,
                                 'lead_id': self.current_rec.id,
-                                'admission_date': today,
+                                'admission_date': self.admission_date,
 
                             })
                             self.student_id.batch_id = self.batch_id
@@ -225,13 +226,13 @@ class AddToStudentList(models.TransientModel):
                                 'admission_officer_id': self.admission_officer.id,
                                 'invoice_date': fields.Date.today(),
                                 'lead_id': self.current_rec.id,
-                                'admission_date': today,
+                                'admission_date': self.admission_date,
 
                             })
                             self.student_id.batch_id = self.batch_id
                             self.student_id.admission_fee = self.batch_id.admission_fee
                             self.student_id.course_fee = self.batch_id.course_fee
-                            self.student_id.admission_date = today
+                            self.student_id.admission_date = self.admission_date
                             self.student_id.paid_amount = 0
                             self.student_id.paid_course_fee = 0
                             self.student_id.update({
