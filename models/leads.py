@@ -117,40 +117,40 @@ class LeadsForm(models.Model):
                     rec.incoming_source_checking = False
                     print('na')
 
-    @api.onchange('base_course_id')
-    def get_course_levels(self):
-        ids = []
-        # ids.append(self.base_course_id.course_levels.ids)
-        levels = self.env['course.levels'].search(
-            ['|', ('course_id', '=', self.base_course_id.id), ('name', '=', 'Nil')])
-        for rec in levels:
-            ids.append(rec.id)
-        domain = [('id', 'in', ids)]
-        return {'domain': {'course_level': domain}}
+    # @api.onchange('base_course_id', 'course_level', 'course_group', 'preferred_batch_id', 'course_type')
+    # def get_course_levels(self):
+    #     ids = []
+    #     # ids.append(self.base_course_id.course_levels.ids)
+    #     levels = self.env['course.levels'].search(
+    #         ['|', ('course_id', '=', self.base_course_id.id), ('name', '=', 'Nil')])
+    #     for rec in levels:
+    #         ids.append(rec.id)
+    #     domain = [('id', 'in', ids)]
+    #     return {'domain': {'course_level': domain}}
 
-    course_level = fields.Many2one('course.levels', string='Course Level', domain=get_course_levels)
+    course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
 
-    @api.onchange('branch', 'preferred_batch_id')
-    def get_branch_inside_batches(self):
-        print('oooops')
-        ids = []
-        for j in self:
-            group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id)])
-            for rec in group:
-                print(rec.id, 'gr')
-                ids.append(rec.id)
-        if self.branch:
-            print('kkkkk')
-            domain = [('id', 'in', ids)]
-
-        else:
-            print('naaaa')
-            domain = []
-        return {'domain': {'preferred_batch_id': domain}}
+    # @api.onchange('branch', 'preferred_batch_id','course_level', 'course_group', 'course_type')
+    # def get_branch_inside_batches(self):
+    #     print('oooops')
+    #     ids = []
+    #     for j in self:
+    #         group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id)])
+    #         for rec in group:
+    #             print(rec.id, 'gr')
+    #             ids.append(rec.id)
+    #     if self.branch:
+    #         print('kkkkk')
+    #         domain = [('id', 'in', ids)]
+    #
+    #     else:
+    #         print('naaaa')
+    #         domain = []
+    #     return {'domain': {'preferred_batch_id': domain}}
 
     preferred_batch_id = fields.Many2one('logic.base.batch', string='Preferred Batch',
-                                         domain=get_branch_inside_batches)
+                                         domain="[('course_id', '=', base_course_id)]")
 
     branch_true_or_false = fields.Boolean(string='Branch Check')
 
@@ -161,41 +161,41 @@ class LeadsForm(models.Model):
         else:
             self.branch_true_or_false = False
 
-    @api.onchange('course_level')
-    def get_course_groups(self):
-        for j in self:
-            j.level_name = j.course_level.name
-            ids = []
-            if not j.level_name == 'Nil':
-                # ids.append(self.base_course_id.course_levels.ids)
-                group = self.env['course.groups'].search([('level_ids', '=', j.course_level.id)])
-                for rec in group:
-                    print(rec.id, 'gr')
-                    ids.append(rec.id)
-                domain = [('id', 'in', ids)]
-                return {'domain': {'course_group': domain}}
-            else:
-                group = self.env['course.groups'].sudo().search([])
-                for rec in group:
-                    print(rec.id, 'gr')
-                    ids.append(rec.id)
-                domain = [('id', 'in', ids)]
-                return {'domain': {'course_group': domain}}
+    # @api.onchange('course_level', 'course_group', 'course_type', 'course_papers_ids', 'preferred_batch_id')
+    # def get_course_groups(self):
+    #     for j in self:
+    #         j.level_name = j.course_level.name
+    #         ids = []
+    #         if not j.level_name == 'Nil':
+    #             # ids.append(self.base_course_id.course_levels.ids)
+    #             group = self.env['course.groups'].search([('level_ids', '=', j.course_level.id)])
+    #             for rec in group:
+    #                 print(rec.id, 'gr')
+    #                 ids.append(rec.id)
+    #             domain = [('id', 'in', ids)]
+    #             return {'domain': {'course_group': domain}}
+    #         else:
+    #             group = self.env['course.groups'].sudo().search([])
+    #             for rec in group:
+    #                 print(rec.id, 'gr')
+    #                 ids.append(rec.id)
+    #             domain = [('id', 'in', ids)]
+    #             return {'domain': {'course_group': domain}}
 
-    course_group = fields.Many2one('course.groups', string='Course Group/Part', domain=get_course_groups)
+    course_group = fields.Many2one('course.groups', string='Course Group/Part', domain="[('level_ids', 'in', course_level)]")
 
-    @api.onchange('course_group')
-    def get_course_papers(self):
-        ids = []
-        # ids.append(self.base_course_id.course_levels.ids)
-        group = self.env['course.papers'].search([('group_ids', '=', self.course_group.id)])
-        for rec in group:
-            print(rec.id, 'gr')
-            ids.append(rec.id)
-        domain = [('id', 'in', ids)]
-        return {'domain': {'course_papers': domain}}
+    # @api.onchange('course_group', 'course_type', 'course_level', 'preferred_batch_id')
+    # def get_course_papers(self):
+    #     ids = []
+    #     # ids.append(self.base_course_id.course_levels.ids)
+    #     group = self.env['course.papers'].search([('group_ids', '=', self.course_group.id)])
+    #     for rec in group:
+    #         print(rec.id, 'gr')
+    #         ids.append(rec.id)
+    #     domain = [('id', 'in', ids)]
+    #     return {'domain': {'course_papers': domain}}
 
-    course_papers = fields.Many2many('course.papers', string='Course Papers', domain=get_course_papers)
+    course_papers = fields.Many2many('course.papers', string='Course Papers', domain="[('group_ids', 'in', course_group)]")
 
     # touch_points
 
@@ -334,15 +334,6 @@ class LeadsForm(models.Model):
 
     lead_source_name = fields.Char(string='Lead Source Name', compute='get_leads_source_name', store=True)
 
-    @api.onchange('base_course_id')
-    def onchange_base_course_id(self):
-        for record in self:
-            record.course_papers = False
-            course = self.env['logic.base.courses'].search([('id', '=', record.base_course_id.id)])
-            print(course.papers.ids, 'hmm')
-            papers = self.env['course.papers'].search([('id', 'in', course.papers.ids)])
-            # for j in papers:
-            #     record.course_papers = [(4, j.id)]
 
     @api.depends('touch_ids')
     def get_count_of_total_touch_points(self):
@@ -630,7 +621,11 @@ class LeadsForm(models.Model):
             'context': {'default_mode_of_study': self.mode_of_study, 'default_course_type': self.course_type,
                         'default_email': self.email_address,
                         'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
-                        'default_current_rec': self.id, 'default_student_name': self.name}
+                        'default_current_rec': self.id, 'default_student_name': self.name,
+                        'default_course_id': self.base_course_id.id, 'default_branch_id': self.branch.id,
+                        'default_course_level_id': self.course_level.id, 'default_course_group_id': self.course_group.id,
+                        'default_course_papers_ids': self.course_papers.ids,
+                    }
 
         }
         self.write({

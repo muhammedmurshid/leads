@@ -20,7 +20,8 @@ class AddToStudentList(models.TransientModel):
     current_rec = fields.Many2one('leads.logic', string="Current Record")
     admission_officer = fields.Many2one('res.users', string="Admission Officer", default=lambda self: self.env.user.id)
     gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')], string="Gender")
-    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline')], string="Mode of Study", required=1)
+    mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline'), ('nil', 'Nil')],
+                                     string="Mode of Study", required=1)
     currency_id = fields.Many2one('res.currency', string="Currency", default=lambda self: self.env.company.currency_id)
     street = fields.Char()
     street2 = fields.Char()
@@ -28,6 +29,11 @@ class AddToStudentList(models.TransientModel):
     city = fields.Char()
     state = fields.Many2one('res.country.state', 'Fed. State', domain="[('country_id', '=?', country)]")
     country = fields.Many2one('res.country')
+    course_id = fields.Many2one('logic.base.courses', string="Course")
+    branch_id = fields.Many2one('logic.base.branches', string="Branch")
+    course_level_id = fields.Many2one('course.levels', string="Course Level")
+    course_group_id = fields.Many2one('course.groups', string="Course Group")
+    course_papers_ids = fields.Many2many('course.papers', string="Course Papers")
     date_of_birth = fields.Date()
     course_type = fields.Selection(
         [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('nil', 'Nil')],
@@ -39,15 +45,7 @@ class AddToStudentList(models.TransientModel):
         year = today.year
         next_year = year + 1
         next_year_last_two_digits = next_year % 100
-        # student = self.env['logic.students'].sudo().search([('lead_id', '=', self.current_rec.id)])
-        # if student:
-        #     print(student.name, 'student')
-        #     student.write({
-        #         'std_adm_detail_ids': [(0, 0, {
-        #             'batch_id': self.batch_id.id,
-        #
-        #         })]
-        #     })
+
         if self.type == 'new_admission':
             print('no student')
             self.current_rec.admission_status = True
@@ -73,6 +71,11 @@ class AddToStudentList(models.TransientModel):
                 'lead_id': self.current_rec.id,
                 'std_adm_detail_ids': [(0, 0, {
                     'batch_id': self.batch_id.id,
+                    'course_id': self.course_id.id,
+                    'branch_id': self.branch_id.id,
+                    'course_level_id': self.course_level_id.id,
+                    'course_group_id': self.course_group_id.id,
+                    'course_papers_ids': [(6, 0, self.course_papers_ids.ids)],
 
                 })]
             })
@@ -145,7 +148,6 @@ class AddToStudentList(models.TransientModel):
                             'admission_fee': 0,
                             'lead_id': self.current_rec.id,
 
-
                         })
 
                         fee_id = self.env['admission.fee.collection'].search([])[-1].id
@@ -153,11 +155,16 @@ class AddToStudentList(models.TransientModel):
                         fee.state = 'paid'
                         fee.name.admission_date = today
                         fee.name.update({
-                                'std_adm_detail_ids': [(0, 0, {
-                                    'batch_id': self.batch_id.id,
+                            'std_adm_detail_ids': [(0, 0, {
+                                'batch_id': self.batch_id.id,
+                                'course_id': self.course_id.id,
+                                'branch_id': self.branch_id.id,
+                                'course_level_id': self.course_level_id.id,
+                                'course_group_id': self.course_group_id.id,
+                                'course_papers_ids': [(6, 0, self.course_papers_ids.ids)],
 
-                                })]
-                            })
+                            })]
+                        })
                         fee.name.admission_officer = self.admission_officer.id
                         fee.name.batch_id = self.batch_id.id
                         fee.name.mode_of_study = self.mode_of_study
@@ -230,6 +237,11 @@ class AddToStudentList(models.TransientModel):
                             self.student_id.update({
                                 'std_adm_detail_ids': [(0, 0, {
                                     'batch_id': self.batch_id.id,
+                                    'course_id': self.course_id.id,
+                                    'branch_id': self.branch_id.id,
+                                    'course_level_id': self.course_level_id.id,
+                                    'course_group_id': self.course_group_id.id,
+                                    'course_papers_ids': [(6, 0, self.course_papers_ids.ids)],
 
                                 })]
                             })
@@ -254,4 +266,3 @@ class AddToStudentList(models.TransientModel):
                 raise UserError(
                     _('Pending payment for previous fees')
                 )
-
