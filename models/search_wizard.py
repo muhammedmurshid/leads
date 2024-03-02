@@ -11,9 +11,9 @@ class SearchLeadsWizard(models.TransientModel):
     def action_search(self):
         for rec in self:
             leads = self.env['leads.logic'].sudo().search(
-                [('phone_number', '=', rec.mobile)], limit=1)
+                [('phone_number', 'ilike', rec.mobile)], limit=1)
             leads_second = self.env['leads.logic'].sudo().search(
-                [('phone_number_second', '=', rec.mobile)], limit=1)
+                [('phone_number_second', 'ilike', rec.mobile)], limit=1)
             if leads:
                 return {
                     'type': 'ir.actions.act_window',
