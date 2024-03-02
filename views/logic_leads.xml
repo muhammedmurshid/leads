@@ -118,6 +118,7 @@
                                    placeholder="select course type first."/>
                             <field name="branch" placeholder="select branch"
                                    options="{'no_create': True, 'no_create_edit':True}"/>
+
                             <field name="branch_true_or_false" invisible="1"/>
                             <field name="preferred_batch_id" options="{'no_create':True}"
                                    attrs="{'required': [('source_seminar_or_not', '=', False)], 'readonly':[('branch_true_or_false', '=', False)]}"/>

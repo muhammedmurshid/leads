@@ -128,29 +128,28 @@ class LeadsForm(models.Model):
     #     domain = [('id', 'in', ids)]
     #     return {'domain': {'course_level': domain}}
 
-    course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]")
+    course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]", required=1)
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
 
-    # @api.onchange('branch', 'preferred_batch_id','course_level', 'course_group', 'course_type')
-    # def get_branch_inside_batches(self):
-    #     print('oooops')
-    #     ids = []
-    #     for j in self:
-    #         group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id)])
-    #         for rec in group:
-    #             print(rec.id, 'gr')
-    #             ids.append(rec.id)
-    #     if self.branch:
-    #         print('kkkkk')
-    #         domain = [('id', 'in', ids)]
-    #
-    #     else:
-    #         print('naaaa')
-    #         domain = []
-    #     return {'domain': {'preferred_batch_id': domain}}
+    @api.onchange('branch', 'preferred_batch_id','course_level', 'course_group', 'course_type')
+    def get_branch_inside_batches(self):
+        print('oooops')
+        ids = []
+        for j in self:
+            group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id)])
+            for rec in group:
+                print(rec.id, 'gr')
+                ids.append(rec.id)
+        if self.branch:
+            print('kkkkk')
+            domain = [('id', 'in', ids)]
 
-    preferred_batch_id = fields.Many2one('logic.base.batch', string='Preferred Batch',
-                                         domain="[('course_id', '=', base_course_id)]")
+        else:
+            print('naaaa')
+            domain = []
+        return {'domain': {'preferred_batch_id': domain}}
+
+    preferred_batch_id = fields.Many2one('logic.base.batch', string='Preferred Batch')
 
     branch_true_or_false = fields.Boolean(string='Branch Check')
 
