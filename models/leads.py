@@ -128,7 +128,7 @@ class LeadsForm(models.Model):
     #     domain = [('id', 'in', ids)]
     #     return {'domain': {'course_level': domain}}
 
-    course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]", required=1)
+    course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
 
     @api.onchange('branch', 'preferred_batch_id','course_level', 'course_group', 'course_type')

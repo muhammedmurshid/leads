@@ -123,7 +123,7 @@
                             <field name="preferred_batch_id" options="{'no_create':True}"
                                    attrs="{'required': [('source_seminar_or_not', '=', False)], 'readonly':[('branch_true_or_false', '=', False)]}"/>
                             <field name="course_level" options="{'no_create':True}"
-                                   attrs="{'invisible': [('course_type', '=', 'international')]}"/>
+                                   attrs="{'invisible': [('course_type', '=', 'international')], 'required': [('course_type', '!=', 'international')]}"/>
                             <field name="level_name" invisible="1"/>
                             <field name="course_group" options="{'no_create':True}"/>
                             <field name="course_papers" widget="many2many_tags" options="{'no_create':True}"/>
