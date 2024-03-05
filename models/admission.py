@@ -41,6 +41,14 @@ class AddToStudentList(models.TransientModel):
     admission_date = fields.Date(string="Admission Date", default=fields.Date.context_today, required=1, readonly=0)
 
     def action_create_student(self):
+        seminar_lead = self.env['seminar.students'].sudo().search([('seminar_id', '=', self.current_rec.seminar_id)])
+        for i in seminar_lead:
+            if i.contact_number == self.mobile_number:
+                # print(i.contact_number, 'a')
+                i.sudo().update({
+                    'admission_status': 'yes',
+                })
+
         today = datetime.date.today()
 
         year = today.year
