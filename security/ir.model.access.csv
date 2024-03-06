@@ -13,6 +13,8 @@ leads_users_access_executive,user_source,model_leads_sources,lead_marketing_staf
 user_access_executive,user_leads,model_leads_logic,lead_marketing_staff,1,1,1,1
 user_re_allocation_req,user_leads,model_re_allocation_request_leads,leads_admin,1,1,1,1
 leads_touch_points,user_leads,model_leads_touch_points,leads_admin,1,1,1,1
+leads_heads_access,leads_heads_access,model_leads_logic,lead_users_heads,1,0,0,0
+
 
 leads_own_touch_points_user,user_leads,model_leads_own_touch_points,leads_basic_user,1,1,1,0
 leads_own_touch_points_admin,user_leads,model_leads_own_touch_points,leads_admin,1,1,1,1

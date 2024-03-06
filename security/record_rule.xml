@@ -19,6 +19,15 @@
             <field name="groups" eval="[(4, ref('lead_staff_referral'))]"/>
 
         </record>
+
+        <record id="logic_branch_heads_rules" model="ir.rule">
+            <field name="name">Branch Heads Rules</field>
+            <field name="model_id" ref="model_leads_logic"/>
+            <field name="domain_force">[('branch.id', '=', user.employee_id.branch_id.id)]</field>
+            <field name="groups" eval="[(4, ref('leads.lead_users_heads'))]"/>
+
+        </record>
+
         <record id="leads_executive_access" model="ir.rule">
             <field name="name">See Only His Data</field>
             <field name="model_id" ref="model_leads_logic"/>

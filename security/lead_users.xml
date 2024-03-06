@@ -5,7 +5,7 @@
         <field name="sequence">21</field>
         <field name="visible" eval="0"/>
     </record>
-     <record id="leads_admin" model="res.groups">
+    <record id="leads_admin" model="res.groups">
         <field name="name">Leads Manager</field>
         <field name="category_id" ref="users_for_leads"/>
     </record>
@@ -25,5 +25,8 @@
         <field name="name">Lead Marketing Staff</field>
         <field name="category_id" ref="users_for_leads"/>
     </record>
-
+    <record id="lead_users_heads" model="res.groups">
+        <field name="name">Lead Branch Heads</field>
+        <field name="category_id" ref="users_for_leads"/>
+    </record>
 </odoo>
