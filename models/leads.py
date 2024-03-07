@@ -161,6 +161,20 @@ class LeadsForm(models.Model):
         else:
             self.branch_true_or_false = False
 
+    @api.depends('make_visible')
+    def get_user(self):
+        print('kkkll')
+        user_crnt = self.env.user.id
+
+        res_user = self.env['res.users'].search([('id', '=', self.env.user.id)])
+        if res_user.has_group('leads.leads_admin'):
+            self.make_visible = True
+
+        else:
+            self.make_visible = False
+
+    make_visible = fields.Boolean(string="User", default=True, compute='get_user')
+
     # @api.onchange('course_level', 'course_group', 'course_type', 'course_papers_ids', 'preferred_batch_id')
     # def get_course_groups(self):
     #     for j in self:

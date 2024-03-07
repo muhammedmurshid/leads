@@ -142,7 +142,8 @@
                             <field name="referred_by_number"
                                    attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
                             <field name="admission_status" groups="base.leads_admin"/>
-                            <field name="admission_date" readonly="1"/>
+                            <field name="make_visible" invisible="1"/>
+                            <field name="admission_date" attrs="{'readonly':[('make_visible', '=', False)]}"/>
                         </group>
                         <group>
                             <field name="batch_preference" invisible="1"/>
