@@ -38,7 +38,7 @@ class AddToStudentList(models.TransientModel):
     course_type = fields.Selection(
         [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('nil', 'Nil')],
         string="Course Type")
-    admission_date = fields.Date(string="Admission Date", default=fields.Date.context_today, required=1, readonly=0)
+    admission_date = fields.Date(string="Admission Date", default=fields.Date.context_today, required=1, readonly=1)
 
     def action_create_student(self):
         seminar_lead = self.env['seminar.students'].sudo().search([('seminar_id', '=', self.current_rec.seminar_id)])
