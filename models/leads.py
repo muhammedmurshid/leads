@@ -54,8 +54,8 @@ class LeadsForm(models.Model):
     last_studied_course = fields.Char(string='Last Studied Course')
     incoming_source = fields.Selection(
         [('social_media', 'Social Media'), ('google', 'Google'), ('hoardings', 'Hoardings'), ('tv_ads', 'TV Ads'),
-         ('other', 'Other')],
-        string='How do you hear about us?')
+         ('through friends', 'Through Friends'), ('other', 'Other')],
+        string='How did you hear about us?')
     incoming_source_checking = fields.Boolean(string='Incoming Source Checking', )
     college_name = fields.Char(string='College/School')
     lead_referral_staff_id = fields.Many2one('res.users', string='Lead Referral Staff')

@@ -86,8 +86,7 @@
                             <field name="leads_source" options="{'no_create': True, 'no_create_edit':True}"/>
                             <field name="lead_source_name" invisible="1"/>
                             <field name="incoming_source_checking" invisible="1"/>
-                            <field name="incoming_source"
-                                   attrs="{'invisible':[('incoming_source_checking', '=', False)], 'required':[('incoming_source_checking', '=', True)]}"/>
+                            <field name="incoming_source" required="1"/>
                             <field name="campaign_name"
                                    attrs="{'invisible':[('lead_source_name', '!=', 'Digital Leads')]}"/>
                             <field name="email_address"/>
