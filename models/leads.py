@@ -54,7 +54,7 @@ class LeadsForm(models.Model):
     last_studied_course = fields.Char(string='Last Studied Course')
     incoming_source = fields.Selection(
         [('social_media', 'Social Media'), ('google', 'Google'), ('hoardings', 'Hoardings'), ('tv_ads', 'TV Ads'),
-         ('through friends', 'Through Friends'), ('other', 'Other')],
+         ('through friends', 'Through Friends'), ('whatsapp', 'WhatsApp'), ('other', 'Other')],
         string='How did you hear about us?')
     incoming_source_checking = fields.Boolean(string='Incoming Source Checking', )
     college_name = fields.Char(string='College/School')
@@ -114,7 +114,7 @@ class LeadsForm(models.Model):
                     print('ya')
                 elif "Walk In" in rec.lead_source_name:
                     rec.incoming_source_checking = True
-                elif "WhatsApp" in rec.lead_source_name:
+                elif "WhatsApp" == rec.lead_source_name:
                     rec.incoming_source_checking = True
                 else:
                     rec.incoming_source_checking = False
@@ -134,7 +134,7 @@ class LeadsForm(models.Model):
     course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
 
-    @api.onchange('branch', 'preferred_batch_id','course_level', 'course_group', 'course_type')
+    @api.onchange('branch', 'preferred_batch_id', 'course_level', 'course_group', 'course_type')
     def get_branch_inside_batches(self):
         print('oooops')
         ids = []
