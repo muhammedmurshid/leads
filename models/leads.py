@@ -114,6 +114,8 @@ class LeadsForm(models.Model):
                     print('ya')
                 elif "Walk In" in rec.lead_source_name:
                     rec.incoming_source_checking = True
+                elif "WhatsApp" in rec.lead_source_name:
+                    rec.incoming_source_checking = True
                 else:
                     rec.incoming_source_checking = False
                     print('na')
