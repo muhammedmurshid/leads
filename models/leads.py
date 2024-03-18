@@ -868,6 +868,8 @@ class LeadsAssigningWizard(models.TransientModel):
         for i in aa:
             if i.id in self._context['parent_obj']:
                 i.leads_assign = self.assigned_to
+                i.state = 'confirm'
+                i.assigned_date = fields.Datetime.now()
         # aa.lead_owner = self.assigned_to
         # abc.lead_owner = self.assigned_to
 
