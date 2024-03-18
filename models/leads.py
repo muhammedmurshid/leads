@@ -556,6 +556,16 @@ class LeadsForm(models.Model):
 
         }
 
+    def multiple_leads_change_state(self):
+        active_ids = self.env.context.get('active_ids', [])
+        # sales = sale_obj.browse(active_ids)
+        print(active_ids, 'current rec')
+        leads = self.env['leads.logic'].sudo().search([('id', 'in', active_ids)])
+        for rec in leads:
+            print(rec, 'rec')
+            rec.state = 'confirm'
+            rec.assigned_date = fields.Datetime.now()
+
     # @api.onchange('admission_status')
     # def _onchange_admission_status(self):
     #     print('booooooooooooooo')
