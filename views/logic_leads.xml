@@ -330,7 +330,9 @@
         <field name="arch" type="xml">
             <pivot string="Pivot View">
                 <field name="name" type="row"/>
+                <field name="admission_date" type="row"/>
                 <field name="leads_source"/>
+                <field name="phone_number"/>
                 <field name="admission_status"/>
             </pivot>
         </field>

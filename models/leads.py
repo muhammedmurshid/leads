@@ -304,6 +304,15 @@ class LeadsForm(models.Model):
                             if activity_id:
                                 activity_id.action_feedback(feedback=f'Done.')
 
+    def action_created_records_states_changing(self):
+        lead = self.env['leads.logic'].sudo().search([])
+        for rec in lead:
+            if rec.leads_assign:
+                if rec.state == 'draft':
+                    print(rec.create_date, 'res date')
+                    rec.assigned_date = rec.create_date
+                    rec.state = 'confirm'
+
     @api.onchange('course_type', 'base_course_id')
     def onchange_course_id_domain(self):
         if self.course_type:

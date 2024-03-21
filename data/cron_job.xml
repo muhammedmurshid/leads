@@ -23,4 +23,16 @@
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
     </record>
+
+    <record id="cron_job_for_lead_change_state_to_confirm" model="ir.cron">
+        <field name="name">Cron Job For Change State To Confirm</field>
+        <field name="model_id" ref="model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="code">model.action_created_records_states_changing()</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+    </record>
 </odoo>
