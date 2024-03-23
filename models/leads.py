@@ -133,13 +133,14 @@ class LeadsForm(models.Model):
 
     course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
+    academic_year = fields.Char(string='Academic Year', required=True)
 
-    @api.onchange('branch', 'preferred_batch_id', 'course_level', 'course_group', 'course_type')
+    @api.onchange('branch', 'preferred_batch_id', 'course_level', 'course_group', 'course_type','academic_year')
     def get_branch_inside_batches(self):
         print('oooops')
         ids = []
         for j in self:
-            group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id)])
+            group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id),('academic_year', '=', j.academic_year)])
             for rec in group:
                 print(rec.id, 'gr')
                 ids.append(rec.id)
