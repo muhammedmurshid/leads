@@ -32,6 +32,16 @@
             action = records.change_leads_channel_name()
         </field>
     </record>
+    <record model="ir.actions.server" id="action_all_leads_source_change_to_seminar_data">
+        <field name="name">Change Lead Source Seminar to Data</field>
+        <field name="model_id" ref="model_leads_logic"/>
+        <field name="binding_model_id" ref="model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+            action = records.action_change_source_seminar_to_seminar_data()
+        </field>
+    </record>
 
     <record model="ir.actions.server" id="action_server_lead_data_source">
         <field name="name">Add Seminar Id</field>

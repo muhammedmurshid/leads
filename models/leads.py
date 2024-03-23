@@ -826,6 +826,14 @@ class LeadsForm(models.Model):
 
         }
 
+    def action_change_source_seminar_to_seminar_data(self):
+        rec = self.env['leads.logic'].sudo().search([])
+        for i in rec:
+            if i.leads_source:
+                if i.lead_source_name == 'Seminar':
+                    i.leads_source = 12
+
+
     def action_add_country_code(self):
         rec = self.env['leads.logic'].sudo().search([])
         for i in rec:
