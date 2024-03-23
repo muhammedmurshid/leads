@@ -133,7 +133,7 @@ class LeadsForm(models.Model):
 
     course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
-    academic_year = fields.Char(string='Academic Year', required=True)
+    academic_year = fields.Selection([('2020', '2020'), ('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025'), ('2026', '2026'), ('nil', 'Nil')], string='Academic Year', required=True)
 
     @api.onchange('branch', 'preferred_batch_id', 'course_level', 'course_group', 'course_type','academic_year')
     def get_branch_inside_batches(self):

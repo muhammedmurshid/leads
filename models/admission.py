@@ -16,7 +16,7 @@ class AddToStudentList(models.TransientModel):
         [('new_admission', 'New Admission'), ('already_taken_admission', 'Already Taken Admission')], string="Type",
         required=1, default='new_admission')
     student_id = fields.Many2one('logic.students', string="Student")
-    academic_year = fields.Char(string="Academic Year", placeholder="Please specify the academic year needed")
+    academic_year = fields.Selection([('2020', '2020'), ('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025'), ('2026', '2026'), ('nil', 'Nil')], string='Academic Year', required=True)
     current_rec = fields.Many2one('leads.logic', string="Current Record")
     admission_officer = fields.Many2one('res.users', string="Admission Officer", default=lambda self: self.env.user.id)
     gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')], string="Gender")
