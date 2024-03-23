@@ -140,10 +140,14 @@ class LeadsForm(models.Model):
         print('oooops')
         ids = []
         for j in self:
-            group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id),('academic_year', '=', j.academic_year)])
+            group = self.env['logic.base.batch'].search([('branch_id', '=', j.branch.id)])
             for rec in group:
-                print(rec.id, 'gr')
-                ids.append(rec.id)
+                if j.academic_year:
+                    if j.academic_year == rec.academic_year:
+                        ids.append(rec.id)
+                else:
+                    print(rec.id, 'gr')
+                    ids.append(rec.id)
         if self.branch:
             print('kkkkk')
             domain = [('id', 'in', ids)]
