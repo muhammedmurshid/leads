@@ -10,13 +10,13 @@ class AddToStudentList(models.TransientModel):
     _rec_name = 'student_name'
 
     student_name = fields.Char(string="Student Name")
-    batch_id = fields.Many2one('logic.base.batch', string="Batch", domain=[('state', '=', 'done')])
     mobile_number = fields.Char(string="Mobile Number")
     email = fields.Char(string="Email")
     type = fields.Selection(
         [('new_admission', 'New Admission'), ('already_taken_admission', 'Already Taken Admission')], string="Type",
         required=1, default='new_admission')
     student_id = fields.Many2one('logic.students', string="Student")
+    academic_year = fields.Char(string="Academic Year", placeholder="Please specify the academic year needed")
     current_rec = fields.Many2one('leads.logic', string="Current Record")
     admission_officer = fields.Many2one('res.users', string="Admission Officer", default=lambda self: self.env.user.id)
     gender = fields.Selection([('male', 'Male'), ('female', 'Female'), ('other', 'Other')], string="Gender")
@@ -39,6 +39,24 @@ class AddToStudentList(models.TransientModel):
         [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('nil', 'Nil')],
         string="Course Type")
     admission_date = fields.Date(string="Admission Date", default=fields.Date.context_today, required=1, readonly=1)
+
+    @api.onchange('academic_year')
+    def academic_year_based_batches(self):
+        self.batch_id = False
+        if self.academic_year:
+            batch = self.env['logic.base.batch'].sudo().search([('academic_year', '=', self.academic_year),('state', '=', 'done')])
+            batches = []
+            batches.clear()
+            for i in batch:
+                print(i.name, 'batch')
+                batches.append(i.id)
+            domain = [('id', 'in', batches)]
+            print(domain, 'domain')
+            print(batches, 'batches')
+
+            return {'domain': {'batch_id': domain}}
+
+    batch_id = fields.Many2one('logic.base.batch', string="Batch", domain=academic_year_based_batches)
 
     def action_create_student(self):
         seminar_lead = self.env['seminar.students'].sudo().search([('seminar_id', '=', self.current_rec.seminar_id)])

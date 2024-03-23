@@ -16,6 +16,7 @@
                                 <field name="student_name" required="1" placeholder="Student name"
                                        attrs="{'invisible': [('type', '!=', 'new_admission')]}"/>
                                 <field name="course_type"/>
+                                <field name="academic_year"/>
                                 <field name="batch_id" required="1" options="{'no_create': True}"/>
                                 <field name="mobile_number"/>
                                 <field name="email"/>
