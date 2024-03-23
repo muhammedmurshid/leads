@@ -40,7 +40,7 @@ class AddToStudentList(models.TransientModel):
         string="Course Type")
     admission_date = fields.Date(string="Admission Date", default=fields.Date.context_today, required=1, readonly=1)
 
-    @api.onchange('academic_year')
+    @api.onchange('academic_year', 'branch_id')
     def academic_year_based_batches(self):
         self.batch_id = False
         if self.academic_year:
@@ -49,7 +49,8 @@ class AddToStudentList(models.TransientModel):
             batches.clear()
             for i in batch:
                 print(i.name, 'batch')
-                batches.append(i.id)
+                if i.branch_id.id == self.branch_id.id:
+                    batches.append(i.id)
             domain = [('id', 'in', batches)]
             print(domain, 'domain')
             print(batches, 'batches')

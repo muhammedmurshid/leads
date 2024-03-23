@@ -661,6 +661,7 @@ class LeadsForm(models.Model):
                         'default_course_id': self.base_course_id.id, 'default_branch_id': self.branch.id,
                         'default_course_level_id': self.course_level.id, 'default_course_group_id': self.course_group.id,
                         'default_course_papers_ids': self.course_papers.ids,
+                        'default_academic_year': self.academic_year,
                     }
 
         }
@@ -884,7 +885,20 @@ class GenerateLeadLink(models.Model):
 class LeadsAssigningWizard(models.TransientModel):
     _name = 'leads.assigning.wizard'
 
-    assigned_to = fields.Many2one('hr.employee', string='Assigned To')
+
+
+    @api.onchange('assigned_to')
+    def _onchange_leads_users(self):
+        users = self.env.ref('leads.leads_basic_user').users
+        lead_users = []
+        for j in users:
+            print(j.name, 'j')
+            lead_users.append(j.employee_id.id)
+        domain = [('id', 'in', lead_users)]
+        return {'domain': {'assigned_to': domain}}
+
+    assigned_to = fields.Many2one('hr.employee', string='Assigned To', domain=_onchange_leads_users)
+
 
     def action_done(self):
         # abc = self.env['leads.logic'].sudo().update({
