@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="mail_activity_for_returned_leads" model="mail.activity.type">
-        <field name="name">Return to Draft</field>
-        <field name="res_model_id" ref="leads.model_leads_logic"/>
-        <field name="delay_count">30</field>
-    </record>
+
     <record id="mail_seminar_leads_done" model="mail.activity.type">
         <field name="name">Lead Assign</field>
         <field name="res_model_id" ref="leads.model_leads_logic"/>

@@ -10,7 +10,14 @@
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="leads_users_record_rules" model="ir.rule">
+            <field name="name">See Only His Data</field>
+            <field name="model_id" ref="model_mail_activity"/>
+            <field name="domain_force">[('user_id.id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('leads_basic_user'))]"/>
+
         </record>
         <record id="logic_staff_access_for_leads" model="ir.rule">
             <field name="name">See Only His Data</field>

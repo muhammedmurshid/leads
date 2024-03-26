@@ -20,7 +20,6 @@
     </record>
     <menuitem name="Follow Up Activity" id="menu_leads_activity" action="lead_activity_view_action"
               parent="menu_leads_details"
-              groups="leads.leads_admin"
               sequence="3"/>
     <record id="view_inherit_activity_leads" model="ir.ui.view">
         <field name="name">leads.activity.inherit</field>

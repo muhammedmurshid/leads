@@ -131,11 +131,14 @@ class LeadsForm(models.Model):
     #     domain = [('id', 'in', ids)]
     #     return {'domain': {'course_level': domain}}
 
-    course_level = fields.Many2one('course.levels', string='Course Level', domain="[('course_id', '=', base_course_id)]")
+    course_level = fields.Many2one('course.levels', string='Course Level',
+                                   domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
-    academic_year = fields.Selection([('2020', '2020'), ('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025'), ('2026', '2026'), ('nil', 'Nil')], string='Academic Year', required=True)
+    academic_year = fields.Selection(
+        [('2020', '2020'), ('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025'),
+         ('2026', '2026'), ('nil', 'Nil')], string='Academic Year', required=True)
 
-    @api.onchange('branch', 'preferred_batch_id', 'course_level', 'course_group', 'course_type','academic_year')
+    @api.onchange('branch', 'preferred_batch_id', 'course_level', 'course_group', 'course_type', 'academic_year')
     def get_branch_inside_batches(self):
         print('oooops')
         ids = []
@@ -203,7 +206,8 @@ class LeadsForm(models.Model):
     #             domain = [('id', 'in', ids)]
     #             return {'domain': {'course_group': domain}}
 
-    course_group = fields.Many2one('course.groups', string='Course Group/Part', domain="[('level_ids', 'in', course_level)]")
+    course_group = fields.Many2one('course.groups', string='Course Group/Part',
+                                   domain="[('level_ids', 'in', course_level)]")
 
     # @api.onchange('course_group', 'course_type', 'course_level', 'preferred_batch_id')
     # def get_course_papers(self):
@@ -216,7 +220,8 @@ class LeadsForm(models.Model):
     #     domain = [('id', 'in', ids)]
     #     return {'domain': {'course_papers': domain}}
 
-    course_papers = fields.Many2many('course.papers', string='Course Papers', domain="[('group_ids', 'in', course_group)]")
+    course_papers = fields.Many2many('course.papers', string='Course Papers',
+                                     domain="[('group_ids', 'in', course_group)]")
 
     # touch_points
 
@@ -363,7 +368,6 @@ class LeadsForm(models.Model):
             record.lead_source_name = record.leads_source.name
 
     lead_source_name = fields.Char(string='Lead Source Name', compute='get_leads_source_name', store=True)
-
 
     @api.depends('touch_ids')
     def get_count_of_total_touch_points(self):
@@ -663,71 +667,17 @@ class LeadsForm(models.Model):
                         'default_mobile_number': self.phone_number, 'default_batch_id': self.preferred_batch_id.id,
                         'default_current_rec': self.id, 'default_student_name': self.name,
                         'default_course_id': self.base_course_id.id, 'default_branch_id': self.branch.id,
-                        'default_course_level_id': self.course_level.id, 'default_course_group_id': self.course_group.id,
+                        'default_course_level_id': self.course_level.id,
+                        'default_course_group_id': self.course_group.id,
                         'default_course_papers_ids': self.course_papers.ids,
                         'default_academic_year': self.academic_year,
-                    }
+                        }
 
         }
         self.write({
             'admission_status': True,
             'state': 'done'
         })
-
-    def cron_seven_days_checking_lead(self):
-        print('working')
-        records = self.env['leads.logic'].search([('state', '=', 'confirm')])
-        users_ids = []
-        current_datetime = datetime.now()
-        current_date = current_datetime.date()
-
-        for rec in records:
-            if rec.date_of_adding:
-                print(rec.date_of_adding, 'date_of_adding')
-                seven_days_later = rec.date_of_adding + timedelta(days=7)
-                print(seven_days_later, 'seven_days_later')
-                if rec.date_of_adding + timedelta(days=7) == current_date:
-                    print('ya')
-                    if rec.admission_status == False:
-                        # print(rec.id, 'id')
-                        rec.write({'state': 'draft'})
-                        users = rec.env.ref('leads.leads_admin').users
-                        for i in users:
-                            # users_ids.append(i.id)
-                            print(i.name, 'users')
-                            rec.activity_schedule('leads.mail_activity_for_returned_leads', user_id=i.id,
-                                                  lead_id=rec.id, assign_to=rec.leads_assign.id,
-                                                  note=f'Lead status reset to Draft as the students admission decision is pending.')
-                    else:
-                        print('no')
-                    print('hhi')
-                else:
-                    print('no')
-
-            print(rec.id, 'id')
-            print(rec.state, 'state')
-
-            # rec.state = 'draft'
-
-    # def leadcreation(self):
-    #     if not self.sales_person_id:
-    #         raise ValidationError('Please select sales person')
-    #     elif not self.name:
-    #         raise ValidationError('Please enter name')
-    #     elif not self.email_address:
-    #         raise ValidationError('Please enter email address')
-    #     else:
-    #         crm = self.env['crm.lead'].create({
-    #             'student_name': self.name,
-    #             # 'email_from': self.email_address,
-    #             'phone': self.phone_number,
-    #             'name': self.name,
-    #             'user_id': self.sales_person_id.id,
-    #         }
-    #         )
-    #         self.state = 'crm'
-    #
-    #     print('hi')
 
     sales_person_id = fields.Many2one('res.users', string='Sales person')
     seminar_id = fields.Integer(string='Seminar')
@@ -839,7 +789,6 @@ class LeadsForm(models.Model):
                 if i.lead_source_name == 'Seminar':
                     i.leads_source = 12
 
-
     def action_add_country_code(self):
         rec = self.env['leads.logic'].sudo().search([])
         for i in rec:
@@ -889,8 +838,6 @@ class GenerateLeadLink(models.Model):
 class LeadsAssigningWizard(models.TransientModel):
     _name = 'leads.assigning.wizard'
 
-
-
     @api.onchange('assigned_to')
     def _onchange_leads_users(self):
         users = self.env.ref('leads.leads_basic_user').users
@@ -902,7 +849,6 @@ class LeadsAssigningWizard(models.TransientModel):
         return {'domain': {'assigned_to': domain}}
 
     assigned_to = fields.Many2one('hr.employee', string='Assigned To', domain=_onchange_leads_users)
-
 
     def action_done(self):
         # abc = self.env['leads.logic'].sudo().update({
