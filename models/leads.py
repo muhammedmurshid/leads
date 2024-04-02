@@ -90,6 +90,7 @@ class LeadsForm(models.Model):
                                  ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta'),
                                  ('abroad', 'Abroad'), ('other', 'Other'), ('nil', 'Nil')],
                                 string='District', required=True)
+    referred_teacher = fields.Many2one('res.users', string='Referred Teacher')
 
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
@@ -227,6 +228,7 @@ class LeadsForm(models.Model):
 
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
     source_seminar_or_not = fields.Boolean(string='Source Seminar or Not')
+    referral_staff_id = fields.Many2one('res.users', string='Referral Staff')
 
     def get_admission_profile(self):
         self.ensure_one()

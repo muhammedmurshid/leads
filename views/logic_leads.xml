@@ -85,6 +85,8 @@
                             <field name="lead_channel" attrs="{'readonly':[('make_visible_manager', '=', True)]}"/>
                             <field name="leads_source" options="{'no_create': True, 'no_create_edit':True}"/>
                             <field name="lead_source_name" invisible="1"/>
+<!--                            <field name="referral_staff_id" attrs="{'invisible':[('lead_source_name', '!=', 'Logic Staff')]}"/>-->
+                            <field name="referred_teacher" attrs="{'invisible':[('lead_source_name', '!=', 'Student Referral')]}"/>
                             <field name="incoming_source_checking" invisible="1"/>
                             <field name="incoming_source" attrs="{'invisible':[('incoming_source_checking', '=', False)], 'required':[('incoming_source_checking', '=', True)]}"/>
                             <field name="campaign_name"
@@ -298,6 +300,7 @@
                 <field name="admission_status"/>
                 <field name="lead_quality"/>
                 <field name="finished_points" string="Finished Touch Points" widget="badge"/>
+
                 <!--                <field name="state" widget="badge" decoration-success="state == 'done'"-->
                 <!--                       decoration-primary="state == 'crm'" decoration-info="state == 'confirmed'"-->
                 <!--                       decoration-danger="state == 'cancel'"/>-->

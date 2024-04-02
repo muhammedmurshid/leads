@@ -7,6 +7,11 @@
 
     </record>
     <data>
+        <record model="leads.sources" id="default_leads_sources">
+            <field name="name">Student Referral</field>
+        </record>
+    </data>
+    <data>
         <!--        <record id="seven_days_after_return_state" model="ir.cron">-->
         <!--            <field name="name">Seven Days After Checking Lead Status</field>-->
         <!--            <field name="model_id" ref="model_leads_logic"/>-->
@@ -28,16 +33,16 @@
             action = records.change_leads_channel_name()
         </field>
     </record>
-<!--    <record model="ir.actions.server" id="action_all_leads_source_change_to_seminar_data">-->
-<!--        <field name="name">Change Lead Source Seminar to Data</field>-->
-<!--        <field name="model_id" ref="model_leads_logic"/>-->
-<!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
-<!--        <field name="state">code</field>-->
-<!--        <field name="code">-->
-<!--            if records:-->
-<!--            action = records.action_change_source_seminar_to_seminar_data()-->
-<!--        </field>-->
-<!--    </record>-->
+    <!--    <record model="ir.actions.server" id="action_all_leads_source_change_to_seminar_data">-->
+    <!--        <field name="name">Change Lead Source Seminar to Data</field>-->
+    <!--        <field name="model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="state">code</field>-->
+    <!--        <field name="code">-->
+    <!--            if records:-->
+    <!--            action = records.action_change_source_seminar_to_seminar_data()-->
+    <!--        </field>-->
+    <!--    </record>-->
 
     <record model="ir.actions.server" id="action_server_lead_data_source">
         <field name="name">Add Seminar Id</field>
