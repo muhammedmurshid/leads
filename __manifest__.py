@@ -18,6 +18,7 @@
         'views/lead_target.xml',
         'views/admission.xml',
         'data/cron_job.xml',
+        'views/re_allocation.xml',
         # 'views/staff_referrel.xml',
         # 'views/link_generation.xml',
 

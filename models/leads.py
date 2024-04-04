@@ -48,7 +48,7 @@ class LeadsForm(models.Model):
         string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
-        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')],
+        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('re_allocated', 'Re Assigned'), ('done', 'Done'), ('cancel', 'Cancelled')],
         string='State',
         default='draft', tracking=True)
     last_studied_course = fields.Char(string='Last Studied Course')
@@ -241,6 +241,20 @@ class LeadsForm(models.Model):
             'context': "{'create': False}"
         }
 
+    def action_bulk_lead_re_allocation(self):
+        active_ids = self.env.context.get('active_ids', [])
+        print(active_ids, 'current rec')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Re Allocation',
+            'res_model': 're_allocation.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'parent_obj': active_ids}
+
+        }
+
     def compute_count(self):
         for record in self:
             record.admission_count = self.env['admission.fee.collection'].search_count(
@@ -257,6 +271,18 @@ class LeadsForm(models.Model):
             'res_model': 'logic.students',
             'domain': [('id', '=', self.student_id.id)],
             'context': "{'create': False}"
+        }
+
+    def action_re_allocation_wizard(self):
+        self.ensure_one()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Re Allocation',
+            'view_mode': 'form',
+            'res_model': 're_allocation.wizard',
+            'target': 'new',
+            'context': {'parent_obj': self.id}
         }
 
     def compute_student_count(self):
@@ -295,7 +321,7 @@ class LeadsForm(models.Model):
                                     print('yes', record.id)
                                     record.activity_schedule(
                                         'leads.mail_seminar_leads_done', user_id=record.leads_assign.user_id.id,
-                                        note=f'You have been assigned {record.name} lead. please update its status.'),
+                                        note=f'Please update status for the lead assigned four days ago.'),
 
             else:
                 print('no', record.id)

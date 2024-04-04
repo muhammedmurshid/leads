@@ -7,3 +7,4 @@ from . import touch_points
 from . import lead_target
 from . import admission
 from . import staff_reference
+from . import re_allocation

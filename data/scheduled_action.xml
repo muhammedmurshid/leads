@@ -6,6 +6,10 @@
         <field name="res_model_id" ref="leads.model_leads_logic"/>
 
     </record>
+    <record id="activity_lead_re_allocation" model="mail.activity.type">
+        <field name="name">Re Assigned</field>
+        <field name="res_model_id" ref="leads.model_leads_logic"/>
+    </record>
     <data>
         <record model="leads.sources" id="default_leads_sources">
             <field name="name">Student Referral</field>
@@ -31,6 +35,16 @@
         <field name="code">
             if records:
             action = records.change_leads_channel_name()
+        </field>
+    </record>
+    <record model="ir.actions.server" id="action_bulk_lead_re_allocation">
+        <field name="name">Re Assign</field>
+        <field name="model_id" ref="model_leads_logic"/>
+        <field name="binding_model_id" ref="model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+            action = records.action_bulk_lead_re_allocation()
         </field>
     </record>
     <!--    <record model="ir.actions.server" id="action_all_leads_source_change_to_seminar_data">-->
