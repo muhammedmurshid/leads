@@ -205,21 +205,22 @@
     <record model="ir.actions.server" id="action_multiple_leads_owner">
         <field name="name">Leads Assign To</field>
         <field name="model_id" ref="leads.model_leads_logic"/>
+        <field name="groups_id" eval="[(4, ref('leads.leads_admin'))]"/>
         <field name="binding_model_id" ref="leads.model_leads_logic"/>
         <field name="state">code</field>
         <field name="code">
             action= record.multiple_leads_assigning()
         </field>
     </record>
-    <record model="ir.actions.server" id="action_multiple_leads_change_state">
-        <field name="name">Change States Add Assigned Date</field>
-        <field name="model_id" ref="leads.model_leads_logic"/>
-        <field name="binding_model_id" ref="leads.model_leads_logic"/>
-        <field name="state">code</field>
-        <field name="code">
-            action= record.multiple_leads_change_state()
-        </field>
-    </record>
+    <!--    <record model="ir.actions.server" id="action_multiple_leads_change_state">-->
+    <!--        <field name="name">Change States Add Assigned Date</field>-->
+    <!--        <field name="model_id" ref="leads.model_leads_logic"/>-->
+    <!--        <field name="binding_model_id" ref="leads.model_leads_logic"/>-->
+    <!--        <field name="state">code</field>-->
+    <!--        <field name="code">-->
+    <!--            action= record.multiple_leads_change_state()-->
+    <!--        </field>-->
+    <!--    </record>-->
     <record id="leads_search_filter" model="ir.ui.view">
         <field name="model">leads.logic</field>
         <field name="arch" type="xml">
@@ -382,6 +383,7 @@
     <record id="action_add_country_code_for_numbers" model="ir.actions.server">
         <field name="name">Add Country code</field>
         <field name="model_id" ref="leads.model_leads_logic"/>
+        <field name="groups_id" eval="[(4, ref('leads.leads_admin'))]"/>
         <field name="state">code</field>
         <field name="code">
             action= record.action_add_country_code()
