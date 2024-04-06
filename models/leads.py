@@ -255,6 +255,22 @@ class LeadsForm(models.Model):
 
         }
 
+    def old_states_changing_dates(self):
+        selected_ids = self.env.context.get('active_ids', [])
+        selected_records = self.env['leads.logic'].browse(selected_ids)
+
+        for i in selected_records:
+            if i.state == 'confirm':
+                print(i.write_date, 'current rec')
+                i.assigned_date = i.write_date
+        # rec = self.env['leads.logic'].sudo().search([('id', '=', self._context['parent_obj'])])
+        # for i in rec:
+        #     print(i.write_date, 'date')
+        # activities = self.write_date
+        # print(activities, 'activities')
+        # for activity in activities:
+        #     print(activity.create_date, 'date')
+
     def compute_count(self):
         for record in self:
             record.admission_count = self.env['admission.fee.collection'].search_count(
