@@ -1,4 +1,5 @@
 from odoo import models, fields, api, _
+from datetime import timedelta
 
 
 class ReAllocationWizard(models.TransientModel):
@@ -14,9 +15,13 @@ class ReAllocationWizard(models.TransientModel):
             lead_users.append(j.employee_id.id)
         domain = [('id', 'in', lead_users)]
         return {'domain': {'assign_to': domain}}
+
     assign_to = fields.Many2one('hr.employee', string='Assigned To', domain=_onchange_leads_users)
 
     def action_add_assigned_user(self):
+        today = fields.Date.today()
+        after_four_days = today + timedelta(days=4)
+        print(after_four_days, 'after_four_days')
         print(self._context['parent_obj'], 'parent_obj')
         # current_rec_id = self.env.context.get('active_id')
         # lead = self.env['leads.logic'].sudo().search([('id', '=', current_rec_id)])
@@ -27,8 +32,10 @@ class ReAllocationWizard(models.TransientModel):
             rec.sudo().write({
                 'leads_assign': self.assign_to.id,
                 'state': 're_allocated',
-                'assigned_date': fields.Datetime.now()
+                'assigned_date': fields.Datetime.now(),
+                'over_due': False
             })
 
             rec.activity_schedule('leads.activity_lead_re_allocation', user_id=rec.leads_assign.user_id.id,
+                                  date_deadline=after_four_days,
                                   note=f' You have been assigned new lead.')

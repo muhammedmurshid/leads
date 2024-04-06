@@ -91,6 +91,7 @@ class LeadsForm(models.Model):
                                  ('abroad', 'Abroad'), ('other', 'Other'), ('nil', 'Nil')],
                                 string='District', required=True)
     referred_teacher = fields.Many2one('res.users', string='Referred Teacher')
+    over_due = fields.Boolean(string='Over Due')
 
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
@@ -330,10 +331,11 @@ class LeadsForm(models.Model):
                 if record.assigned_date:
                     delta = today - record.assigned_date
                     if delta.days > 4:
-                        if record.state == 'confirm':
+                        if record.state == 'confirm' or record.state == 're_allocated':
                             print('yaaaaaaaa', record.admission_status, record.id)
                             if record.admission_status != True:
                                 if record.lead_quality != 'bad_lead':
+                                    record.over_due = True
                                     print('yes', record.id)
                                     record.activity_schedule(
                                         'leads.mail_seminar_leads_done', user_id=record.leads_assign.user_id.id,
@@ -341,6 +343,7 @@ class LeadsForm(models.Model):
 
             else:
                 print('no', record.id)
+               
 
     def action_cancel_cron_for_bad_leads(self):
         lead = self.env['leads.logic'].sudo().search([])
@@ -357,6 +360,25 @@ class LeadsForm(models.Model):
                                     self.env.ref('leads.mail_seminar_leads_done').id)])
                             if activity_id:
                                 activity_id.action_feedback(feedback=f'Done.')
+
+    def action_cron_job_for_over_due_leads(self):
+        print('over_due_checking')
+        lead = self.env['leads.logic'].sudo().search([])
+        today = fields.Date.today()
+        for rec in lead:
+            if rec.assigned_date:
+                delta = today - rec.assigned_date
+                if delta.days > 4:
+                    if rec.state == 'confirm' or rec.state == 're_allocated':
+                        if rec.lead_quality != 'bad_lead':
+                            rec.over_due = True
+                        else:
+                            rec.over_due = False
+                    else:
+                        rec.over_due = False
+                else:
+                    rec.over_due = False
+
 
     def action_created_records_states_changing(self):
         lead = self.env['leads.logic'].sudo().search([])

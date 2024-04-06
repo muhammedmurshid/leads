@@ -152,6 +152,7 @@
                             <field name="admission_status" groups="base.leads_admin"/>
                             <field name="make_visible" invisible="1"/>
                             <field name="admission_date" attrs="{'readonly':[('make_visible', '=', False)]}"/>
+                            <field name="over_due" invisible="1"/>
                         </group>
                         <group>
                             <field name="batch_preference" invisible="1"/>

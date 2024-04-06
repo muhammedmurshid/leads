@@ -78,6 +78,7 @@ class AddToStudentList(models.TransientModel):
             print('no student')
             self.current_rec.admission_status = True
             self.current_rec.state = 'done'
+            self.current_rec.over_due = False
             self.current_rec.admission_date = self.admission_date
             student = self.env['logic.students'].sudo().create({
                 'name': self.student_name,
