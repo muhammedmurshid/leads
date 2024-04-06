@@ -57,8 +57,7 @@
                     <button name="action_re_allocation_wizard" type="object" string="Re Assign" states="confirm"
                             style="background-color:#f79c40;" groups="leads.leads_admin"/>
                     <button name="cancel_lead" type="object" states='draft,confirm' string="Cancel"/>
-                    <button name="old_states_changing_dates" type="object" string="Changed Dates"
-                            />
+
 
                     <!--                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>-->
                 </header>
