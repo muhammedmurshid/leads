@@ -106,6 +106,9 @@ class LeadsForm(models.Model):
 
     admission_date = fields.Date(string='Admission Date', compute='_compute_admission_status', store=True,
                                  readonly=False)
+    lead_user_type = fields.Selection(
+        [('basic', 'Basic'), ('teacher', 'Teacher'), ('marketing', 'Marketing'), ('other', 'Other')],
+        string='Acquisition Channel', default='basic')
 
     @api.onchange('lead_source_name')
     def check_lead_source_incoming(self):
@@ -210,6 +213,13 @@ class LeadsForm(models.Model):
 
     course_group = fields.Many2one('course.groups', string='Course Group/Part',
                                    domain="[('level_ids', 'in', course_level)]")
+
+    def action_add_lead_user_type(self):
+        leads = self.env['leads.logic'].sudo().search([])
+        for i in leads:
+            if i.lead_source_name == 'Seminar' or i.lead_source_name == 'Seminar Data':
+                if i.seminar_id != 0:
+                    i.lead_user_type = 'marketing'
 
     # @api.onchange('course_group', 'course_type', 'course_level', 'preferred_batch_id')
     # def get_course_papers(self):
@@ -327,19 +337,20 @@ class LeadsForm(models.Model):
         rec = self.env['leads.logic'].sudo().search([])
         today = fields.Date.today()
         for record in rec:
-            if not record.activity_ids:
-                if record.assigned_date:
-                    delta = today - record.assigned_date
-                    if delta.days > 4:
-                        if record.state == 'confirm' or record.state == 're_allocated':
-                            print('yaaaaaaaa', record.admission_status, record.id)
-                            if record.admission_status != True:
-                                if record.lead_quality != 'bad_lead':
-                                    record.over_due = True
-                                    print('yes', record.id)
-                                    record.activity_schedule(
-                                        'leads.mail_seminar_leads_done', user_id=record.leads_assign.user_id.id,
-                                        note=f'Please update status for the lead assigned four days ago.'),
+            if record.lead_user_type != 'teacher':
+                if not record.activity_ids:
+                    if record.assigned_date:
+                        delta = today - record.assigned_date
+                        if delta.days > 4:
+                            if record.state == 'confirm' or record.state == 're_allocated':
+                                print('yaaaaaaaa', record.admission_status, record.id)
+                                if record.admission_status != True:
+                                    if record.lead_quality != 'bad_lead':
+                                        record.over_due = True
+                                        print('yes', record.id)
+                                        record.activity_schedule(
+                                            'leads.mail_seminar_leads_done', user_id=record.leads_assign.user_id.id,
+                                            note=f'Please update status for the lead assigned four days ago.'),
 
             else:
                 print('no', record.id)

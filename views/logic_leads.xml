@@ -41,8 +41,10 @@
                     $(".o_ChatterTopbar_buttonSendMessage").css("display","none")
                     });
 
+
                 </script>
                 <header>
+                    
                     <field name="state" widget="statusbar"/>
                     <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm"
                             onclick="confirm()"/>
@@ -86,7 +88,7 @@
                         <group>
                             <field name="name"/>
                             <field name="country"/>
-                            <field name="lead_channel" attrs="{'readonly':[('make_visible_manager', '=', True)]}"/>
+                            <field name="lead_channel" attrs="{'readonly':[('make_visible_manager', '=', True)], 'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                             <field name="leads_source" options="{'no_create': True, 'no_create_edit':True}"/>
                             <field name="lead_source_name" invisible="1"/>
                             <!--                            <field name="referral_staff_id" attrs="{'invisible':[('lead_source_name', '!=', 'Logic Staff')]}"/>-->
@@ -109,11 +111,11 @@
                             <field name="make_visible_manager" invisible="1"/>
                             <field name="seminar_lead_id" invisible="1"/>
                             <field name="mode_of_study"/>
-                            <field name="platform"/>
+                            <field name="platform" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                             <field name="lead_owner"/>
                             <field name="seminar_id" groups="base.group_no_one"/>
-                            <field name="leads_assign" attrs="{'invisible':[('make_visible_manager', '=', True)]}"/>
-                            <field name="assigned_date"/>
+                            <field name="leads_assign" attrs="{'invisible':['|',('lead_user_type', '=', 'teacher'),('make_visible_manager', '=', True)]}"/>
+                            <field name="assigned_date" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                         </group>
                         <group>
                             <field name="source_seminar_or_not" invisible="1"/>
@@ -137,13 +139,13 @@
                             <field name="course_papers" widget="many2many_tags" options="{'no_create':True}"/>
                             <field name="lead_qualification"/>
                             <field name="last_studied_course"/>
-                            <field name="probability" widget="percentage"/>
+                            <field name="probability" widget="percentage" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                             <field name="current_user_id_int" invisible="1"/>
-                            <field name="lead_quality"/>
-                            <field name="lead_status"/>
+                            <field name="lead_quality" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
+                            <field name="lead_status" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                             <field name="sales_person_id"
                                    attrs="{'invisible':['|',('state', 'in', ['draft', 'cancel']),('make_visible_manager', '=', True)]}"/>
-                            <field name="referred_by"/>
+                            <field name="referred_by" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                             <field name="referred_by_name"
                                    attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
                             <field name="referred_by_id" attrs="{'invisible':[('referred_by', '!=', 'staff')]}"/>
@@ -152,18 +154,19 @@
                             <field name="admission_status" groups="base.leads_admin"/>
                             <field name="make_visible" invisible="1"/>
                             <field name="admission_date" attrs="{'readonly':[('make_visible', '=', False)]}"/>
-                            <field name="over_due"/>
+                            <field name="over_due" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                         </group>
                         <group>
                             <field name="batch_preference" invisible="1"/>
-                            <field name="remarks"/>
+                            <field name="remarks" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                             <field name="student_id" invisible="1"/>
                             <field name="adm_id" invisible="1"/>
+                            <field name="lead_user_type" invisible="1"/>
                             <field name="lead_referral_staff_id" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="date_of_adding"/>
-                            <field name="last_update_date"/>
+                            <field name="last_update_date" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -187,11 +190,11 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
+                <div class="oe_chatter" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}">
                     <field name="message_follower_ids"
-                           widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                           widget="mail_followers" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
+                    <field name="activity_ids" widget="mail_activity" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
 
                 </div>
             </form>
