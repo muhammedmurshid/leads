@@ -31,6 +31,7 @@ leads_staff_referral,access_leads,model_staff_reference_leads,leads.lead_staff_r
 user_access_staff_referral,user_leads,model_leads_logic,leads.lead_staff_referral,1,1,1,1
 
 re_allocation_wizard_access,re_allocation_wizard_access,model_re_allocation_wizard,,1,1,1,1
+lead_status_model_access,lead_status_model_access,model_lead_status,,1,1,1,1
 
 
 

@@ -48,7 +48,7 @@ class StaffReferenceLeads(models.Model):
             'base_course_id': self.course_id.id,
             'branch': self.branch_id.id,
             'lead_quality': 'nil',
-            'lead_status': 'nil',
+            # 'lead_status': 'nil',
             'lead_referral_staff_id': self.create_uid.id,
             'lead_owner': self.create_uid.employee_id.id,
             'mode_of_study': 'nil',

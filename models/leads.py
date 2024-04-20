@@ -32,7 +32,7 @@ class LeadsForm(models.Model):
         [('not_responding', 'Not Responding'),
          ('already_enrolled', 'Already Enrolled'), ('joined_in_another_institute', 'Joined in another institute'),
          ('nil', 'Nil')],
-        string='Lead Status', required=True
+        string='Lead Status',
     )
 
     place = fields.Char('Place')
@@ -109,6 +109,18 @@ class LeadsForm(models.Model):
     lead_user_type = fields.Selection(
         [('basic', 'Basic'), ('teacher', 'Teacher'), ('marketing', 'Marketing'), ('other', 'Other')],
         string='Acquisition Channel', default='basic')
+
+    @api.depends('remarks_lead_user_id')
+    def _check_remarks(self):
+        for rec in self:
+            re = ''
+            if rec.remarks_lead_user_id:
+                re+=rec.remarks_lead_user_id.name
+            rec.lead_status_name = re
+
+
+    lead_status_name = fields.Char(string='Lead Status Name', compute="_check_remarks", store=True)
+
 
     @api.onchange('lead_source_name')
     def check_lead_source_incoming(self):
@@ -890,6 +902,9 @@ class LeadsForm(models.Model):
                         'seminar_id': i.seminar_id
                     })
 
+    remarks_id = fields.Many2one('lead.status', string='Lead Status')
+    remarks_lead_user_id = fields.Many2one('lead.status', string='Remarks')
+
 
 class LeadsSources(models.Model):
     _name = 'leads.sources'
@@ -974,3 +989,10 @@ class AdmissionFeeReceiptCustom(models.Model):
     _name = 'admission.fee.receipt'
 
     name = fields.Char(string='Test Name')
+
+class LeadStatus(models.Model):
+    _name = 'lead.status'
+    _inherit = 'mail.thread'
+    _description = 'Lead Status'
+
+    name = fields.Char('Name')
