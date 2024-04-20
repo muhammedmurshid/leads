@@ -162,7 +162,7 @@
                             <field name="batch_preference" invisible="1"/>
                             <field name="lead_status_name" invisible="1"/>
                             <field name="remarks_id" groups="leads.leads_admin"/>
-                            <field name="remarks_lead_user_id" options="{'no_create': True}"/>
+                            <field name="remarks_lead_user_id" options="{'no_create': True}" required="1"/>
                             <field name="remarks" string="Remarks Note" attrs="{'invisible':['|',('lead_status_name', '!=', 'Other'),('lead_user_type', '=', 'teacher')]}"/>
                             <field name="student_id" invisible="1"/>
                             <field name="adm_id" invisible="1"/>
