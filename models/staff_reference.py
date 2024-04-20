@@ -37,6 +37,8 @@ class StaffReferenceLeads(models.Model):
             record.display_name = record.lead_name + '-' + record.phone_number
 
     def action_add_lead(self):
+        leads_status = self.env['lead.status'].sudo().search([('name', '=', 'Nil')])
+
         lead = self.env['leads.logic'].sudo().create({
             'name': self.lead_name,
             'leads_source': self.lead_source_id.id,
@@ -48,7 +50,7 @@ class StaffReferenceLeads(models.Model):
             'base_course_id': self.course_id.id,
             'branch': self.branch_id.id,
             'lead_quality': 'nil',
-            # 'lead_status': 'nil',
+            'lead_status': leads_status.id,
             'lead_referral_staff_id': self.create_uid.id,
             'lead_owner': self.create_uid.employee_id.id,
             'mode_of_study': 'nil',

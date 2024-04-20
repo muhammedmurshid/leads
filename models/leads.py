@@ -903,7 +903,7 @@ class LeadsForm(models.Model):
                     })
 
     remarks_id = fields.Many2one('lead.status', string='Lead Status')
-    remarks_lead_user_id = fields.Many2one('lead.status', string='Remarks')
+    remarks_lead_user_id = fields.Many2one('lead.status', string='Remarks', required=1)
 
 
 class LeadsSources(models.Model):
