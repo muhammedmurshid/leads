@@ -285,8 +285,29 @@ class LeadsForm(models.Model):
         for i in selected_records:
             if i.admission_status == True:
                 if i.admission_count == 0:
-                    i.admission_count = 1
-                
+                    student = self.env['logic.students'].create({
+                        'name': i.name,
+                        'lead_id': i.id,
+                    })
+
+    def add_admission_fee_collection_data(self):
+        selected_ids = self.env.context.get('active_ids', [])
+        selected_records = self.env['leads.logic'].browse(selected_ids)
+
+        for i in selected_records:
+
+            if i.admission_status == True:
+                if i.admission_count == 0:
+                    domain = self.env['logic.students'].search([('lead_id', '=', i.id)])
+                    for j in domain:
+
+                        print(j.name, 'oops')
+                        fee = self.env['admission.fee.collection'].create({
+                            'name': j.id,
+                            'lead_id': j.lead_id,
+                        })
+
+
 
 
 
@@ -294,6 +315,7 @@ class LeadsForm(models.Model):
         for record in self:
             record.admission_count = self.env['admission.fee.collection'].search_count(
                 [('lead_id', '=', record.id)])
+
 
     admission_count = fields.Integer(compute='compute_count')
 
