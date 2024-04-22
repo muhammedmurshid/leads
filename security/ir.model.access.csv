@@ -3,7 +3,7 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 management_user_access,manager_user_leads,model_leads_logic,leads_admin,1,1,1,1
 management_users_access,manager_user_leads,model_leads_sources,leads_admin,1,1,1,1
 leads_users_access,user_source,model_leads_sources,leads_basic_user,1,1,1,1
-user_access,user_leads,model_leads_logic,leads_basic_user,1,1,1,1
+user_access,user_leads,model_leads_logic,leads_basic_user,1,1,1,0
 management_users_acc,manager_user_leads,model_leads_sources,base.group_user,1,0,0,0
 management_wizard_lead,manager_user_leads,model_leads_assigning_wizard,,1,1,1,1
 lead_channel_name,manager_user_leads,model_channel_name_wizard,leads_admin,1,1,1,1

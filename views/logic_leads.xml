@@ -147,7 +147,7 @@
                             <field name="lead_quality" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                             <field name="sales_person_id"
                                    attrs="{'invisible':['|',('state', 'in', ['draft', 'cancel']),('make_visible_manager', '=', True)]}"/>
-                            <field name="referred_by" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
+                            <field name="referred_by" attrs="{'invisible':[('lead_user_type', '=', 'teacher')], 'required':[('lead_source_name', '=', 'Reference')]}"/>
                             <field name="referred_by_name"
                                    attrs="{'invisible':[('referred_by', 'not in', ['student', 'other'])]}"/>
                             <field name="referred_by_id" attrs="{'invisible':[('referred_by', '!=', 'staff')]}"/>
