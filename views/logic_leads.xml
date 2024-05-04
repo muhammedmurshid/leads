@@ -123,7 +123,7 @@
                             <field name="assigned_date" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                         </group>
                         <group>
-                            <field name="college_type_listed" widget="radio"/>
+                            <field name="college_type_listed" widget="radio" invisible="1"/>
                             <field name="source_seminar_or_not" invisible="1"/>
                             <field name="college_name"
                                    attrs="{'invisible':[('college_type_listed', '!=', 'unlisted')], 'required':[('college_type_listed', '=', 'unlisted')]}"/>
