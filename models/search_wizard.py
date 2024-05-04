@@ -15,31 +15,57 @@ class SearchLeadsWizard(models.TransientModel):
             leads_second = self.env['leads.logic'].sudo().search(
                 [('phone_number_second', 'ilike', rec.mobile)], limit=1)
             if leads:
-                return {
-                    'type': 'ir.actions.act_window',
-                    'res_model': 'searched.leads.response',
-                    'view_mode': 'form',
-                    'view_type': 'form',
-                    'target': 'new',
-                    'context': {
-                        'default_owner': 'Lead: ' + leads.name + ' already exists with ' + leads.leads_assign.name,
-                        'default_course': 'Course: ' + leads.base_course_id.name,
-                        'default_date': 'Added Date: ' + str(leads.date_of_adding)},
+                if leads.base_course_id:
+                    return {
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'searched.leads.response',
+                        'view_mode': 'form',
+                        'view_type': 'form',
+                        'target': 'new',
+                        'context': {
+                            'default_owner': 'Lead: ' + leads.name + ' already exists with ' + leads.leads_assign.name,
+                            'default_course': 'Course: ' + leads.base_course_id.name,
+                            'default_date': 'Added Date: ' + str(leads.date_of_adding)},
 
-                }
+                    }
+                else:
+                    return {
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'searched.leads.response',
+                        'view_mode': 'form',
+                        'view_type': 'form',
+                        'target': 'new',
+                        'context': {
+                            'default_owner': 'Lead: ' + leads.name + ' already exists with ' + leads.leads_assign.name,
+                            'default_date': 'Added Date: ' + str(leads.date_of_adding)},
+
+                    }
             elif leads_second:
-                return {
-                    'type': 'ir.actions.act_window',
-                    'res_model': 'searched.leads.response',
-                    'view_mode': 'form',
-                    'view_type': 'form',
-                    'target': 'new',
-                    'context': {
-                        'default_owner': 'Lead: ' + leads_second.name + ' already exists with ' + leads_second.leads_assign.name,
-                        'default_course': 'Course: ' + leads_second.base_course_id.name,
-                        'default_date': 'Added Date: ' + str(leads_second.date_of_adding)},
+                if leads_second.base_course_id:
+                    return {
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'searched.leads.response',
+                        'view_mode': 'form',
+                        'view_type': 'form',
+                        'target': 'new',
+                        'context': {
+                            'default_owner': 'Lead: ' + leads_second.name + ' already exists with ' + leads_second.leads_assign.name,
+                            'default_course': 'Course: ' + leads_second.base_course_id.name,
+                            'default_date': 'Added Date: ' + str(leads_second.date_of_adding)},
 
-                }
+                        }
+                else:
+                    return {
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'searched.leads.response',
+                        'view_mode': 'form',
+                        'view_type': 'form',
+                        'target': 'new',
+                        'context': {
+                            'default_owner': 'Lead: ' + leads_second.name + ' already exists with ' + leads_second.leads_assign.name,
+                            'default_date': 'Added Date: ' + str(leads_second.date_of_adding)},
+
+                    }
             else:
                 return {
                     'type': 'ir.actions.act_window',

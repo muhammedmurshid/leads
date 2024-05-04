@@ -34,7 +34,6 @@ class LeadsForm(models.Model):
          ('nil', 'Nil')],
         string='Lead Status',
     )
-
     place = fields.Char('Place')
     leads_assign = fields.Many2one('hr.employee', string='Assign to', default=lambda self: self.env.user.employee_id)
     lead_owner = fields.Many2one('hr.employee', string='Lead Owner')
@@ -118,9 +117,7 @@ class LeadsForm(models.Model):
                 re+=rec.remarks_lead_user_id.name
             rec.lead_status_name = re
 
-
     lead_status_name = fields.Char(string='Lead Status Name', compute="_check_remarks", store=True)
-
 
     @api.onchange('lead_source_name')
     def check_lead_source_incoming(self):
@@ -252,6 +249,9 @@ class LeadsForm(models.Model):
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
     source_seminar_or_not = fields.Boolean(string='Source Seminar or Not')
     referral_staff_id = fields.Many2one('res.users', string='Referral Staff')
+    college_type_listed = fields.Selection(string='College', selection=[('listed', 'Listed'), ('unlisted', 'Unlisted')])
+    lead_source_ids = fields.Many2many('leads.sources', string='Lead Sources')
+    list_id = fields.Many2one('seminar.leads', string='List')
 
     def get_admission_profile(self):
         self.ensure_one()
@@ -306,8 +306,6 @@ class LeadsForm(models.Model):
                             'name': j.id,
                             'lead_id': j.lead_id,
                         })
-
-
 
 
 
