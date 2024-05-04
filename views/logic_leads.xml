@@ -127,7 +127,7 @@
                             <field name="source_seminar_or_not" invisible="1"/>
                             <field name="college_name"
                                    attrs="{'invisible':[('college_type_listed', '!=', 'unlisted')], 'required':[('college_type_listed', '=', 'unlisted')]}"/>
-                            <field name="list_id"/>
+<!--                            <field name="list_id"/>-->
                             <field name="course_type"
                                    attrs="{'required': [('lead_source_name', 'not in', ['Seminar','Seminar Data','Webinar'])]}"/>
                             <field name="course_id" invisible="1"/>

@@ -249,9 +249,9 @@ class LeadsForm(models.Model):
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
     source_seminar_or_not = fields.Boolean(string='Source Seminar or Not')
     referral_staff_id = fields.Many2one('res.users', string='Referral Staff')
-    college_type_listed = fields.Selection(string='College', selection=[('listed', 'Listed'), ('unlisted', 'Unlisted')])
+    college_type_listed = fields.Selection(string='College', selection=[('listed', 'Listed'), ('unlisted', 'Unlisted')], default='unlisted')
     lead_source_ids = fields.Many2many('leads.sources', string='Lead Sources')
-    list_id = fields.Many2one('seminar.leads', string='List')
+    # list_id = fields.Many2one('seminar.leads', string='List')
 
     def get_admission_profile(self):
         self.ensure_one()
@@ -928,7 +928,6 @@ class LeadsSources(models.Model):
     _description = 'Leads Sources'
 
     name = fields.Char('Name', required=True)
-
 
 class GenerateLeadLink(models.Model):
     _inherit = 'res.users'
