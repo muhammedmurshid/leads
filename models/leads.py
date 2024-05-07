@@ -193,7 +193,6 @@ class LeadsForm(models.Model):
         res_user = self.env['res.users'].search([('id', '=', self.env.user.id)])
         if res_user.has_group('leads.leads_admin'):
             self.make_visible = True
-
         else:
             self.make_visible = False
 
@@ -251,7 +250,7 @@ class LeadsForm(models.Model):
     referral_staff_id = fields.Many2one('res.users', string='Referral Staff')
     college_type_listed = fields.Selection(string='College', selection=[('listed', 'Listed'), ('unlisted', 'Unlisted')], default='unlisted')
     lead_source_ids = fields.Many2many('leads.sources', string='Lead Sources')
-    # list_id = fields.Many2one('seminar.leads', string='List')
+    list_id = fields.Many2one('college.list', string='List')
 
     def get_admission_profile(self):
         self.ensure_one()
@@ -306,8 +305,6 @@ class LeadsForm(models.Model):
                             'name': j.id,
                             'lead_id': j.lead_id,
                         })
-
-
 
     def compute_count(self):
         for record in self:
