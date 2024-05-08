@@ -38,26 +38,38 @@
             action = records.change_leads_channel_name()
         </field>
     </record>
-<!--    <record model="ir.actions.server" id="action_add_assigned_date">-->
-<!--        <field name="name">Add Student</field>-->
-<!--        <field name="model_id" ref="model_leads_logic"/>-->
-<!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
-<!--        <field name="state">code</field>-->
-<!--        <field name="code">-->
-<!--            if records:-->
-<!--            action = records.old_states_changing_adm_counts()-->
-<!--        </field>-->
-<!--    </record>-->
-<!--    <record model="ir.actions.server" id="action_add_new_fee_collection">-->
-<!--        <field name="name">Add FeeCollection</field>-->
-<!--        <field name="model_id" ref="model_leads_logic"/>-->
-<!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
-<!--        <field name="state">code</field>-->
-<!--        <field name="code">-->
-<!--            if records:-->
-<!--            action = records.add_admission_fee_collection_data()-->
-<!--        </field>-->
-<!--    </record>-->
+    <record model="ir.actions.server" id="action_add_bulk_lead_quality">
+        <field name="name">Add Lead Quality</field>
+        <field name="model_id" ref="model_leads_logic"/>
+        <!--        <field name="groups_id" eval="[(4, ref('leads.leads_admin'))]"/>-->
+        <field name="binding_model_id" ref="model_leads_logic"/>
+        <field name="state">code</field>
+        <field name="binding_view_types">list</field>
+        <field name="code">
+            if records:
+            action = records.action_bulk_add_lead_quality()
+        </field>
+    </record>
+    <!--    <record model="ir.actions.server" id="action_add_assigned_date">-->
+    <!--        <field name="name">Add Student</field>-->
+    <!--        <field name="model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="state">code</field>-->
+    <!--        <field name="code">-->
+    <!--            if records:-->
+    <!--            action = records.old_states_changing_adm_counts()-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!--    <record model="ir.actions.server" id="action_add_new_fee_collection">-->
+    <!--        <field name="name">Add FeeCollection</field>-->
+    <!--        <field name="model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="state">code</field>-->
+    <!--        <field name="code">-->
+    <!--            if records:-->
+    <!--            action = records.add_admission_fee_collection_data()-->
+    <!--        </field>-->
+    <!--    </record>-->
     <record model="ir.actions.server" id="action_bulk_lead_re_allocation">
         <field name="name">Re Assign</field>
         <field name="model_id" ref="model_leads_logic"/>
@@ -76,21 +88,22 @@
         <field name="groups_id" eval="[(4, ref('leads.leads_admin'))]"/>
         <field name="binding_model_id" ref="model_leads_logic"/>
         <field name="state">code</field>
+        <field name="binding_view_types">list</field>
         <field name="code">
             if records:
             action = records.action_add_lead_user_type()
         </field>
     </record>
-<!--    <record model="ir.actions.server" id="action_bulk_over_due_value_assigning">-->
-<!--        <field name="name">Over Due</field>-->
-<!--        <field name="model_id" ref="model_leads_logic"/>-->
-<!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
-<!--        <field name="state">code</field>-->
-<!--        <field name="code">-->
-<!--            if records:-->
-<!--            action = records.action_cron_job_for_over_due_leads()-->
-<!--        </field>-->
-<!--    </record>-->
+    <!--    <record model="ir.actions.server" id="action_bulk_over_due_value_assigning">-->
+    <!--        <field name="name">Over Due</field>-->
+    <!--        <field name="model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="binding_model_id" ref="model_leads_logic"/>-->
+    <!--        <field name="state">code</field>-->
+    <!--        <field name="code">-->
+    <!--            if records:-->
+    <!--            action = records.action_cron_job_for_over_due_leads()-->
+    <!--        </field>-->
+    <!--    </record>-->
     <!--    <record model="ir.actions.server" id="action_all_leads_source_change_to_seminar_data">-->
     <!--        <field name="name">Change Lead Source Seminar to Data</field>-->
     <!--        <field name="model_id" ref="model_leads_logic"/>-->

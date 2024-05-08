@@ -918,6 +918,15 @@ class LeadsForm(models.Model):
     remarks_id = fields.Many2one('lead.status', string='Lead Status')
     remarks_lead_user_id = fields.Many2one('lead.status', string='Remarks', required=1)
 
+    def action_bulk_add_lead_quality(self):
+        rec = self.env['leads.logic'].sudo().search([('lead_quality', '=', False)])
+        for i in rec:
+            if not i.lead_quality:
+                print(i.lead_quality, 'lead_quality')
+                i.lead_quality = 'nil'
+            else:
+                print('no')
+
 
 class LeadsSources(models.Model):
     _name = 'leads.sources'
