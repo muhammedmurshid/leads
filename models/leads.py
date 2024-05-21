@@ -250,7 +250,7 @@ class LeadsForm(models.Model):
     referral_staff_id = fields.Many2one('res.users', string='Referral Staff')
     college_type_listed = fields.Selection(string='College', selection=[('listed', 'Listed'), ('unlisted', 'Unlisted')], default='unlisted')
     lead_source_ids = fields.Many2many('leads.sources', string='Lead Sources')
-    list_id = fields.Char( string='List')
+    list_id = fields.Char(string='List')
 
     def get_admission_profile(self):
         self.ensure_one()
@@ -310,7 +310,6 @@ class LeadsForm(models.Model):
         for record in self:
             record.admission_count = self.env['admission.fee.collection'].search_count(
                 [('lead_id', '=', record.id)])
-
 
     admission_count = fields.Integer(compute='compute_count')
 
@@ -379,7 +378,6 @@ class LeadsForm(models.Model):
 
             else:
                 print('no', record.id)
-               
 
     def action_cancel_cron_for_bad_leads(self):
         lead = self.env['leads.logic'].sudo().search([])
@@ -576,15 +574,49 @@ class LeadsForm(models.Model):
             vals['reference_no'] = self.env['ir.sequence'].next_by_code(
                 'leads.logic') or _('New')
         #
-        existing_record = self.env['leads.logic'].sudo().search([('phone_number', '=', vals.get('phone_number'))])
-        if existing_record:
-            for record in existing_record:
-                # Handle the duplicate record, e.g., raise an error
-                raise ValidationError(
-                    'A record with the same mobile number already exists! created by ' + record.create_uid.name + ' ' + 'number is ' + record.phone_number)
+        number = vals.get('phone_number')
+        reversed_number = number[-10:]
+        print(reversed_number, 'reversed_number')
+        reverse_checking = self.search([('phone_number', 'like', f'%{reversed_number}')], limit=1)
 
+        if reverse_checking:
+            # Update the existing record with new values
+            # reverse_checking.write(vals)
+
+            duplicate = self.env['logic.leads.duplicates'].create({'name': vals.get('name'),
+                                                                   'phone_number': vals.get('phone_number'),
+                                                                   'lead_source_id': vals.get('leads_source'),
+                                                                   'email_address': vals.get('email_address'),
+                                                                   'country': vals.get('country'),
+                                                                   'district': vals.get('district'),
+                                                                   'place': vals.get('place'),
+                                                                   'mode_of_study': vals.get('mode_of_study'),
+                                                                   'platform': vals.get('platform'),
+                                                                   'lead_qualification': vals.get('lead_qualification'),
+                                                                   'last_studied_course': vals.get(
+                                                                       'last_studied_course'),
+                                                                   # 'remark_id': vals.get('remark_id'),
+                                                                   'college_name': vals.get('college_name'),
+                                                                   'branch': vals.get('branch'),
+                                                                   'course_type': vals.get('course_type'),
+                                                                   'academic_year': vals.get('academic_year'),
+                                                                   'course_id': vals.get('base_course_id'),
+                                                                   'course_level': vals.get('course_level'),
+                                                                   'course_group': vals.get('course_group'),
+                                                                   'course_papers': vals.get('course_papers'),
+                                                                   'preferred_batch_id': vals.get(
+                                                                       'preferred_batch_id'),
+                                                                   'lead_status': vals.get('lead_status'),
+                                                                   'lead_quality': vals.get('lead_quality'),
+                                                                   'probability': vals.get('probability'),
+                                                                   'lead_owner': self.env.user.employee_id.id,
+                                                                   'leads_assign': vals.get('leads_assign'),
+                                                                   'assigned_date': vals.get('assigned_date'),
+                                                                   'date_of_adding': vals.get('date_of_adding'),
+                                                                   'last_update_date': vals.get('last_update_date'),
+                                                                   'admission_date': vals.get('admission_date')})
+            return reverse_checking
         else:
-            print('lll')
             return super(LeadsForm, self).create(vals)
 
     def add_touches(self):
@@ -594,7 +626,6 @@ class LeadsForm(models.Model):
             points = []
             res_list = {
                 'name': touch.id,
-
             }
             points.append((0, 0, res_list))
             self.touch_ids = points
@@ -610,16 +641,40 @@ class LeadsForm(models.Model):
 
         self.state = 'done'
 
-    @api.constrains('phone_number_second')
-    def check_number_duplicate(self):
+    def get_duplicate_leads(self):
+        self.ensure_one()
+        number = self.phone_number
+        reversed_number = number[-10:]
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Duplicate',
+            'view_mode': 'tree,form',
+            'res_model': 'logic.leads.duplicates',
+            'domain': [('phone_number','like', f'%{reversed_number}')],
+            'context': "{'create': False}"
+        }
+
+
+
+    def compute_duplicates_leads_count(self):
+        number = self.phone_number
+        reversed_number = number[-10:]
         for record in self:
-            if record.phone_number_second:
-                duplicate_records = self.search(
-                    [('phone_number_second', '=', record.phone_number_second), ('id', '!=', record.id)])
-                if duplicate_records:
-                    raise ValidationError(
-                        'This number already exists in the records created by ' + record.create_uid.name + ' ' + 'number is ' + str(
-                            record.phone_number_second))
+            record.duplicates_count = self.env['logic.leads.duplicates'].search_count(
+                [('phone_number','like', f'%{reversed_number}')])
+
+    duplicates_count = fields.Integer(compute='compute_duplicates_leads_count')
+
+    # @api.constrains('phone_number_second')
+    # def check_number_duplicate(self):
+    #     for record in self:
+    #         if record.phone_number_second:
+    #             duplicate_records = self.search(
+    #                 [('phone_number_second', '=', record.phone_number_second), ('id', '!=', record.id)])
+    #             if duplicate_records:
+    #                 raise ValidationError(
+    #                     'This number already exists in the records created by ' + record.create_uid.name + ' ' + 'number is ' + str(
+    #                         record.phone_number_second))
 
     # @api.constrains('phone_number')
     # def check_number_duplicate_mobile_number(self):
@@ -868,7 +923,6 @@ class LeadsForm(models.Model):
     current_user_id_int = fields.Integer(string='Current User ID', compute='current_user_id')
 
     def change_leads_channel_name(self):
-
         for i in self:
             print(i.name, 'name')
         print('hi')
@@ -917,15 +971,6 @@ class LeadsForm(models.Model):
 
     remarks_id = fields.Many2one('lead.status', string='Lead Status')
     remarks_lead_user_id = fields.Many2one('lead.status', string='Remarks', required=1)
-
-    def action_bulk_add_lead_quality(self):
-        rec = self.env['leads.logic'].sudo().search([('lead_quality', '=', False)])
-        for i in rec:
-            if not i.lead_quality:
-                print(i.lead_quality, 'lead_quality')
-                i.lead_quality = 'nil'
-            else:
-                print('no')
 
 
 class LeadsSources(models.Model):
