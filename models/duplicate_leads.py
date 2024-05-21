@@ -11,10 +11,10 @@ class LogicPipelineDuplicates(models.Model):
     _rec_name = 'name'
     _order = 'id desc'
 
-    lead_source_id = fields.Many2one('leads.sources', string='Leads Source', required=True)
-    name = fields.Char(string='Lead Name', required=True)
+    lead_source_id = fields.Many2one('leads.sources', string='Leads Source',)
+    name = fields.Char(string='Lead Name')
     email_address = fields.Char(string='Email Address', widget='mail')
-    phone_number = fields.Char(string='Mobile Number', required=True)
+    phone_number = fields.Char(string='Mobile Number', )
     probability = fields.Float(string='Probability')
     date_of_adding = fields.Date(string='Date of Adding', default=fields.Datetime.now)
     last_update_date = fields.Datetime(string='Last Updated Date')
@@ -23,7 +23,7 @@ class LogicPipelineDuplicates(models.Model):
         [('hot', 'Hot'), ('warm', 'Warm'), ('cold', 'Cold'),
          ('bad_lead', 'Bad Lead'),
          ('nil', 'Nil')],
-        string='Lead Quality', required=True)
+        string='Lead Quality', )
     lead_status = fields.Selection(
         [('not_responding', 'Not Responding'),
          ('already_enrolled', 'Already Enrolled'), ('joined_in_another_institute', 'Joined in another institute'),
@@ -37,7 +37,7 @@ class LogicPipelineDuplicates(models.Model):
                                  ('alappuzha', 'Alappuzha'), ('malappuram', 'Malappuram'), ('kasaragod', 'Kasaragod'),
                                  ('thrissur', 'Thrissur'), ('idukki', 'Idukki'), ('pathanamthitta', 'Pathanamthitta'),
                                  ('abroad', 'Abroad'), ('other', 'Other'), ('nil', 'Nil')],
-                                string='District', required=True)
+                                string='District', )
     phone_number_second = fields.Char(string='Phone Number')
     course_type = fields.Selection(
         [('indian', 'Indian'), ('international', 'International'), ('crash', 'Crash'), ('repeaters', 'Repeaters'),
@@ -69,12 +69,12 @@ class LogicPipelineDuplicates(models.Model):
     incoming_source_checking = fields.Boolean(string='Incoming Source Checking', )
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
                                    string='Referred By')
-    course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True,
+    course_id = fields.Many2one('logic.base.courses', string='Preferred Course',
                                 domain=[('state', '=', 'done')])
     branch = fields.Many2one('logic.base.branches', string='Branch', required=1)
     academic_year = fields.Selection(
         [('2020', '2020'), ('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025'),
-         ('2026', '2026'), ('nil', 'Nil')], string='Academic Year', required=True)
+         ('2026', '2026'), ('nil', 'Nil')], string='Academic Year', )
     preferred_batch_id = fields.Many2one('logic.base.batch', string='Preferred Batch')
 
     campaign_name = fields.Char(string='Campaign Name')
@@ -88,7 +88,7 @@ class LogicPipelineDuplicates(models.Model):
     place = fields.Char(string='Place')
     mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline'), ('nil', 'Nil')],
                                      string='Mode of Study',
-                                     required=True)
+                                     )
     platform = fields.Selection(
         [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('website', 'Website'), ('just_dial', 'Just Dial'),
          ('other', 'Other')],
