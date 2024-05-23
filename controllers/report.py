@@ -21,6 +21,13 @@ class LeadExcelReportController(http.Controller):
         total_nil = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'nil')])
         total_bad = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'bad_lead')])
         total_leads = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids)])
+        total_adm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True)])
+        adm_hot = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'hot')])
+        adm_cold = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'cold')])
+        adm_warm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'warm')])
+        adm_nil = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'nil')])
+        adm_bad = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'bad_lead')])
+
         perc_hot = round((total_hot / total_leads) * 100)
         perc_cold = round((total_cold / total_leads) * 100)
         perc_warm = round((total_warm / total_leads) * 100)
@@ -60,6 +67,12 @@ class LeadExcelReportController(http.Controller):
             'align': 'center',
             'valign': 'vcenter',
         })
+        admission = workbook.add_format({
+            'font_color': 'black',
+            'bg_color': '#84f032',  # Background color
+            'align': 'center',
+            'valign': 'vcenter',
+        })
         percentage = workbook.add_format({
             'font_color': 'black',
             'bg_color': '#f0a732',  # Background color
@@ -77,8 +90,9 @@ class LeadExcelReportController(http.Controller):
         sheet.write(1, 4, 'Cold', header_format)
         sheet.write(1, 5, 'Bad Lead', header_format)
         sheet.write(1, 6, 'Nil', header_format)
-        sheet.write(1, 7, 'Total', header_format)
-        sheet.write(1, 8, 'Percentage %', header_format)
+        sheet.write(1, 7, 'Admission', header_format)
+        sheet.write(1, 8, 'Total', header_format)
+        sheet.write(1, 9, 'Percentage %', header_format)
 
         row = 2
         number = 1
@@ -92,12 +106,23 @@ class LeadExcelReportController(http.Controller):
             sheet.write(row, 4, line['cold_count'], )
             sheet.write(row, 5, line['bad_count'], )
             sheet.write(row, 6, line['nil_count'], )
-            sheet.write(row, 7, line['total_count'], total_format)
-            sheet.write(row, 8, line['perc_total'], percentage)
+            sheet.write(row, 7, line['adm_source'], admission)
+            sheet.write(row, 8, line['total_count'], total_format)
+            sheet.write(row, 9, line['perc_total'], percentage)
 
             row += 1
             number += 1
         sheet.set_row(row, 20)
+        row += 1
+        sheet.write(row, 1, 'Admission', header_format)
+        sheet.write(row, 2, adm_hot, admission)
+        sheet.write(row, 3, adm_warm, admission)
+        sheet.write(row, 4, adm_cold, admission)
+        sheet.write(row, 5, adm_bad, admission)
+        sheet.write(row, 6, adm_nil, admission)
+        sheet.write(row, 7, total_adm, admission)
+        # sheet.write(row, 8, total_leads, total_leads_format)
+
         row += 1
         print(report_lines, 'datas')
         sheet.write(row, 1, 'Total', header_format)
@@ -106,7 +131,8 @@ class LeadExcelReportController(http.Controller):
         sheet.write(row, 4, total_cold, total_format)
         sheet.write(row, 5, total_bad, total_format)
         sheet.write(row, 6, total_nil, total_format)
-        sheet.write(row, 7, total_leads, total_leads_format)
+        # sheet.write(row, 7, total_adm, admission)
+        sheet.write(row, 8, total_leads, total_leads_format)
 
         row += 1
         sheet.write(row, 1, 'Percentage %', header_format)

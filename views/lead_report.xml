@@ -11,8 +11,8 @@
                     <field name="datas_ids" widget="many2many_tags" invisible="1"/>
                 </group>
                 <footer>
-                    <button name="print_xlsx_report" type="object" string="Source Base Report" class="btn-primary"/>
-<!--                    <button name="print_xlsx_report_course" type="object" string="Course Base Report" class="btn-primary"/>-->
+                    <button name="print_xlsx_report" type="object" string="Source Wise Report" class="btn-primary"/>
+                    <button name="print_xlsx_report_course" type="object" string="Course Wise Report" class="btn-primary"/>
 
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
@@ -28,6 +28,6 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="Report" id="menu_leads_report" action="lead_report_action"
+    <menuitem name="Reports" id="menu_leads_report" action="lead_report_action"
               parent="menu_leads_details" sequence="10" groups="leads.leads_admin"/>
 </odoo>
