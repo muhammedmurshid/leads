@@ -8,5 +8,5 @@ from . import lead_target
 from . import admission
 from . import staff_reference
 from . import re_allocation
-from . import lead_pipeline
+from . import lead_report
 from . import duplicate_leads

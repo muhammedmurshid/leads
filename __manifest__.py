@@ -19,7 +19,7 @@
         'views/admission.xml',
         'data/cron_job.xml',
         'views/re_allocation.xml',
-        'views/lead_pipeline.xml',
+        'views/lead_report.xml',
         'views/duplicate_pipeline_leads.xml',
         # 'views/link_generation.xml',
 

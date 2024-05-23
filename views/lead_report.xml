@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="leads_report_excel_report" model="ir.ui.view">
+        <field name="name">lead.report.form</field>
+        <field name="model">lead.report</field>
+        <field name="arch" type="xml">
+            <form string="Report">
+                <group class="oe_title">
+                    <field name="date_from" placeholder="Report From Date"/>
+                    <field name="to_date" placeholder="Report To Date"/>
+                    <field name="datas_ids" widget="many2many_tags" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="print_xlsx_report" type="object" string="Source Base Report" class="btn-primary"/>
+<!--                    <button name="print_xlsx_report_course" type="object" string="Course Base Report" class="btn-primary"/>-->
+
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="lead_report_action" model="ir.actions.act_window">
+        <field name="name">Lead Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">lead.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="leads_report_excel_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="Report" id="menu_leads_report" action="lead_report_action"
+              parent="menu_leads_details" sequence="10" groups="leads.leads_admin"/>
+</odoo>
