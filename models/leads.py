@@ -980,6 +980,7 @@ class LeadsSources(models.Model):
 
     name = fields.Char('Name', required=True)
 
+
 class GenerateLeadLink(models.Model):
     _inherit = 'res.users'
 
