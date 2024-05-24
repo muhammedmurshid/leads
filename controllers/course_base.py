@@ -2,6 +2,7 @@ from odoo import http
 from odoo.http import request
 import xlsxwriter
 import io
+from odoo.http import request
 from odoo.http import Controller, request, route, content_disposition
 
 
@@ -61,20 +62,6 @@ class LeadExcelReportCourseController(http.Controller):
         # get data for the report.
         report_lines = report_id.get_course_reports()
         print(report_lines, 'report_lines')
-        non_empty_columns = set()
-        for line in report_lines:
-            if line['adm_count'] > 0 or line['count'] > 0 or line['prc_count'] > 0:
-                non_empty_columns.add('Admission')
-                non_empty_columns.add('Total')
-                non_empty_columns.add('Percentage %')
-            for source in lead_source:
-                search_count = request.env['leads.logic'].sudo().search_count(
-                    [('id', 'in', datas.ids), ('leads_source', '=', source.id),
-                     ('base_course_id', '=', line['course_id'])]
-                )
-                if search_count > 0:
-                    non_empty_columns.add(source.name)
-
         # prepare excel sheet styles and formats
         sheet = workbook.add_worksheet("courses")
         sheet.write(1, 0, 'No.', header_format)
@@ -82,9 +69,9 @@ class LeadExcelReportCourseController(http.Controller):
         for source in lead_source:
             sheet.write(1, 1 + source.id, source.name, header_format)
         print(len(lead_source), 'len(lead_source)')
-        sheet.write(1, len(lead_source)+2, 'Admission', header_format)
-        sheet.write(1, len(lead_source)+3,'Total', header_format)
-        sheet.write(1, len(lead_source)+4, 'Percentage %', header_format)
+        # sheet.write(1, len(lead_source)+2, 'Admission', header_format)
+        # sheet.write(1, len(lead_source)+3, 'Total', header_format)
+        # sheet.write(1, len(lead_source)+4, 'Percentage %', header_format)
 
         row = 2
         number = 1
@@ -101,9 +88,9 @@ class LeadExcelReportCourseController(http.Controller):
                      ('base_course_id', '=', line['course_id'])])
                 perc_course = round((search_count / total_count) * 100)
                 sheet.write(row, 1 + source.id, search_count, )
-            sheet.write(row, len(lead_source)+2, line['adm_count'], admission)
-            sheet.write(row, len(lead_source)+3, line['count'], total_format)
-            sheet.write(row, len(lead_source)+4, line['prc_count'], percentage)
+            # sheet.write(row, len(lead_source)+2, line['adm_count'], admission)
+            # sheet.write(row, len(lead_source)+3, line['count'], total_format)
+            # sheet.write(row, len(lead_source)+4, line['prc_count'], percentage)
 
             row += 1
             number += 1
