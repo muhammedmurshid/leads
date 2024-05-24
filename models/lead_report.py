@@ -120,7 +120,7 @@ class LeadReport(models.TransientModel):
 
         # hostel_ids = self.hostel_id.ids
         datas = self.datas_ids
-        lead_course = self.env['logic.base.courses'].sudo().search([])
+        lead_course = self.env['logic.base.courses'].sudo().search([('state', '=', 'done')])
         lead_source = self.env['leads.sources'].sudo().search([])
 
         for j in lead_course:

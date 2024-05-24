@@ -15,7 +15,7 @@ class LeadExcelReportCourseController(http.Controller):
         datas = report_id.datas_ids
         print(datas, 'date')
         lead_source = request.env['leads.sources'].sudo().search([])
-        course = request.env['logic.base.courses'].sudo().search([])
+        course = request.env['logic.base.courses'].sudo().search([('state', '=', 'done')])
         total_count = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids)])
 
         response = request.make_response(
