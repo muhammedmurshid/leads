@@ -2,7 +2,6 @@ from odoo import http
 from odoo.http import request
 import xlsxwriter
 import io
-from odoo.http import request
 from odoo.http import Controller, request, route, content_disposition
 
 
@@ -22,7 +21,7 @@ class LeadExcelReportCourseController(http.Controller):
             None,
             headers=[
                 ('Content-Type', 'application/vnd.ms-excel'),
-                ('Content-Disposition', content_disposition('Course Base Report' + '.xlsx'))
+                ('Content-Disposition', content_disposition('Course Wise Report' + '.xlsx'))
             ]
         )
         output = io.BytesIO()
@@ -62,6 +61,20 @@ class LeadExcelReportCourseController(http.Controller):
         # get data for the report.
         report_lines = report_id.get_course_reports()
         print(report_lines, 'report_lines')
+        non_empty_columns = set()
+        for line in report_lines:
+            if line['adm_count'] > 0 or line['count'] > 0 or line['prc_count'] > 0:
+                non_empty_columns.add('Admission')
+                non_empty_columns.add('Total')
+                non_empty_columns.add('Percentage %')
+            for source in lead_source:
+                search_count = request.env['leads.logic'].sudo().search_count(
+                    [('id', 'in', datas.ids), ('leads_source', '=', source.id),
+                     ('base_course_id', '=', line['course_id'])]
+                )
+                if search_count > 0:
+                    non_empty_columns.add(source.name)
+
         # prepare excel sheet styles and formats
         sheet = workbook.add_worksheet("courses")
         sheet.write(1, 0, 'No.', header_format)

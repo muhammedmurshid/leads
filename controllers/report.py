@@ -42,7 +42,7 @@ class LeadExcelReportController(http.Controller):
             None,
             headers=[
                 ('Content-Type', 'application/vnd.ms-excel'),
-                ('Content-Disposition', content_disposition('Leads Report' + '.xlsx'))
+                ('Content-Disposition', content_disposition('Source Wise Report' + '.xlsx'))
             ]
         )
         output = io.BytesIO()
