@@ -12,6 +12,7 @@
                 </group>
                 <footer>
                     <button name="print_xlsx_report" type="object" string="Source Wise Report" class="btn-primary"/>
+                    <button name="print_without_crash_xlsx_report" string="Source Without Crash" type="object" style="background-color: #ccf26b"/>
                     <button name="print_xlsx_report_course" type="object" string="Course Wise Report" class="btn-primary"/>
 
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
