@@ -9,12 +9,15 @@
                     <field name="date_from" placeholder="Report From Date"/>
                     <field name="to_date" placeholder="Report To Date"/>
                     <field name="datas_ids" widget="many2many_tags" invisible="1"/>
+                    <field name="report_type"/>
                 </group>
                 <footer>
-                    <button name="print_xlsx_report" type="object" string="Source Wise Report" class="btn-primary"/>
-                    <button name="print_without_crash_xlsx_report" string="Source Without Crash" type="object" style="background-color: #ccf26b"/>
-                    <button name="print_xlsx_report_course" type="object" string="Course Wise Report" class="btn-primary"/>
-
+                    <button name="print_xlsx_report" type="object" string="Source Wise Report" class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'fully_report')]}"/>
+                    <button name="print_without_crash_xlsx_report" string="Source Wise Report" type="object" class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'without_crash')]}"/>
+                    <button name="print_xlsx_report_course" type="object" string="Course Wise Report" class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'fully_report')]}"/>
+                    <button name="print_xlsx_without_crash_report_course" type="object" string="Course Wise Report" class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'without_crash')]}"/>
+                    <button name="print_xlsx_crash_report_course" type="object" string="Course Crash Report" class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}"/>
+                    <button name="print_crash_xlsx_report" string="Source Crash Report" type="object" class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
