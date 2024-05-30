@@ -31,6 +31,7 @@ class LogicPipelineDuplicates(models.Model):
         string='Lead Status',
     )
     remarks_id = fields.Many2one('lead.status', string='Lead Status')
+    original_lead_id = fields.Integer()
     district = fields.Selection([('wayanad', 'Wayanad'), ('ernakulam', 'Ernakulam'), ('kollam', 'Kollam'),
                                  ('thiruvananthapuram', 'Thiruvananthapuram'), ('kottayam', 'Kottayam'),
                                  ('kozhikode', 'Kozhikode'), ('palakkad', 'Palakkad'), ('kannur', 'Kannur'),

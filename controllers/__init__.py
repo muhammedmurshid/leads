@@ -5,3 +5,6 @@ from . import without_crash
 from . import course_wise_report_without_crash
 from . import course_crash_only
 from . import source_crash_only
+from . import digital_report
+from . import digital_lead_without_crash
+from . import digital_report_with_crash

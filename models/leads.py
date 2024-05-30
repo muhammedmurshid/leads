@@ -47,7 +47,8 @@ class LeadsForm(models.Model):
         string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
-        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('re_allocated', 'Re Assigned'), ('done', 'Done'), ('cancel', 'Cancelled')],
+        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('re_allocated', 'Re Assigned'), ('done', 'Done'),
+         ('cancel', 'Cancelled')],
         string='State',
         default='draft', tracking=True)
     last_studied_course = fields.Char(string='Last Studied Course')
@@ -114,7 +115,7 @@ class LeadsForm(models.Model):
         for rec in self:
             re = ''
             if rec.remarks_lead_user_id:
-                re+=rec.remarks_lead_user_id.name
+                re += rec.remarks_lead_user_id.name
             rec.lead_status_name = re
 
     lead_status_name = fields.Char(string='Lead Status Name', compute="_check_remarks", store=True)
@@ -248,7 +249,8 @@ class LeadsForm(models.Model):
     count_of_total_touch_points = fields.Integer(compute='get_count_of_total_touch_points', store=True)
     source_seminar_or_not = fields.Boolean(string='Source Seminar or Not')
     referral_staff_id = fields.Many2one('res.users', string='Referral Staff')
-    college_type_listed = fields.Selection(string='College', selection=[('listed', 'Listed'), ('unlisted', 'Unlisted')], default='unlisted')
+    college_type_listed = fields.Selection(string='College', selection=[('listed', 'Listed'), ('unlisted', 'Unlisted')],
+                                           default='unlisted')
     lead_source_ids = fields.Many2many('leads.sources', string='Lead Sources')
     list_id = fields.Char(string='List')
 
@@ -299,7 +301,6 @@ class LeadsForm(models.Model):
                 if i.admission_count == 0:
                     domain = self.env['logic.students'].search([('lead_id', '=', i.id)])
                     for j in domain:
-
                         print(j.name, 'oops')
                         fee = self.env['admission.fee.collection'].create({
                             'name': j.id,
@@ -412,7 +413,6 @@ class LeadsForm(models.Model):
                         rec.over_due = False
                 else:
                     rec.over_due = False
-
 
     def action_created_records_states_changing(self):
         lead = self.env['leads.logic'].sudo().search([])
@@ -575,9 +575,15 @@ class LeadsForm(models.Model):
                 'leads.logic') or _('New')
         #
         number = vals.get('phone_number')
+        second_number = vals.get('phone_number_second')
+
         reversed_number = number[-10:]
         print(reversed_number, 'reversed_number')
-        reverse_checking = self.search([('phone_number', 'like', f'%{reversed_number}')], limit=1)
+        reverse_checking = self.search(
+            [('phone_number', 'like', f'%{reversed_number}')], limit=1)
+
+        current_rec = self.env['leads.logic'].search([('phone_number', 'ilike', number)], limit=1)
+        print(current_rec, 'reveeeee')
 
         if reverse_checking:
             # Update the existing record with new values
@@ -595,6 +601,7 @@ class LeadsForm(models.Model):
                                                                    'lead_qualification': vals.get('lead_qualification'),
                                                                    'last_studied_course': vals.get(
                                                                        'last_studied_course'),
+                                                                   'original_lead_id': current_rec.id,
                                                                    # 'remark_id': vals.get('remark_id'),
                                                                    'college_name': vals.get('college_name'),
                                                                    'branch': vals.get('branch'),
@@ -616,6 +623,48 @@ class LeadsForm(models.Model):
                                                                    'last_update_date': vals.get('last_update_date'),
                                                                    'admission_date': vals.get('admission_date')})
             return reverse_checking
+        if second_number:
+            second_reverse = second_number[-10:]
+            print(second_reverse, 'second_reverse testt')
+            second_number_checking = self.search(
+                [('phone_number', 'like', f'%{second_reverse}')], limit=1)
+            sec_lead_id = self.env['leads.logic'].sudo().search([('phone_number', 'ilike', second_number)], limit=1)
+
+            if second_number_checking:
+                duplicate = self.env['logic.leads.duplicates'].create({'name': vals.get('name'),
+                                                                       'phone_number': vals.get('phone_number'),
+                                                                       'lead_source_id': vals.get('leads_source'),
+                                                                       'email_address': vals.get('email_address'),
+                                                                       'country': vals.get('country'),
+                                                                       'district': vals.get('district'),
+                                                                       'place': vals.get('place'),
+                                                                       'mode_of_study': vals.get('mode_of_study'),
+                                                                       'platform': vals.get('platform'),
+                                                                       'lead_qualification': vals.get('lead_qualification'),
+                                                                       'last_studied_course': vals.get(
+                                                                           'last_studied_course'),
+                                                                       'original_lead_id': sec_lead_id.id,
+                                                                       # 'remark_id': vals.get('remark_id'),
+                                                                       'college_name': vals.get('college_name'),
+                                                                       'branch': vals.get('branch'),
+                                                                       'course_type': vals.get('course_type'),
+                                                                       'academic_year': vals.get('academic_year'),
+                                                                       'course_id': vals.get('base_course_id'),
+                                                                       'course_level': vals.get('course_level'),
+                                                                       'course_group': vals.get('course_group'),
+                                                                       'course_papers': vals.get('course_papers'),
+                                                                       'preferred_batch_id': vals.get(
+                                                                           'preferred_batch_id'),
+                                                                       'lead_status': vals.get('lead_status'),
+                                                                       'lead_quality': vals.get('lead_quality'),
+                                                                       'probability': vals.get('probability'),
+                                                                       'lead_owner': self.env.user.employee_id.id,
+                                                                       'leads_assign': vals.get('leads_assign'),
+                                                                       'assigned_date': vals.get('assigned_date'),
+                                                                       'date_of_adding': vals.get('date_of_adding'),
+                                                                       'last_update_date': vals.get('last_update_date'),
+                                                                       'admission_date': vals.get('admission_date')})
+                return second_number_checking
         else:
             return super(LeadsForm, self).create(vals)
 
@@ -643,25 +692,22 @@ class LeadsForm(models.Model):
 
     def get_duplicate_leads(self):
         self.ensure_one()
-        number = self.phone_number
-        reversed_number = number[-10:]
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Duplicate',
             'view_mode': 'tree,form',
             'res_model': 'logic.leads.duplicates',
-            'domain': [('phone_number','like', f'%{reversed_number}')],
+            'domain': [('original_lead_id', '=', self.id)],
             'context': "{'create': False}"
         }
-
-
 
     def compute_duplicates_leads_count(self):
         number = self.phone_number
         reversed_number = number[-10:]
         for record in self:
             record.duplicates_count = self.env['logic.leads.duplicates'].search_count(
-                [('phone_number','like', f'%{reversed_number}')])
+                [('original_lead_id', '=', self.id)])
 
     duplicates_count = fields.Integer(compute='compute_duplicates_leads_count')
 
@@ -979,6 +1025,7 @@ class LeadsSources(models.Model):
     _description = 'Leads Sources'
 
     name = fields.Char('Name', required=True)
+    digital_lead = fields.Boolean('Digital Lead', default=False)
 
 
 class GenerateLeadLink(models.Model):
@@ -1056,6 +1103,7 @@ class AdmissionFeeReceiptCustom(models.Model):
     _name = 'admission.fee.receipt'
 
     name = fields.Char(string='Test Name')
+
 
 class LeadStatus(models.Model):
     _name = 'lead.status'

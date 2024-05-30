@@ -374,6 +374,7 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="digital_lead"/>
                         </group>
                     </group>
                 </sheet>
