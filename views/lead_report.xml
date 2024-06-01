@@ -19,8 +19,8 @@
                     <button name="print_xlsx_crash_report_course" type="object" string="Course Crash Report" class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}"/>
                     <button name="print_crash_xlsx_report" string="Source Crash Report" type="object" class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}"/>
                     <button name="print_xlsx_digital_report" class="btn-primary" string="Digital Report" type="object" attrs="{'invisible': [('report_type', '!=', 'fully_report')]}"/>
-                    <button name="print_crash_digital_xlsx_report" class="btn-primary" string="Digital Report with Crash" type="object" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}"/>
-                    <button name="print_without_crash_digital_xlsx_report" class="btn-primary" string="Digital Report Without Crash" type="object" attrs="{'invisible': [('report_type', '!=', 'without_crash')]}"/>
+                    <button name="print_crash_digital_xlsx_report" class="btn-primary" string="Digital Report" type="object" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}"/>
+                    <button name="print_without_crash_digital_xlsx_report" class="btn-primary" string="Digital Report" type="object" attrs="{'invisible': [('report_type', '!=', 'without_crash')]}"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
