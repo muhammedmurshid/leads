@@ -16,6 +16,7 @@ class LeadExcelReportCourseCrashController(http.Controller):
         print(datas, 'date')
         lead_source = request.env['leads.sources'].sudo().search([])
         course = request.env['logic.base.courses'].sudo().search([('state', '=', 'done')])
+        total_admission = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('admission_status', '=', True),('course_type', '=', 'crash'), ('lead_quality', '!=', False)])
         total_count = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('course_type', '=', 'crash')])
         response = request.make_response(
             None,
@@ -118,6 +119,7 @@ class LeadExcelReportCourseCrashController(http.Controller):
                 [('id', 'in', datas.ids), ('leads_source', '=', v.id), ('course_type', '=', 'crash')
                  ])
             sheet.write(row,vd, search_count, total_format)
+            sheet.write(row, len(lead_source) + 2, total_admission, admission)
             sheet.write(row, len(lead_source) + 3, total_count, total_leads_format)
         row += 1
         sheet.write(row, 1, 'Percentage %', header_format)

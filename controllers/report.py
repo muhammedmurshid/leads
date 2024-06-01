@@ -120,7 +120,7 @@ class LeadExcelReportController(http.Controller):
         sheet.write(row, 4, adm_cold, admission)
         sheet.write(row, 5, adm_bad, admission)
         sheet.write(row, 6, adm_nil, admission)
-        sheet.write(row, 7, total_adm, admission)
+        # sheet.write(row, 7, total_adm, admission)
         # sheet.write(row, 8, total_leads, total_leads_format)
 
         row += 1
@@ -131,7 +131,7 @@ class LeadExcelReportController(http.Controller):
         sheet.write(row, 4, total_cold, total_format)
         sheet.write(row, 5, total_bad, total_format)
         sheet.write(row, 6, total_nil, total_format)
-        # sheet.write(row, 7, total_adm, admission)
+        sheet.write(row, 7, total_adm, admission)
         sheet.write(row, 8, total_leads, total_leads_format)
 
         row += 1

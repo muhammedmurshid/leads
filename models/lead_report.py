@@ -11,15 +11,23 @@ class LeadReport(models.TransientModel):
     date_from = fields.Date(string="From Date", required=True, placeholder="Report From Date")
     to_date = fields.Date(string="To Date", required=True, placeholder="Report To Date")
     datas_ids = fields.Many2many('leads.logic', string="Data")
+    report_admission = fields.Selection([('yes', 'Yes'), ('no', 'No')], string='Admission Report', default='yes')
     report_type = fields.Selection([('fully_report', 'Full Report'), ('only_crash', 'Crash Report'), ('without_crash', 'Without Crash')], default='fully_report')
 
-    @api.onchange('date_from', 'to_date')
+    @api.onchange('date_from', 'to_date', 'report_admission')
     def _onchange_inbetween_date(self):
+        self.datas_ids = False
         print(self.date_from, self.to_date, 'date')
-        leads = self.env['leads.logic'].sudo().search(
-            [('date_of_adding', '>=', self.date_from), ('date_of_adding', '<=', self.to_date)])
-        print(leads, 'datas')
-        self.datas_ids = leads.ids
+        if self.report_admission == 'yes':
+            leads = self.env['leads.logic'].sudo().search(
+                [('admission_date', '>=', self.date_from), ('admission_date', '<=', self.to_date),
+                 ('admission_status', '=', True)])
+            self.datas_ids = leads.ids
+        else:
+            leads = self.env['leads.logic'].sudo().search(
+                [('date_of_adding', '>=', self.date_from), ('date_of_adding', '<=', self.to_date)])
+            print(leads, 'datas')
+            self.datas_ids = leads.ids
 
     def get_report_lines(self):
         invoice_list = []
@@ -29,7 +37,7 @@ class LeadReport(models.TransientModel):
         lead_source = self.env['leads.sources'].sudo().search([])
 
         total_hot = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'hot')])
-        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids)])
+        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '!=', False)])
         admission = self.env['leads.logic'].sudo().search_count(
             [('id', 'in', datas.ids), ('admission_status', '=', True)])
 
@@ -45,7 +53,7 @@ class LeadReport(models.TransientModel):
             warm_count = self.env['leads.logic'].sudo().search_count(
                 [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '=', 'warm')])
             total_count = self.env['leads.logic'].sudo().search_count(
-                [('id', 'in', datas.ids), ('leads_source', '=', j.id)])
+                [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '!=', False)])
             hot_adm = self.env['leads.logic'].sudo().search_count(
                 [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '=', 'hot'), ('admission_status', '=', True)])
             cold_adm = self.env['leads.logic'].sudo().search_count(
@@ -101,7 +109,7 @@ class LeadReport(models.TransientModel):
         lead_source = self.env['leads.sources'].sudo().search([('digital_lead', '=', True)])
 
         total_hot = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'hot')])
-        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids)])
+        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '!=', False)])
         admission = self.env['leads.logic'].sudo().search_count(
             [('id', 'in', datas.ids), ('admission_status', '=', True)])
 
@@ -117,7 +125,7 @@ class LeadReport(models.TransientModel):
             warm_count = self.env['leads.logic'].sudo().search_count(
                 [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '=', 'warm')])
             total_count = self.env['leads.logic'].sudo().search_count(
-                [('id', 'in', datas.ids), ('leads_source', '=', j.id)])
+                [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '!=', False)])
             hot_adm = self.env['leads.logic'].sudo().search_count(
                 [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '=', 'hot'), ('admission_status', '=', True)])
             cold_adm = self.env['leads.logic'].sudo().search_count(
@@ -214,7 +222,7 @@ class LeadReport(models.TransientModel):
         lead_source = self.env['leads.sources'].sudo().search([])
 
         total_hot = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'hot'), ('course_type', '!=', 'crash')])
-        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '!=', 'crash')])
+        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '!=', 'crash'),('lead_quality', '!=', False)])
         admission = self.env['leads.logic'].sudo().search_count(
             [('id', 'in', datas.ids), ('admission_status', '=', True),('course_type', '!=', 'crash')])
 
@@ -230,7 +238,7 @@ class LeadReport(models.TransientModel):
             warm_count = self.env['leads.logic'].sudo().search_count(
                 [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '=', 'warm'),('course_type', '!=', 'crash')])
             total_count = self.env['leads.logic'].sudo().search_count(
-                [('id', 'in', datas.ids), ('leads_source', '=', j.id),('course_type', '!=', 'crash')])
+                [('id', 'in', datas.ids), ('leads_source', '=', j.id),('course_type', '!=', 'crash'),('lead_quality', '!=', False)])
             hot_adm = self.env['leads.logic'].sudo().search_count(
                 [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '=', 'hot'),
                  ('admission_status', '=', True),('course_type', '!=', 'crash')])
@@ -293,7 +301,7 @@ class LeadReport(models.TransientModel):
         lead_source = self.env['leads.sources'].sudo().search([('digital_lead', '=', True)])
 
         total_hot = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'hot'), ('course_type', '!=', 'crash')])
-        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '!=', 'crash')])
+        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '!=', 'crash'),('lead_quality', '!=', False)])
         admission = self.env['leads.logic'].sudo().search_count(
             [('id', 'in', datas.ids), ('admission_status', '=', True),('course_type', '!=', 'crash')])
 
@@ -309,7 +317,7 @@ class LeadReport(models.TransientModel):
             warm_count = self.env['leads.logic'].sudo().search_count(
                 [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '=', 'warm'),('course_type', '!=', 'crash')])
             total_count = self.env['leads.logic'].sudo().search_count(
-                [('id', 'in', datas.ids), ('leads_source', '=', j.id),('course_type', '!=', 'crash')])
+                [('id', 'in', datas.ids), ('leads_source', '=', j.id),('course_type', '!=', 'crash'),('lead_quality', '!=', False)])
             hot_adm = self.env['leads.logic'].sudo().search_count(
                 [('id', 'in', datas.ids), ('leads_source', '=', j.id), ('lead_quality', '=', 'hot'),
                  ('admission_status', '=', True),('course_type', '!=', 'crash')])
@@ -448,7 +456,7 @@ class LeadReport(models.TransientModel):
         lead_source = self.env['leads.sources'].sudo().search([])
 
         total_hot = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'hot'), ('course_type', '=', 'crash')])
-        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '=', 'crash')])
+        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '=', 'crash'),('lead_quality', '!=', False)])
         admission = self.env['leads.logic'].sudo().search_count(
             [('id', 'in', datas.ids), ('admission_status', '=', True),('course_type', '=', 'crash')])
 

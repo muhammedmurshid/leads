@@ -20,7 +20,7 @@ class LeadExcelDigitalReportController(http.Controller):
         total_warm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'warm')])
         total_nil = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'nil')])
         total_bad = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'bad_lead')])
-        total_leads = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids)])
+        total_leads = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '!=', False)])
         total_adm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True)])
         adm_hot = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'hot')])
         adm_cold = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'cold')])
@@ -120,7 +120,7 @@ class LeadExcelDigitalReportController(http.Controller):
         sheet.write(row, 4, adm_cold, admission)
         sheet.write(row, 5, adm_bad, admission)
         sheet.write(row, 6, adm_nil, admission)
-        sheet.write(row, 7, total_adm, admission)
+        # sheet.write(row, 7, total_adm, admission)
         # sheet.write(row, 8, total_leads, total_leads_format)
 
         row += 1
@@ -131,7 +131,7 @@ class LeadExcelDigitalReportController(http.Controller):
         sheet.write(row, 4, total_cold, total_format)
         sheet.write(row, 5, total_bad, total_format)
         sheet.write(row, 6, total_nil, total_format)
-        # sheet.write(row, 7, total_adm, admission)
+        sheet.write(row, 7, total_adm, admission)
         sheet.write(row, 8, total_leads, total_leads_format)
 
         row += 1

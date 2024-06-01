@@ -20,7 +20,7 @@ class LeadSourceCrashExcelReportController(http.Controller):
         total_warm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'warm'),('course_type', '=', 'crash')])
         total_nil = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'nil'),('course_type', '=', 'crash')])
         total_bad = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'bad_lead'),('course_type', '=', 'crash')])
-        total_leads = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '=', 'crash')])
+        total_leads = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '=', 'crash'), ('lead_quality', '!=', False)])
         total_adm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('course_type', '=', 'crash')])
         adm_hot = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'hot'),('course_type', '=', 'crash')])
         adm_cold = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'cold'),('course_type', '=', 'crash')])
@@ -120,7 +120,7 @@ class LeadSourceCrashExcelReportController(http.Controller):
         sheet.write(row, 4, adm_cold, admission)
         sheet.write(row, 5, adm_bad, admission)
         sheet.write(row, 6, adm_nil, admission)
-        sheet.write(row, 7, total_adm, admission)
+        # sheet.write(row, 7, total_adm, admission)
         # sheet.write(row, 8, total_leads, total_leads_format)
 
         row += 1
@@ -131,7 +131,7 @@ class LeadSourceCrashExcelReportController(http.Controller):
         sheet.write(row, 4, total_cold, total_format)
         sheet.write(row, 5, total_bad, total_format)
         sheet.write(row, 6, total_nil, total_format)
-        # sheet.write(row, 7, total_adm, admission)
+        sheet.write(row, 7, total_adm, admission)
         sheet.write(row, 8, total_leads, total_leads_format)
 
         row += 1
