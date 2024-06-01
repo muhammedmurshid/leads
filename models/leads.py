@@ -640,7 +640,8 @@ class LeadsForm(models.Model):
                                                                        'place': vals.get('place'),
                                                                        'mode_of_study': vals.get('mode_of_study'),
                                                                        'platform': vals.get('platform'),
-                                                                       'lead_qualification': vals.get('lead_qualification'),
+                                                                       'lead_qualification': vals.get(
+                                                                           'lead_qualification'),
                                                                        'last_studied_course': vals.get(
                                                                            'last_studied_course'),
                                                                        'original_lead_id': sec_lead_id.id,
@@ -945,6 +946,13 @@ class LeadsForm(models.Model):
             self.make_visible_manager = True
 
     make_visible_manager = fields.Boolean(string="User", compute='get_manager')
+
+    def action_add_lead_quality_undefined_to_nil(self):
+        active_ids = self.env.context.get('active_ids', [])
+        rec = self.env['leads.logic'].sudo().search([('id', 'in', active_ids)])
+        for i in rec:
+            if not i.lead_quality:
+                i.lead_quality = 'nil'
 
     # @api.depends('phone_number')
     # def _compute_name_without_spaces(self):
