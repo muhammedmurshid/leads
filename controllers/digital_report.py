@@ -114,6 +114,23 @@ class LeadExcelDigitalReportController(http.Controller):
             number += 1
         sheet.set_row(row, 20)
         row += 1
+        sheet.write(row, 1, 'Google')
+        row += 1
+        sheet.write(row, 1, 'Hoardings')
+
+        row += 1
+        sheet.write(row, 1, 'Social Media')
+        row += 1
+        sheet.write(row, 1, 'Through Friends')
+        row += 1
+        sheet.write(row, 1, 'Tvs Ads')
+        row += 1
+        sheet.write(row, 1, 'WhatsApp')
+        row += 1
+        sheet.write(row, 1, 'Other')
+        row += 1
+        sheet.set_row(row, 20)
+        row += 1
         sheet.write(row, 1, 'Admission', header_format)
         sheet.write(row, 2, adm_hot, admission)
         sheet.write(row, 3, adm_warm, admission)

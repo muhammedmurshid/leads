@@ -14,20 +14,42 @@ class LeadReport(models.TransientModel):
     report_admission = fields.Selection([('yes', 'Yes'), ('no', 'No')], string='Admission Report', default='yes')
     report_type = fields.Selection([('fully_report', 'Full Report'), ('only_crash', 'Crash Report'), ('without_crash', 'Without Crash')], default='fully_report')
 
-    @api.onchange('date_from', 'to_date', 'report_admission')
+    @api.onchange('date_from', 'to_date', 'report_admission', 'report_type')
     def _onchange_inbetween_date(self):
         self.datas_ids = False
         print(self.date_from, self.to_date, 'date')
         if self.report_admission == 'yes':
-            leads = self.env['leads.logic'].sudo().search(
-                [('admission_date', '>=', self.date_from), ('admission_date', '<=', self.to_date),
-                 ('admission_status', '=', True)])
-            self.datas_ids = leads.ids
+            if self.report_type == 'fully_report':
+                leads = self.env['leads.logic'].sudo().search(
+                    [('admission_date', '>=', self.date_from), ('admission_date', '<=', self.to_date),
+                     ('admission_status', '=', True)])
+                self.datas_ids = leads.ids
+            if self.report_type == 'without_crash':
+                leads = self.env['leads.logic'].sudo().search(
+                    [('admission_date', '>=', self.date_from), ('admission_date', '<=', self.to_date),
+                     ('admission_status', '=', True), ('course_type', '!=', 'crash')])
+                self.datas_ids = leads.ids
+            if self.report_type == 'only_crash':
+                leads = self.env['leads.logic'].sudo().search(
+                    [('admission_date', '>=', self.date_from), ('admission_date', '<=', self.to_date),
+                     ('admission_status', '=', True), ('course_type', '=', 'crash')])
+                self.datas_ids = leads.ids
         else:
-            leads = self.env['leads.logic'].sudo().search(
-                [('date_of_adding', '>=', self.date_from), ('date_of_adding', '<=', self.to_date)])
-            print(leads, 'datas')
-            self.datas_ids = leads.ids
+            if self.report_type == 'fully_report':
+                leads = self.env['leads.logic'].sudo().search(
+                    [('date_of_adding', '>=', self.date_from), ('date_of_adding', '<=', self.to_date)])
+                print(leads, 'datas')
+                self.datas_ids = leads.ids
+            if self.report_type == 'without_crash':
+                leads = self.env['leads.logic'].sudo().search(
+                    [('date_of_adding', '>=', self.date_from), ('date_of_adding', '<=', self.to_date),
+                     ('course_type', '!=', 'crash')])
+                self.datas_ids = leads.ids
+            if self.report_type == 'only_crash':
+                leads = self.env['leads.logic'].sudo().search(
+                    [('date_of_adding', '>=', self.date_from), ('date_of_adding', '<=', self.to_date),
+                     ('course_type', '=', 'crash')])
+                self.datas_ids = leads.ids
 
     def get_report_lines(self):
         invoice_list = []
@@ -177,7 +199,6 @@ class LeadReport(models.TransientModel):
 
     def get_course_reports(self):
         invoice_list = []
-        lead_sources = []
 
         # hostel_ids = self.hostel_id.ids
         datas = self.datas_ids
@@ -301,7 +322,7 @@ class LeadReport(models.TransientModel):
         lead_source = self.env['leads.sources'].sudo().search([('digital_lead', '=', True)])
 
         total_hot = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'hot'), ('course_type', '!=', 'crash')])
-        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '!=', 'crash'),('lead_quality', '!=', False)])
+        total_leads = self.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '!=', 'crash'),('lead_quality', '!=', False),('leads_source', 'in', lead_source.ids)])
         admission = self.env['leads.logic'].sudo().search_count(
             [('id', 'in', datas.ids), ('admission_status', '=', True),('course_type', '!=', 'crash')])
 

@@ -15,18 +15,35 @@ class LeadSourceCrashDigitalExcelReportController(http.Controller):
         datas = report_id.datas_ids
         print(datas, 'date')
 
-        total_hot = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'hot'), ('course_type', '=', 'crash')])
-        total_cold = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'cold'), ('course_type', '=', 'crash')])
-        total_warm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'warm'),('course_type', '=', 'crash')])
-        total_nil = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'nil'),('course_type', '=', 'crash')])
-        total_bad = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids), ('lead_quality', '=', 'bad_lead'),('course_type', '=', 'crash')])
-        total_leads = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('course_type', '=', 'crash'), ('lead_quality', '!=', False)])
-        total_adm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('course_type', '=', 'crash')])
-        adm_hot = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'hot'),('course_type', '=', 'crash')])
-        adm_cold = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'cold'),('course_type', '=', 'crash')])
-        adm_warm = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'warm'),('course_type', '=', 'crash')])
-        adm_nil = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'nil'),('course_type', '=', 'crash')])
-        adm_bad = request.env['leads.logic'].sudo().search_count([('id', 'in', datas.ids),('admission_status', '=', True),('lead_quality', '=', 'bad_lead'),('course_type', '=', 'crash')])
+        total_hot = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('lead_quality', '=', 'hot'), ('course_type', '=', 'crash')])
+        total_cold = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('lead_quality', '=', 'cold'), ('course_type', '=', 'crash')])
+        total_warm = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('lead_quality', '=', 'warm'), ('course_type', '=', 'crash')])
+        total_nil = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('lead_quality', '=', 'nil'), ('course_type', '=', 'crash')])
+        total_bad = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('lead_quality', '=', 'bad_lead'), ('course_type', '=', 'crash')])
+        total_leads = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('course_type', '=', 'crash'), ('lead_quality', '!=', False)])
+        total_adm = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('admission_status', '=', True), ('course_type', '=', 'crash')])
+        adm_hot = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('admission_status', '=', True), ('lead_quality', '=', 'hot'),
+             ('course_type', '=', 'crash')])
+        adm_cold = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('admission_status', '=', True), ('lead_quality', '=', 'cold'),
+             ('course_type', '=', 'crash')])
+        adm_warm = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('admission_status', '=', True), ('lead_quality', '=', 'warm'),
+             ('course_type', '=', 'crash')])
+        adm_nil = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('admission_status', '=', True), ('lead_quality', '=', 'nil'),
+             ('course_type', '=', 'crash')])
+        adm_bad = request.env['leads.logic'].sudo().search_count(
+            [('id', 'in', datas.ids), ('admission_status', '=', True), ('lead_quality', '=', 'bad_lead'),
+             ('course_type', '=', 'crash')])
         if total_hot == 0:
             perc_hot = 0
         else:
@@ -126,7 +143,26 @@ class LeadSourceCrashDigitalExcelReportController(http.Controller):
 
             row += 1
             number += 1
+
         sheet.set_row(row, 20)
+        row += 1
+        sheet.write(row, 1, 'Google')
+        row += 1
+        sheet.write(row, 1, 'Hoardings')
+
+        row += 1
+        sheet.write(row, 1, 'Social Media')
+        row += 1
+        sheet.write(row, 1, 'Through Friends')
+        row += 1
+        sheet.write(row, 1, 'Tvs Ads')
+        row += 1
+        sheet.write(row, 1, 'WhatsApp')
+        row += 1
+        sheet.write(row, 1, 'Other')
+        row += 1
+        sheet.set_row(row, 20)
+
         row += 1
         sheet.write(row, 1, 'Admission', header_format)
         sheet.write(row, 2, adm_hot, admission)
