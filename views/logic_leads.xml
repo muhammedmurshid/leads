@@ -127,6 +127,7 @@
                             <field name="assigned_date" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                         </group>
                         <group>
+                            <field name="title"/>
                             <field name="college_type_listed" widget="radio" invisible="1"/>
                             <field name="source_seminar_or_not" invisible="1"/>
                             <field name="college_name"
@@ -399,6 +400,7 @@
                 <field name="phone_number" widget="phone"/>
                 <button name="whatsapp_click_button" class="fa fa-whatsapp btn-success" type="object"/>
                 <field name="phone_number_second" widget="phone"/>
+                <field name="title"/>
                 <field name="base_course_id" string="Course"/>
                 <!--                <field name="sample" widget="url" string="WhatsApp"/>-->
                 <field name="remarks"/>
@@ -408,7 +410,7 @@
                 <field name="last_update_date"/>
                 <field name="admission_status"/>
                 <field name="lead_quality"/>
-                <field name="finished_points" string="Finished Touch Points" widget="badge"/>
+                <field name="finished_points" string="Finished Touch Points" widget="badge" optional="hide"/>
 
                 <!--                <field name="state" widget="badge" decoration-success="state == 'done'"-->
                 <!--                       decoration-primary="state == 'crm'" decoration-info="state == 'confirmed'"-->
