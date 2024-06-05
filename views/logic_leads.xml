@@ -331,6 +331,8 @@
                 <field name="phone_number" string="Mobile Number"/>
                 <field name="lead_channel" string="Lead Channel"/>
                 <field name="name" string="Lead Name"/>
+                <field name="title" string="Title"/>
+                <field name="college_name" string="College"/>
                 <field name="phone_number_second" string="Alternate Mobile Number"/>
                 <field name="base_course_id" string="Course"/>
                 <filter string="assign" name="leads_assign" context="{'group_by': 'leads_assign'}"/>
