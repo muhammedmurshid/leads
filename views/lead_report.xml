@@ -27,11 +27,11 @@
                     <button name="print_crash_xlsx_report" string="Source Crash Report" type="object"
                             class="btn-primary" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}"/>
                     <button name="print_xlsx_digital_report" class="btn-primary" string="Digital Report" type="object"
-                            attrs="{'invisible': [('report_type', '!=', 'fully_report')]}" invisible="1"/>
+                            attrs="{'invisible': [('report_type', '!=', 'fully_report')]}" />
                     <button name="print_crash_digital_xlsx_report" class="btn-primary" string="Digital Report"
-                            type="object" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}" invisible="1"/>
+                            type="object" attrs="{'invisible': [('report_type', '!=', 'only_crash')]}"/>
                     <button name="print_without_crash_digital_xlsx_report" class="btn-primary" string="Digital Report"
-                            type="object" attrs="{'invisible': [('report_type', '!=', 'without_crash')]}" invisible="1"/>
+                            type="object" attrs="{'invisible': [('report_type', '!=', 'without_crash')]}" />
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

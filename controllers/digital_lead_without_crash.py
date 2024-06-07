@@ -187,35 +187,35 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
         hoardings_total = request.env['leads.logic'].sudo().search_count(
             [('id', 'in', datas.ids), ('course_type', '!=', 'crash'),
              ('incoming_source', '=', 'hoardings')])
-        if whatsapp_total == 0:
+        if whatsapp_total == 0 or total_leads_count == 0:
             perc_whatsapp = 0
         else:
             perc_whatsapp = round((whatsapp_total / total_leads_count) * 100)
-        if google_total == 0:
+        if google_total == 0 or total_leads_count == 0:
             perc_google = 0
         else:
             perc_google = round(( google_total/ total_leads_count) * 100)
-        if hoardings_total == 0:
+        if hoardings_total == 0 or total_leads_count == 0:
             perc_hoardings = 0
         else:
             perc_hoardings = round((hoardings_total / total_leads_count) * 100)
-        if social_total == 0:
+        if social_total == 0 or total_leads_count == 0:
             perc_social = 0
         else:
             perc_social = round((social_total / total_leads_count) * 100)
-        if friend_total == 0:
+        if friend_total == 0 or total_leads_count == 0:
             perc_friend = 0
         else:
             perc_friend = round((friend_total / total_leads_count) * 100)
-        if tv_total == 0:
+        if tv_total == 0 or total_leads_count == 0:
             perc_tv = 0
         else:
             perc_tv = round((tv_total / total_leads_count) * 100)
-        if other_total == 0:
+        if other_total == 0 or total_leads_count == 0:
             perc_other = 0
         else:
             perc_other = round((other_total / total_leads_count) * 100)
-        if total_leads_count == 0:
+        if total_leads_count == 0 or total_leads_count == 0:
             perc_total = 0
         else:
             perc_total = round((total_leads_count / total_leads_count) * 100)
@@ -313,12 +313,11 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
             number += 1
             row_size += 1
 
-        sheet.set_row(row, 20)
         print(row_size,'size')
-        sheet.merge_range(f'B{row_size + 3}:J7', 'SUB SOURCES', title_format)
-
         row += 1
-        sheet.write(row, 1, 'Google')
+        # sheet.merge_range(f'B{row_size + 3}:J7', 'SUB SOURCES', title_format)
+        sheet.set_row(row, 20)
+        sheet.write(row, 1, 'Google', sub_source)
         sheet.write(row, 2, google_hot, )
         sheet.write(row, 3, google_warm, )
         sheet.write(row, 4, google_cold)
@@ -327,8 +326,9 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
         sheet.write(row, 7, google_adm_total, admission)
         sheet.write(row, 8, google_total, total_format)
         sheet.write(row, 9, perc_google, percentage)
+
         row += 1
-        sheet.write(row, 1, 'Hoardings')
+        sheet.write(row, 1, 'Hoardings', sub_source)
         sheet.write(row, 2, hoardings_hot, )
         sheet.write(row, 3, hoardings_warm, )
         sheet.write(row, 4, hoardings_cold)
@@ -339,7 +339,7 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
         sheet.write(row, 9, perc_hoardings, percentage)
 
         row += 1
-        sheet.write(row, 1, 'Social Media')
+        sheet.write(row, 1, 'Social Media', sub_source)
         sheet.write(row, 2, social_hot, )
         sheet.write(row, 3, social_warm, )
         sheet.write(row, 4, social_cold)
@@ -349,7 +349,7 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
         sheet.write(row, 8, social_total, total_format)
         sheet.write(row, 9, perc_social, percentage)
         row += 1
-        sheet.write(row, 1, 'Through Friends')
+        sheet.write(row, 1, 'Through Friends', sub_source)
         sheet.write(row, 2, friend_hot, )
         sheet.write(row, 3, friend_warm, )
         sheet.write(row, 4, friend_cold)
@@ -359,7 +359,7 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
         sheet.write(row, 8, friend_total, total_format)
         sheet.write(row, 9, perc_friend, percentage)
         row += 1
-        sheet.write(row, 1, 'Tvs Ads')
+        sheet.write(row, 1, 'Tvs Ads', sub_source)
         sheet.write(row, 2, tv_hot, )
         sheet.write(row, 3, tv_warm, )
         sheet.write(row, 4, tv_cold)
@@ -369,7 +369,7 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
         sheet.write(row, 8, tv_total, total_format)
         sheet.write(row, 9, perc_tv, percentage)
         row += 1
-        sheet.write(row, 1, 'WhatsApp')
+        sheet.write(row, 1, 'WhatsApp', sub_source)
         sheet.write(row, 2, whatsapp_hot, )
         sheet.write(row, 3, whatsapp_warm, )
         sheet.write(row, 4, whatsapp_cold)
@@ -379,7 +379,7 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
         sheet.write(row, 8, whatsapp_total, total_format)
         sheet.write(row, 9, perc_whatsapp, percentage)
         row += 1
-        sheet.write(row, 1, 'Other')
+        sheet.write(row, 1, 'Other', sub_source)
 
         sheet.write(row, 2, other_hot, )
         sheet.write(row, 3, other_warm, )
@@ -402,7 +402,7 @@ class LeadWithoutCrashDigitalExcelReportController(http.Controller):
         # sheet.write(row, 8, total_leads, total_leads_format)
 
         row += 1
-        print(report_lines, 'datas')
+
         sheet.write(row, 1, 'Total', header_format)
         sheet.write(row, 2, total_hot, total_format)
         sheet.write(row, 3, total_warm, total_format)
