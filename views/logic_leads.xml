@@ -176,7 +176,7 @@
                             <field name="remarks_id" groups="leads.leads_admin"/>
                             <field name="remarks_lead_user_id" options="{'no_create': True}" required="1"/>
                             <field name="remarks" string="Remarks Note"
-                                   attrs="{'invisible':['|',('lead_status_name', '!=', 'Other'),('lead_user_type', '=', 'teacher')]}"/>
+                                   attrs="{'invisible':['|',('lead_status_name', '!=', 'Other'),('lead_user_type', '=', 'teacher')], 'required':[('lead_status_name', '=', 'Other')]}"/>
                             <field name="student_id" invisible="1"/>
                             <field name="adm_id" invisible="1"/>
                             <field name="lead_user_type" invisible="1"/>
