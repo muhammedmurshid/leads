@@ -124,6 +124,7 @@
                             <field name="seminar_id" groups="base.group_no_one"/>
                             <field name="leads_assign"
                                    attrs="{'invisible':['|',('lead_user_type', '=', 'teacher'),('make_visible_manager', '=', True)]}"/>
+                            <field name="tele_caller_ids" widget="many2many_tags" attrs="{'readonly':[('make_visible_manager', '=', True)]}"/>
                             <field name="assigned_date" attrs="{'invisible':[('lead_user_type', '=', 'teacher')]}"/>
                         </group>
                         <group>

@@ -29,4 +29,8 @@
         <field name="name">Lead Branch Heads</field>
         <field name="category_id" ref="users_for_leads"/>
     </record>
+    <record id="lead_tele_callers" model="res.groups">
+        <field name="name">Lead Tele Callers</field>
+        <field name="category_id" ref="users_for_leads"/>
+    </record>
 </odoo>

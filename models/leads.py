@@ -92,7 +92,6 @@ class LeadsForm(models.Model):
                                 string='District', required=True)
     referred_teacher = fields.Many2one('res.users', string='Referred Teacher')
     over_due = fields.Boolean(string='Over Due')
-
     remarks = fields.Char(string='Remarks')
     parent_number = fields.Char('Parent Number')
     mode_of_study = fields.Selection([('online', 'Online'), ('offline', 'Offline'), ('nil', 'Nil')],
@@ -135,17 +134,16 @@ class LeadsForm(models.Model):
                     rec.incoming_source_checking = False
                     print('na')
 
-    # @api.onchange('base_course_id', 'course_level', 'course_group', 'preferred_batch_id', 'course_type')
-    # def get_course_levels(self):
-    #     ids = []
-    #     # ids.append(self.base_course_id.course_levels.ids)
-    #     levels = self.env['course.levels'].search(
-    #         ['|', ('course_id', '=', self.base_course_id.id), ('name', '=', 'Nil')])
-    #     for rec in levels:
-    #         ids.append(rec.id)
-    #     domain = [('id', 'in', ids)]
-    #     return {'domain': {'course_level': domain}}
-
+    @api.onchange('tele_caller_ids', 'name')
+    def get_tele_callers_in_domain(self):
+        users = self.env.ref('leads.lead_tele_callers').users
+        lead_users = []
+        for j in users:
+            print(j.name, 'j')
+            lead_users.append(j.id)
+        domain = [('id', 'in', lead_users)]
+        return {'domain': {'tele_caller_ids': domain}}
+    tele_caller_ids = fields.Many2many('res.users', string='Tele Caller', domain=get_tele_callers_in_domain)
     course_level = fields.Many2one('course.levels', string='Course Level',
                                    domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
@@ -169,14 +167,12 @@ class LeadsForm(models.Model):
         if self.branch:
             print('kkkkk')
             domain = [('id', 'in', ids)]
-
         else:
             print('naaaa')
             domain = []
         return {'domain': {'preferred_batch_id': domain}}
 
     preferred_batch_id = fields.Many2one('logic.base.batch', string='Preferred Batch')
-
     branch_true_or_false = fields.Boolean(string='Branch Check')
 
     @api.onchange('branch')
