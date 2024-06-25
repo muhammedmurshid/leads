@@ -58,9 +58,6 @@ class AllocationTeleCallersWizard(models.TransientModel):
     assign_to = fields.Many2one('res.users', string='Assigned To', domain=_onchange_leads_users)
 
     def action_add_assigned_user(self):
-        today = fields.Date.today()
-        after_four_days = today + timedelta(days=4)
-        print(after_four_days, 'after_four_days')
         print(self._context['parent_obj'], 'parent_obj')
         # current_rec_id = self.env.context.get('active_id')
         # lead = self.env['leads.logic'].sudo().search([('id', '=', current_rec_id)])
@@ -69,7 +66,7 @@ class AllocationTeleCallersWizard(models.TransientModel):
         leads = self.env['leads.logic'].sudo().search([('id', '=', self._context['parent_obj'])])
         for rec in leads:
             rec.sudo().write({
-                'tele_caller_ids': [(6, 0, [self.assign_to.id])],
+                'tele_caller_ids': self.assign_to.id,
 
                 'assigned_date': fields.Datetime.now(),
                 'over_due': False

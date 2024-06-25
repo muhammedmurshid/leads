@@ -143,7 +143,7 @@ class LeadsForm(models.Model):
             lead_users.append(j.id)
         domain = [('id', 'in', lead_users)]
         return {'domain': {'tele_caller_ids': domain}}
-    tele_caller_ids = fields.Many2many('res.users', string='Tele Caller', domain=get_tele_callers_in_domain)
+    tele_caller_ids = fields.Many2one('res.users', string='Tele Caller', domain=get_tele_callers_in_domain)
     course_level = fields.Many2one('course.levels', string='Course Level',
                                    domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
