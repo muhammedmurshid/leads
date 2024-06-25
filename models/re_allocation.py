@@ -69,7 +69,7 @@ class AllocationTeleCallersWizard(models.TransientModel):
         leads = self.env['leads.logic'].sudo().search([('id', '=', self._context['parent_obj'])])
         for rec in leads:
             rec.sudo().write({
-                'tele_caller_ids': self.assign_to.id,
+                'tele_caller_ids': [(6, 0, [self.assign_to.id])],
 
                 'assigned_date': fields.Datetime.now(),
                 'over_due': False
