@@ -24,4 +24,28 @@
         <field name="view_id" ref="re_allocation_wizard_form_view"/>
         <field name="target">new</field>
     </record>
+    <record id="tele_allocation_wizard_form_view" model="ir.ui.view">
+        <field name="name">tele_allocation.wizard.form</field>
+        <field name="model">allocation.tele_callers.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Allocation">
+                <footer>
+                    <button name="action_add_assigned_user" string="Assign" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+                <group class="oe_title">
+                    <field name="assign_to"/>
+                </group>
+
+            </form>
+        </field>
+    </record>
+    <record id="re_allocation_wizard_action" model="ir.actions.act_window">
+        <field name="name">Re Allocation Wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">re_allocation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="re_allocation_wizard_form_view"/>
+        <field name="target">new</field>
+    </record>
 </odoo>

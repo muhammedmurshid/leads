@@ -125,14 +125,14 @@ class LeadsForm(models.Model):
             if rec.lead_source_name:
                 if "Incoming Calls" in rec.lead_source_name:
                     rec.incoming_source_checking = True
-                    print('ya')
+
                 elif "Walk In" in rec.lead_source_name:
                     rec.incoming_source_checking = True
                 elif "WhatsApp" == rec.lead_source_name:
                     rec.incoming_source_checking = True
                 else:
                     rec.incoming_source_checking = False
-                    print('na')
+
 
     @api.onchange('tele_caller_ids', 'name')
     def get_tele_callers_in_domain(self):
@@ -269,6 +269,20 @@ class LeadsForm(models.Model):
             'type': 'ir.actions.act_window',
             'name': 'Re Allocation',
             'res_model': 're_allocation.wizard',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'parent_obj': active_ids}
+
+        }
+
+    def action_bulk_lead_allocation_tele_callers(self):
+        active_ids = self.env.context.get('active_ids', [])
+        print(active_ids, 'current rec')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Allocation',
+            'res_model': 'allocation.tele_callers.wizard',
             'view_mode': 'form',
             'view_type': 'form',
             'target': 'new',
