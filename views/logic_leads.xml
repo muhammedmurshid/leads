@@ -50,6 +50,7 @@
                     <field name="state" widget="statusbar"/>
                     <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm"
                             onclick="confirm()"/>
+                    <button name="action_assign_to_tele_caller" string="Assign to Tele Caller" states="draft" type="object"/>
                     <!--                    <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"-->
                     <!--                            attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel','confirm']),('make_visible_manager', '=', True)]}"/>-->
                     <!--                    <button name="action_done" class="oe_highlight" type="object" string="Done" states="confirm"/>-->
@@ -57,10 +58,11 @@
                             groups="leads.leads_admin"/>
 
                     <button name="action_admission" type="object" string="Admission" style="background-color:#6fc72c;"
-                            attrs="{'invisible':[('state', 'in', ['draft','cancel'])]}"/>
+                            attrs="{'invisible':[('state', 'in', ['draft','tele_caller','cancel'])]}"/>
                     <button name="action_re_allocation_wizard" type="object" string="Re Assign" states="confirm"
                             style="background-color:#f79c40;" groups="leads.leads_admin"/>
                     <button name="cancel_lead" type="object" states='draft,confirm' string="Cancel"/>
+<!--                    <button name="action_sent_notification" type="object" string="Sent Notification"/>-->
 
 
                     <!--                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>-->

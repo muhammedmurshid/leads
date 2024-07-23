@@ -67,11 +67,12 @@ class AllocationTeleCallersWizard(models.TransientModel):
         for rec in leads:
             rec.sudo().write({
                 'tele_caller_ids': self.assign_to.id,
-
+                'state': 'tele_caller',
+                'lead_quality': 'nil',
+                'leads_assign': False,
                 'assigned_date': fields.Datetime.now(),
                 'over_due': False
             })
 
-            # rec.activity_schedule('leads.activity_lead_re_allocation', user_id=rec.leads_assign.user_id.id,
-            #
-            #                       note=f' You have been assigned new lead.')
+            rec.activity_schedule('leads.mail_seminar_leads_done', user_id=rec.tele_caller_ids.id,
+                                  note=f' You have been assigned new lead.')

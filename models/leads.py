@@ -47,7 +47,7 @@ class LeadsForm(models.Model):
         string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
-        [('draft', 'Draft'), ('confirm', 'Confirmed'), ('re_allocated', 'Re Assigned'), ('done', 'Done'),
+        [('draft', 'Draft'), ('tele_caller', 'Tele caller'), ('confirm', 'Confirmed'), ('re_allocated', 'Re Assigned'), ('done', 'Done'),
          ('cancel', 'Cancelled')],
         string='State',
         default='draft', tracking=True)
@@ -134,7 +134,6 @@ class LeadsForm(models.Model):
                     rec.incoming_source_checking = False
 
 
-    @api.onchange('tele_caller_ids', 'name')
     def get_tele_callers_in_domain(self):
         users = self.env.ref('leads.lead_tele_callers').users
         lead_users = []
@@ -143,7 +142,7 @@ class LeadsForm(models.Model):
             lead_users.append(j.id)
         domain = [('id', 'in', lead_users)]
         return {'domain': {'tele_caller_ids': domain}}
-    tele_caller_ids = fields.Many2one('res.users', string='Tele Caller', domain=get_tele_callers_in_domain)
+    tele_caller_ids = fields.Many2one('res.users', string='Tele Caller')
     course_level = fields.Many2one('course.levels', string='Course Level',
                                    domain="[('course_id', '=', base_course_id)]")
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
@@ -181,6 +180,12 @@ class LeadsForm(models.Model):
             self.branch_true_or_false = True
         else:
             self.branch_true_or_false = False
+
+    def action_sent_notification(self):
+        self.activity_schedule(
+            'leads.mail_seminar_leads_done', user_id=self.tele_caller_ids.id,
+            note=f'Please update status for the lead assigned four days ago.'),
+
 
     @api.depends('make_visible')
     def get_user(self):
@@ -424,6 +429,14 @@ class LeadsForm(models.Model):
                         rec.over_due = False
                 else:
                     rec.over_due = False
+
+    def action_assign_to_tele_caller(self):
+        if not self.tele_caller_ids:
+            raise ValidationError('Please add tele caller.')
+        else:
+            self.state = 'tele_caller'
+            self.update({'lead_quality': 'nil'})
+            self.leads_assign = False
 
     def action_created_records_states_changing(self):
         lead = self.env['leads.logic'].sudo().search([])
