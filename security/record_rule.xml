@@ -21,7 +21,7 @@
         <record id="leads_tele_callers_rules" model="ir.rule">
             <field name="name">See Only His Data</field>
             <field name="model_id" ref="model_leads_logic"/>
-            <field name="domain_force">[('tele_caller_ids.id', '=', user.id)]</field>
+            <field name="domain_force">['|',('tele_caller_ids.id', '=', user.id),('state', '=', 'tele_caller')]</field>
             <field name="groups" eval="[(4, ref('lead_tele_callers'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
