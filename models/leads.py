@@ -1000,6 +1000,7 @@ class LeadsForm(models.Model):
 
     current_user_id_int = fields.Integer(string='Current User ID', compute='current_user_id')
 
+
     def change_leads_channel_name(self):
         for i in self:
             print(i.name, 'name')

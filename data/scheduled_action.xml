@@ -38,6 +38,7 @@
             action = records.change_leads_channel_name()
         </field>
     </record>
+
     <record model="ir.actions.server" id="action_change_lead_quality">
         <field name="name">Change Lead Quality</field>
         <field name="model_id" ref="leads.model_leads_logic"/>

@@ -76,3 +76,20 @@ class AllocationTeleCallersWizard(models.TransientModel):
 
             rec.activity_schedule('leads.mail_seminar_leads_done', user_id=rec.tele_caller_ids.id,
                                   note=f' You have been assigned new lead.')
+
+    def action_add_tele_callers_user(self):
+        print(self._context['parent_obj'], 'parent_obj')
+        # current_rec_id = self.env.context.get('active_id')
+        # lead = self.env['leads.logic'].sudo().search([('id', '=', current_rec_id)])
+        # lead.leads_assign = self.assign_to.id
+        # print(current_rec_id, 'current_rec_id')
+        leads = self.env['leads.logic'].sudo().search([('id', '=', self._context['parent_obj'])])
+        for rec in leads:
+            rec.sudo().write({
+                'tele_caller_ids': self.assign_to.id,
+                # 'state': 'tele_caller',
+                # 'lead_quality': 'nil',
+                'leads_assign': False,
+                # 'assigned_date': fields.Datetime.now(),
+                # 'over_due': False
+            })

@@ -31,6 +31,7 @@
             <form string="Allocation">
                 <footer>
                     <button name="action_add_assigned_user" string="Assign" type="object" class="oe_highlight"/>
+                    <button type="object" string="Allocate to Tele callers" class="oe_highlight" name="action_add_tele_callers_user"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
                 <group class="oe_title">
