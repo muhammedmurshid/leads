@@ -87,7 +87,7 @@ class AllocationTeleCallersWizard(models.TransientModel):
         for rec in leads:
             rec.sudo().write({
                 'tele_caller_ids': self.assign_to.id,
-                # 'state': 'tele_caller',
+                'state': 'tele_caller',
                 # 'lead_quality': 'nil',
                 'leads_assign': False,
                 # 'assigned_date': fields.Datetime.now(),
