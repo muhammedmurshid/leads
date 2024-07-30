@@ -61,7 +61,8 @@ class LeadsForm(models.Model):
     lead_referral_staff_id = fields.Many2one('res.users', string='Lead Referral Staff')
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
                                    string='Referred By')
-    campaign_name = fields.Char(string='Campaign Name')
+    # campaign_name = fields.Char(string='Campaign Name')
+    campaign = fields.Selection([('CA Weekend Thrissur', 'CA Weekend Thrissur'), ('CA Weekend Ernakulam', 'CA Weekend Ernakulam'), ('CA Weekend Trivandrum', 'CA Weekend Trivandrum'), ('CA Weekend Calicut', 'CA Weekend Calicut'), ('CA Weekend Perintalmanna', 'CA Weekend Perintalmanna')], string='Campaign')
     country = fields.Selection(
         [('india', 'India'), ('germany', 'Germany'), ('canada', 'Canada'), ('usa', 'USA'), ('australia', 'Australia'),
          ('italy', 'Italy'), ('france', 'France'), ('united_kingdom', 'United Kingdom'),

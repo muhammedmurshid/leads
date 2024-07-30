@@ -107,8 +107,9 @@
                             <field name="incoming_source_checking" invisible="1"/>
                             <field name="incoming_source"
                                    attrs="{'invisible':[('incoming_source_checking', '=', False)], 'required':[('incoming_source_checking', '=', True)]}"/>
-                            <field name="campaign_name"
-                                   attrs="{'invisible':[('lead_source_name', '!=', 'Digital Leads')]}"/>
+<!--                            <field name="campaign_name"-->
+<!--                                   attrs="{'invisible':[('lead_source_name', '!=', 'Digital Leads')]}"/>-->
+                            <field name="campaign" attrs="{'invisible':[('lead_source_name', '!=', 'Digital Leads')]}"/>
                             <field name="email_address"/>
                             <field name="phone_number" widget="phone"/>
                             <field name="phone_number_second" widget="phone"/>
