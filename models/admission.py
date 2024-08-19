@@ -96,6 +96,7 @@ class AddToStudentList(models.TransientModel):
                 'city': self.city,
                 'state': self.state.id,
                 'country': self.country.id,
+                'status': 'confirm',
                 'dob': self.date_of_birth,
                 'lead_id': self.current_rec.id,
                 'std_adm_detail_ids': [(0, 0, {
@@ -117,6 +118,7 @@ class AddToStudentList(models.TransientModel):
                     'batch_id': self.batch_id.id,
                     'mobile_number': self.mobile_number,
                     'email': self.email,
+                    'status': 'confirm',
                     # 'mode_of_study': self.mode_of_study,
                     'admission_officer_id': self.admission_officer.id,
                     'invoice_date': fields.Date.today(),

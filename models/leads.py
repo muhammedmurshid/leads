@@ -1102,13 +1102,6 @@ class LeadsAssigningWizard(models.TransientModel):
                 i.leads_assign = self.assigned_to
                 i.state = 'confirm'
                 i.assigned_date = fields.Datetime.now()
-        # aa.lead_owner = self.assigned_to
-        # abc.lead_owner = self.assigned_to
-
-        # for i in abc:
-        #     if i:
-        #         print(i.id, 'selected only')
-        #         abc.lead_owner = self.assigned_to
 
         print('hi')
 
