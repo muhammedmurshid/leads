@@ -47,7 +47,8 @@ class LeadsForm(models.Model):
         string='Course Type')
     lead_channel = fields.Char(string='Lead Channel')
     state = fields.Selection(
-        [('draft', 'Draft'), ('tele_caller', 'Tele caller'), ('confirm', 'Confirmed'), ('re_allocated', 'Re Assigned'), ('done', 'Done'),
+        [('draft', 'Draft'), ('tele_caller', 'Tele caller'), ('confirm', 'Confirmed'), ('re_allocated', 'Re Assigned'),
+         ('done', 'Done'),
          ('cancel', 'Cancelled')],
         string='State',
         default='draft', tracking=True)
@@ -62,7 +63,10 @@ class LeadsForm(models.Model):
     referred_by = fields.Selection([('staff', 'Staff'), ('student', 'Student'), ('other', 'Other')],
                                    string='Referred By')
     # campaign_name = fields.Char(string='Campaign Name')
-    campaign = fields.Selection([('CA Weekend Thrissur', 'CA Weekend Thrissur'), ('CA Weekend Ernakulam', 'CA Weekend Ernakulam'), ('CA Weekend Trivandrum', 'CA Weekend Trivandrum'), ('CA Weekend Calicut', 'CA Weekend Calicut'), ('CA Weekend Perintalmanna', 'CA Weekend Perintalmanna')], string='Campaign')
+    campaign = fields.Selection(
+        [('CA Weekend Thrissur', 'CA Weekend Thrissur'), ('CA Weekend Ernakulam', 'CA Weekend Ernakulam'),
+         ('CA Weekend Trivandrum', 'CA Weekend Trivandrum'), ('CA Weekend Calicut', 'CA Weekend Calicut'),
+         ('CA Weekend Perintalmanna', 'CA Weekend Perintalmanna')], string='Campaign')
     country = fields.Selection(
         [('india', 'India'), ('germany', 'Germany'), ('canada', 'Canada'), ('usa', 'USA'), ('australia', 'Australia'),
          ('italy', 'Italy'), ('france', 'France'), ('united_kingdom', 'United Kingdom'),
@@ -134,7 +138,6 @@ class LeadsForm(models.Model):
                 else:
                     rec.incoming_source_checking = False
 
-
     def get_tele_callers_in_domain(self):
         users = self.env.ref('leads.lead_tele_callers').users
         lead_users = []
@@ -143,6 +146,7 @@ class LeadsForm(models.Model):
             lead_users.append(j.id)
         domain = [('id', 'in', lead_users)]
         return {'domain': {'tele_caller_ids': domain}}
+
     tele_caller_ids = fields.Many2one('res.users', string='Tele Caller')
     course_level = fields.Many2one('course.levels', string='Course Level',
                                    domain="[('course_id', '=', base_course_id)]")
@@ -186,7 +190,6 @@ class LeadsForm(models.Model):
         self.activity_schedule(
             'leads.mail_seminar_leads_done', user_id=self.tele_caller_ids.id,
             note=f'Please update status for the lead assigned four days ago.'),
-
 
     @api.depends('make_visible')
     def get_user(self):
@@ -827,6 +830,19 @@ class LeadsForm(models.Model):
     #
     #     }
 
+    def action_change_bulk_lead_sources(self):
+        active_ids = self.env.context.get('active_ids', [])
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Leads Sources',
+            'res_model': 'change.leads.sources',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',
+            'context': {'default_leads': active_ids}
+
+        }
+
     def confirm(self):
         touch_points = self.env['leads.touch.points'].sudo().search([])
         for touch in touch_points:
@@ -1000,7 +1016,6 @@ class LeadsForm(models.Model):
             i.current_user_id_int = self.env.user.id
 
     current_user_id_int = fields.Integer(string='Current User ID', compute='current_user_id')
-
 
     def change_leads_channel_name(self):
         for i in self:

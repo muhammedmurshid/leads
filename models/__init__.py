@@ -10,3 +10,4 @@ from . import staff_reference
 from . import re_allocation
 from . import lead_report
 from . import duplicate_leads
+from . import leads_sources_bulk_assign

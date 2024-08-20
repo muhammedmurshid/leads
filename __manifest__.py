@@ -21,6 +21,7 @@
         'views/re_allocation.xml',
         'views/lead_report.xml',
         'views/duplicate_pipeline_leads.xml',
+        'views/leads_bulk_assign_view.xml'
         # 'views/link_generation.xml',
 
     ],

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_of_leads_bulk_changing_source" model="ir.ui.view">
+        <field name="name">Leads s</field>
+        <field name="model">change.leads.sources</field>
+        <field name="arch" type="xml">
+            <form string="Leads">
+                <group>
+                    <group class="oe_title">
+                        <field name="lead_source_id"/>
+                        <field name="leads" widget="many2many_tags"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Change Source" class="oe_highlight" type="object" name='action_change_sources'/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

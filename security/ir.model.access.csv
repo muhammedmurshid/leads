@@ -5,6 +5,7 @@ management_users_access,manager_user_leads,model_leads_sources,leads_admin,1,1,1
 leads_users_access,user_source,model_leads_sources,leads_basic_user,1,1,1,1
 leads_tele_access,user_source,model_leads_sources,lead_tele_callers,1,1,1,1
 user_access_tele,user_leads,model_leads_logic,lead_tele_callers,1,1,1,0
+bulk_lead_changing_sources,bulk_lead_changing_sources,model_change_leads_sources,,1,1,1,1
 
 user_access,user_leads,model_leads_logic,leads_basic_user,1,1,1,0
 management_users_acc,manager_user_leads,model_leads_sources,base.group_user,1,0,0,0
