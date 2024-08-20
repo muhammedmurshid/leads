@@ -8,7 +8,7 @@
                 <group>
                     <group class="oe_title">
                         <field name="lead_source_id"/>
-                        <field name="leads" widget="many2many_tags"/>
+                        <field name="leads" widget="many2many_tags" invisible="1"/>
                     </group>
                 </group>
                 <footer>
