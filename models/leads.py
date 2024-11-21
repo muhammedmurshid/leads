@@ -463,10 +463,10 @@ class LeadsForm(models.Model):
             print(courses, 'nn')
             return {'domain': {'base_course_id': domain}}
 
-    base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course', required=True,
+    base_course_id = fields.Many2one('logic.base.courses', string='Preferred Course',
                                      domain=[('state', '=', 'done')])
 
-    branch = fields.Many2one('logic.base.branches', string='Branch', required=1)
+    branch = fields.Many2one('logic.base.branches', string='Branch')
 
     def get_old_branch_to_new_branch(self):
         rec = self.env['leads.logic'].sudo().search([])
@@ -1065,7 +1065,7 @@ class LeadsForm(models.Model):
                     })
 
     remarks_id = fields.Many2one('lead.status', string='Lead Status')
-    remarks_lead_user_id = fields.Many2one('lead.status', string='Remarks', required=1)
+    remarks_lead_user_id = fields.Many2one('lead.status', string='Remarks',)
 
 
 class LeadsSources(models.Model):

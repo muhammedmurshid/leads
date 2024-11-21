@@ -141,16 +141,16 @@
                                    attrs="{'required': [('lead_source_name', 'not in', ['Seminar','Seminar Data','Webinar'])]}"/>
                             <field name="course_id" invisible="1"/>
                             <field name="base_course_id" options="{'no_create': True, 'no_create_edit':True}"
-                                   placeholder="select course type first."/>
+                                   placeholder="select course type first." attrs="{'required':[('lead_source_name', '!=', 'Website')]}"/>
                             <field name="branch" placeholder="select branch"
-                                   options="{'no_create': True, 'no_create_edit':True}"/>
+                                   options="{'no_create': True, 'no_create_edit':True}" attrs="{'required':[('lead_source_name', '!=', 'Website')]}"/>
                             <field name="academic_year"/>
 
                             <field name="branch_true_or_false" invisible="1"/>
                             <field name="preferred_batch_id" options="{'no_create':True}"
                                    attrs="{'required': [('source_seminar_or_not', '=', False)], 'readonly':[('branch_true_or_false', '=', False)]}"/>
                             <field name="course_level" options="{'no_create':True}"
-                                   attrs="{'invisible': [('course_type', '=', 'international')], 'required': [('course_type', '!=', 'international')]}"/>
+                                   attrs="{'invisible': [('course_type', '=', 'international')], 'required': ['|',('course_type', '!=', 'international'), ('lead_source_name', '!=', 'Website')]}"/>
                             <field name="level_name" invisible="1"/>
                             <field name="course_group" options="{'no_create':True}"/>
                             <field name="course_papers" widget="many2many_tags" options="{'no_create':True}"/>
@@ -178,7 +178,7 @@
                             <field name="batch_preference" invisible="1"/>
                             <field name="lead_status_name" invisible="1"/>
                             <field name="remarks_id" groups="leads.leads_admin"/>
-                            <field name="remarks_lead_user_id" options="{'no_create': True}" required="1"/>
+                            <field name="remarks_lead_user_id" options="{'no_create': True}" attrs="{'invisible':[('lead_source_name', '!=', 'Website')]}"/>
                             <field name="remarks" string="Remarks Note"
                                    attrs="{'invisible':['|',('lead_status_name', '!=', 'Other'),('lead_user_type', '=', 'teacher')], 'required':[('lead_status_name', '=', 'Other')]}"/>
                             <field name="student_id" invisible="1"/>
@@ -208,7 +208,6 @@
                                     <field name="finished_points"/>
                                 </group>
                             </group>
-
                         </page>
                     </notebook>
                 </sheet>
