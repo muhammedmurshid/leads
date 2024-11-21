@@ -50,7 +50,8 @@
                     <field name="state" widget="statusbar"/>
                     <button name="confirm" class="oe_highlight" type="object" states='draft' string="Confirm"
                             onclick="confirm()"/>
-                    <button name="action_assign_to_tele_caller" string="Assign to Tele Caller" states="draft" type="object"/>
+                    <button name="action_assign_to_tele_caller" string="Assign to Tele Caller" states="draft"
+                            type="object"/>
                     <!--                    <button name="leadcreation" class="oe_highlight" type="object" string="Add To Crm"-->
                     <!--                            attrs="{'invisible':['|',('state', 'in', ['draft', 'crm', 'cancel','confirm']),('make_visible_manager', '=', True)]}"/>-->
                     <!--                    <button name="action_done" class="oe_highlight" type="object" string="Done" states="confirm"/>-->
@@ -62,7 +63,7 @@
                     <button name="action_re_allocation_wizard" type="object" string="Re Assign" states="confirm"
                             style="background-color:#f79c40;" groups="leads.leads_admin"/>
                     <button name="cancel_lead" type="object" states='draft,confirm' string="Cancel"/>
-<!--                    <button name="action_sent_notification" type="object" string="Sent Notification"/>-->
+                    <!--                    <button name="action_sent_notification" type="object" string="Sent Notification"/>-->
 
 
                     <!--                    <button name="get_old_branch_to_new_branch" type="object" string="Get Old Branch To New Branch"/>-->
@@ -107,8 +108,8 @@
                             <field name="incoming_source_checking" invisible="1"/>
                             <field name="incoming_source"
                                    attrs="{'invisible':[('incoming_source_checking', '=', False)], 'required':[('incoming_source_checking', '=', True)]}"/>
-<!--                            <field name="campaign_name"-->
-<!--                                   attrs="{'invisible':[('lead_source_name', '!=', 'Digital Leads')]}"/>-->
+                            <!--                            <field name="campaign_name"-->
+                            <!--                                   attrs="{'invisible':[('lead_source_name', '!=', 'Digital Leads')]}"/>-->
                             <field name="campaign" attrs="{'invisible':[('lead_source_name', '!=', 'Digital Leads')]}"/>
                             <field name="email_address"/>
                             <field name="phone_number" widget="phone"/>
@@ -141,9 +142,13 @@
                                    attrs="{'required': [('lead_source_name', 'not in', ['Seminar','Seminar Data','Webinar'])]}"/>
                             <field name="course_id" invisible="1"/>
                             <field name="base_course_id" options="{'no_create': True, 'no_create_edit':True}"
-                                   placeholder="select course type first." attrs="{'required':[('lead_source_name', '!=', 'Website')]}"/>
+                                   placeholder="select course type first."
+                                   attrs="{'required':[('lead_source_name', '!=', 'Website')], 'invisible':[('lead_source_name', '=', 'Website')]}"/>
+                            <field name="preferred_course"
+                                   attrs="{'invisible':[('lead_source_name', '!=', 'Website')]}"/>
                             <field name="branch" placeholder="select branch"
-                                   options="{'no_create': True, 'no_create_edit':True}" attrs="{'required':[('lead_source_name', '!=', 'Website')]}"/>
+                                   options="{'no_create': True, 'no_create_edit':True}"
+                                   attrs="{'required':[('lead_source_name', '!=', 'Website')]}"/>
                             <field name="academic_year"/>
 
                             <field name="branch_true_or_false" invisible="1"/>
@@ -178,7 +183,8 @@
                             <field name="batch_preference" invisible="1"/>
                             <field name="lead_status_name" invisible="1"/>
                             <field name="remarks_id" groups="leads.leads_admin"/>
-                            <field name="remarks_lead_user_id" options="{'no_create': True}" attrs="{'invisible':[('lead_source_name', '!=', 'Website')]}"/>
+                            <field name="remarks_lead_user_id" options="{'no_create': True}"
+                                   attrs="{'invisible':[('lead_source_name', '!=', 'Website')]}"/>
                             <field name="remarks" string="Remarks Note"
                                    attrs="{'invisible':['|',('lead_status_name', '!=', 'Other'),('lead_user_type', '=', 'teacher')], 'required':[('lead_status_name', '=', 'Other')]}"/>
                             <field name="student_id" invisible="1"/>

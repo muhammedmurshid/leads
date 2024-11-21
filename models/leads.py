@@ -150,6 +150,7 @@ class LeadsForm(models.Model):
     tele_caller_ids = fields.Many2one('res.users', string='Tele Caller')
     course_level = fields.Many2one('course.levels', string='Course Level',
                                    domain="[('course_id', '=', base_course_id)]")
+    preferred_course = fields.Char(string='Preferred Course')
     level_name = fields.Char(string='Level Name', compute='get_course_groups', store=True)
     academic_year = fields.Selection(
         [('2020', '2020'), ('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025'),
